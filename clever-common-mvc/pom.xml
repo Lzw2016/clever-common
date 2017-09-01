@@ -11,5 +11,8 @@
 
     <artifactId>clever-common-mvc</artifactId>
 
+    <dependencies>
+
+    </dependencies>
 
 </project>

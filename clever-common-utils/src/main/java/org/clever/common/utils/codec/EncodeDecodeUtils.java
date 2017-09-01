@@ -3,8 +3,8 @@ package org.clever.common.utils.codec;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.net.URLDecoder;
@@ -73,7 +73,7 @@ public class EncodeDecodeUtils {
      * @param input 待判断的Hex字符串
      * @return 是Hex编码返回true，否则返回false
      */
-    public static boolean isHexcode(String input) {
+    public static boolean isHexCode(String input) {
         if (StringUtils.isBlank(input)) {
             return true;
         }
