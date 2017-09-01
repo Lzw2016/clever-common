@@ -1,4 +1,4 @@
-package org.cleverframe.common.model;
+package org.cleverframe.common.model.response;
 
 import lombok.Data;
 

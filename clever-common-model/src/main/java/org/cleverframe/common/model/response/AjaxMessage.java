@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.clever.common.utils.exception.ExceptionUtils;
-import org.cleverframe.common.model.BaseResponse;
 import org.cleverframe.common.model.ValidMessage;
 import org.springframework.validation.FieldError;
 
