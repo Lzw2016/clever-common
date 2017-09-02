@@ -1,11 +1,11 @@
-package org.cleverframe.common.model.response;
+package org.clever.common.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.clever.common.model.ValidMessage;
 import org.clever.common.utils.exception.ExceptionUtils;
-import org.cleverframe.common.model.ValidMessage;
 import org.springframework.validation.FieldError;
 
 import java.io.Serializable;

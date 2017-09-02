@@ -1,4 +1,4 @@
-package org.cleverframe.common.model;
+package org.clever.common.model;
 
 import lombok.Data;
 import org.springframework.validation.FieldError;

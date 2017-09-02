@@ -1,4 +1,4 @@
-package org.cleverframe.common.model.entity;
+package org.clever.common.model.entity;
 
 import java.io.Serializable;
 

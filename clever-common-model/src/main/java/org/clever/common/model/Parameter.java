@@ -1,4 +1,4 @@
-package org.cleverframe.common.model;
+package org.clever.common.model;
 
 
 import org.clever.common.utils.mapper.BeanMapConverter;

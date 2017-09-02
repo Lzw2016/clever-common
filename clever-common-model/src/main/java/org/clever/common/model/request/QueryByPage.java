@@ -1,4 +1,4 @@
-package org.cleverframe.common.model.request;
+package org.clever.common.model.request;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
