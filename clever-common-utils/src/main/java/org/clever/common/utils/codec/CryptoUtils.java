@@ -67,12 +67,12 @@ public class CryptoUtils {
     /**
      * 生成随机向量
      *
-     * @param ivsize 向量长度
+     * @param ivSize 向量长度
      * @return 向量数据
      */
-    public static byte[] generateIV(int ivsize) {
+    public static byte[] generateIV(int ivSize) {
         SecureRandom random = new SecureRandom();
-        byte[] bytes = new byte[ivsize];
+        byte[] bytes = new byte[ivSize];
         random.nextBytes(bytes);
         return bytes;
     }
@@ -224,10 +224,10 @@ public class CryptoUtils {
     /**
      * 生成AES密钥,可选长度为128,192,256位.
      *
-     * @param keysize 可选长度为128,192,256位
+     * @param keySize 可选长度为128,192,256位
      */
-    public static byte[] generateAesKey(int keysize) {
-        return generateKey(AES, keysize);
+    public static byte[] generateAesKey(int keySize) {
+        return generateKey(AES, keySize);
     }
 
     /**
