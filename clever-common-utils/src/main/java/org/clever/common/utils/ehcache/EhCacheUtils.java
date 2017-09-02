@@ -14,10 +14,6 @@
 // * 创建时间：2016-5-12 17:28 <br/>
 // */
 //public class EhCacheUtils {
-//    /**
-//     * 日志对象
-//     */
-//    private final static Logger logger = LoggerFactory.getLogger(EhCacheUtils.class);
 //
 //    /**
 //     * Ehcache的缓存管理器
