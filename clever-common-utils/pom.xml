@@ -103,9 +103,6 @@
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
         </dependency>
-
-
-
     </dependencies>
 
 </project>

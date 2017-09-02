@@ -180,8 +180,6 @@
                 <artifactId>persistence-api</artifactId>
                 <version>1.0.2</version>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
@@ -195,7 +193,12 @@
             <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
