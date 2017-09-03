@@ -25,7 +25,7 @@
 
     <modules>
         <module>clever-common-utils</module>
-        <module>clever-common-mvc</module>
+        <module>clever-common-server</module>
         <module>clever-common-model</module>
     </modules>
 
