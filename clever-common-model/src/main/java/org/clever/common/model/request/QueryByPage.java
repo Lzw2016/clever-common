@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class QueryByPage extends BaseRequest {
+public class QueryByPage extends QueryBySort {
     private static final long serialVersionUID = 1L;
 
     /**
