@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
         errorResponse.setPath(request.getRequestURI());
         errorResponse.setException(e.getClass().getName());
         errorResponse.setMessage(e.getMessage());
-        errorResponse.setError("请求参数错误");
+        errorResponse.setError("请求参数校验失败");
         errorResponse.setStatus(response.getStatus());
         errorResponse.setTimestamp(new Date());
         return errorResponse;
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
         errorResponse.setPath(request.getRequestURI());
         errorResponse.setException(e.getClass().getName());
         errorResponse.setMessage(e.getMessage());
-        errorResponse.setError("请求参数错误");
+        errorResponse.setError("请求参数校验失败");
         errorResponse.setStatus(response.getStatus());
         errorResponse.setTimestamp(new Date());
         return errorResponse;
