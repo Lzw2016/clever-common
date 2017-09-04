@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 系统异常时返回的数据
+ * <p>
  * 作者：lzw <br/>
  * 创建时间：2017-09-03 13:31 <br/>
  */
