@@ -1,5 +1,6 @@
 package org.clever.common.model.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,11 +23,13 @@ public class QueryByPage extends QueryBySort {
     /**
      * 每页的数据量(1 <= pageSize <= 100)
      */
+    @ApiModelProperty("每页的数据量")
     private int pageSize = 10;
 
     /**
      * 当前页面的页码数(pageNo >= 1)
      */
+    @ApiModelProperty("当前页面的页码数")
     private int pageNo = 1;
 
     /*--------------------------------------------------------------
