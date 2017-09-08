@@ -99,11 +99,6 @@
             </dependency>
             <!--验证码-->
             <dependency>
-                <groupId>org.ehcache</groupId>
-                <artifactId>ehcache</artifactId>
-                <version>3.4.0</version>
-            </dependency>
-            <dependency>
                 <groupId>com.github.cage</groupId>
                 <artifactId>cage</artifactId>
                 <version>1.0</version>
@@ -119,6 +114,11 @@
                 <version>0.0.1</version>
             </dependency>
             <!--工具包-->
+            <dependency>
+                <groupId>org.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>3.4.0</version>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
