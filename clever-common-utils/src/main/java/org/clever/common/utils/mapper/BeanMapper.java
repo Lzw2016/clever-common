@@ -2,6 +2,7 @@ package org.clever.common.utils.mapper;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.clever.common.utils.spring.SpringContextHolder;
 import org.dozer.DozerBeanMapper;
 
@@ -52,7 +53,7 @@ public class BeanMapper {
             return DOZER_BEAN_MAPPER.map(source, destinationClass);
         } catch (Throwable e) {
             log.error("DozerBeanMapper 转换JavaBean失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -78,7 +79,7 @@ public class BeanMapper {
             return destinationList;
         } catch (Throwable e) {
             log.error("DozerBeanMapper 转换Collection<JavaBean>失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -88,15 +89,13 @@ public class BeanMapper {
      *
      * @param source            数据源对象
      * @param destinationObject 目标对象
-     * @return 成功返回true，失败返回false
      */
-    public static boolean copyTo(Object source, Object destinationObject) {
+    public static void copyTo(Object source, Object destinationObject) {
         try {
             DOZER_BEAN_MAPPER.map(source, destinationObject);
-            return true;
         } catch (Throwable e) {
             log.error("DozerBeanMapper 转换对象拷贝属性值失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 }
