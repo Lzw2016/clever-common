@@ -12,6 +12,7 @@ import java.util.List;
  * @see org.clever.common.utils.tree.BuildTreeUtils
  */
 public interface ITreeNode extends Serializable {
+
     /**
      * 节点ID
      */
@@ -30,12 +31,12 @@ public interface ITreeNode extends Serializable {
     /**
      * 判断当前节点是否被构建到树中了
      */
-    boolean isBulid();
+    boolean isBuild();
 
     /**
      * 设置当前节点是否构建到树中
      */
-    void setBulid(boolean isBulid);
+    void setBuild(boolean isBulid);
 
     /**
      * 返回所有子节点，必须是List否则顺序会不一致

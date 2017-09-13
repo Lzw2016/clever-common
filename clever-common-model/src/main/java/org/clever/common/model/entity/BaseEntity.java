@@ -48,4 +48,9 @@ public interface BaseEntity extends Serializable {
      * 自身关联实体类的fullPath属性分隔标识
      */
     char FULL_PATH_SPLIT = '-';
+
+    /**
+     * 树结构对象 根节点父级编号
+     */
+    long ROOT_PARENT_ID = -1;
 }

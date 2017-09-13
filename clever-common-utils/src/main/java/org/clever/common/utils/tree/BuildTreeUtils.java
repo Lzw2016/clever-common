@@ -21,27 +21,27 @@ public class BuildTreeUtils {
      * @param nodes 所有要构建树的节点
      * @return 构建的所有树的根节点
      */
-    public static List<ITreeNode> bulidTree(Collection<ITreeNode> nodes) {
+    public static List<ITreeNode> buildTree(Collection<ITreeNode> nodes) {
         log.debug("开始构建树结构...");
         final long startTime = System.currentTimeMillis();
         // 需要构建树的节点，还未构建到树中的节点
-        List<ITreeNode> allTreeNodeList = getCanBulidTreeNodes(nodes);
+        List<ITreeNode> allTreeNodeList = getCanBuildTreeNodes(nodes);
         // 清除构建状态
-        clearBulid(allTreeNodeList);
+        clearBuild(allTreeNodeList);
         // 查找所有根节点
         List<ITreeNode> rootNodeList = findRootNode(allTreeNodeList);
         // 刷新还未构建到树中的节点，减少循环次数
-        List<ITreeNode> noBulidTreeNodeList = refreshNoBulidNodes(allTreeNodeList);
+        List<ITreeNode> noBuildTreeNodeList = refreshNoBuildNodes(allTreeNodeList);
         // 循环根节点，构建多棵树
         for (ITreeNode rootNode : rootNodeList) {
             // 递归生成树
-            buildTree(rootNode, noBulidTreeNodeList);
+            buildTree(rootNode, noBuildTreeNodeList);
             // 刷新还未构建到树中的节点，减少循环次数
-            noBulidTreeNodeList = refreshNoBulidNodes(noBulidTreeNodeList);
+            noBuildTreeNodeList = refreshNoBuildNodes(noBuildTreeNodeList);
         }
         final long endTime = System.currentTimeMillis();
         // 校验构建是否正确
-        if (noBulidTreeNodeList.size() <= 0) {
+        if (noBuildTreeNodeList.size() <= 0) {
             log.debug("树构建成功！耗时：" + (endTime - startTime) + "ms");
         } else {
             log.debug("树构建失败！耗时：" + (endTime - startTime) + "ms");
@@ -52,35 +52,35 @@ public class BuildTreeUtils {
     /**
      * 刷新还未构建到树中的节点<br/>
      *
-     * @param noBulidTreeNodeList 还未构建到树中的节点集合
+     * @param noBuildTreeNodeList 还未构建到树中的节点集合
      * @return 刷新后的还未构建到树中的节点集合
      */
-    private static List<ITreeNode> refreshNoBulidNodes(List<ITreeNode> noBulidTreeNodeList) {
-        List<ITreeNode> newNoBulidTreeNodeList = new ArrayList<>();
-        for (ITreeNode node : noBulidTreeNodeList) {
-            if (!node.isBulid()) {
-                newNoBulidTreeNodeList.add(node);
+    private static List<ITreeNode> refreshNoBuildNodes(List<ITreeNode> noBuildTreeNodeList) {
+        List<ITreeNode> newNoBuildTreeNodeList = new ArrayList<>();
+        for (ITreeNode node : noBuildTreeNodeList) {
+            if (!node.isBuild()) {
+                newNoBuildTreeNodeList.add(node);
             }
         }
-        return newNoBulidTreeNodeList;
+        return newNoBuildTreeNodeList;
     }
 
     /**
      * 递归生成树<br/>
      *
      * @param parentNode          父节点
-     * @param noBulidTreeNodeList 所有未被添加到父节点下的节点
+     * @param noBuildTreeNodeList 所有未被添加到父节点下的节点
      */
-    private static void buildTree(ITreeNode parentNode, List<ITreeNode> noBulidTreeNodeList) {
-        for (ITreeNode node : noBulidTreeNodeList) {
-            if (!node.isBulid() && Objects.equals(node.getParentId(), parentNode.getId())) {
+    private static void buildTree(ITreeNode parentNode, List<ITreeNode> noBuildTreeNodeList) {
+        for (ITreeNode node : noBuildTreeNodeList) {
+            if (!node.isBuild() && Objects.equals(node.getParentId(), parentNode.getId())) {
                 // 设置已经被添加到父节点下了
-                node.setBulid(true);
+                node.setBuild(true);
                 parentNode.addChildren(node);
 
                 // 递归生成树
-                buildTree(node, noBulidTreeNodeList);
-                // buildTree(node, refreshNoBulidNodes(noBulidTreeNodeList));
+                buildTree(node, noBuildTreeNodeList);
+                // buildTree(node, refreshNoBuildNodes(noBuildTreeNodeList));
             }
         }
     }
@@ -95,7 +95,7 @@ public class BuildTreeUtils {
      * @param nodes 所有要构建树的节点
      * @return 所有可以构建树的节点，即节点数据验证通过的节点
      */
-    private static List<ITreeNode> getCanBulidTreeNodes(Collection<ITreeNode> nodes) {
+    private static List<ITreeNode> getCanBuildTreeNodes(Collection<ITreeNode> nodes) {
         List<ITreeNode> treeNodeList = new ArrayList<>();
         // 初始化需要构建树的节点
         for (ITreeNode node : nodes) {
@@ -109,11 +109,11 @@ public class BuildTreeUtils {
     /**
      * 清除节点的构建状态，以用于重新构建树<br/>
      *
-     * @param noBulidTreeNodeList 所有要构建树的节点
+     * @param noBuildTreeNodeList 所有要构建树的节点
      */
-    private static void clearBulid(List<ITreeNode> noBulidTreeNodeList) {
-        for (ITreeNode node : noBulidTreeNodeList) {
-            node.setBulid(false);
+    private static void clearBuild(List<ITreeNode> noBuildTreeNodeList) {
+        for (ITreeNode node : noBuildTreeNodeList) {
+            node.setBuild(false);
         }
     }
 
@@ -123,28 +123,28 @@ public class BuildTreeUtils {
      * 2.节点的父节点ID等于-1<br/>
      * 3.在节点集合中找不到某个节点的父节点，那么这个节点就是根节点<br/>
      *
-     * @param noBulidTreeNodeList 所有要构建树的节点
+     * @param noBuildTreeNodeList 所有要构建树的节点
      * @return 所有根节点
      */
-    private static List<ITreeNode> findRootNode(List<ITreeNode> noBulidTreeNodeList) {
+    private static List<ITreeNode> findRootNode(List<ITreeNode> noBuildTreeNodeList) {
         // 所有根节点
         List<ITreeNode> rootNodeList = new ArrayList<>();
-        for (ITreeNode node : noBulidTreeNodeList) {
+        for (ITreeNode node : noBuildTreeNodeList) {
             // 节点全路径等于节点ID
             if (node.getId().toString().equals(node.getFullPath())) {
                 rootNodeList.add(node);
-                node.setBulid(true);
+                node.setBuild(true);
                 continue;
             }
             // 节点的父节点ID等于-1
             if (node.getParentId() == -1L) {
                 rootNodeList.add(node);
-                node.setBulid(true);
+                node.setBuild(true);
                 continue;
             }
             // 在节点集合中找不到某个节点的父节点，那么这个节点就是根节点
             boolean flag = true;// 当前节点(node)是否是根节点
-            for (ITreeNode n : noBulidTreeNodeList) {
+            for (ITreeNode n : noBuildTreeNodeList) {
                 if (!node.equals(n) && Objects.equals(node.getParentId(), n.getId())) {
                     flag = false;// 当前节点不是根节点
                     break;
@@ -152,7 +152,7 @@ public class BuildTreeUtils {
             }
             if (flag) {
                 rootNodeList.add(node);
-                node.setBulid(true);
+                node.setBuild(true);
             }
         }
         return rootNodeList;
