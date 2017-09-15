@@ -56,6 +56,14 @@
                 <artifactId>clever-common-utils</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!--spring-cloud-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Dalston.SR3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!--swagger2-->
             <dependency>
                 <groupId>io.springfox</groupId>

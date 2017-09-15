@@ -20,6 +20,15 @@
             <groupId>org.clever</groupId>
             <artifactId>clever-common-utils</artifactId>
         </dependency>
+        <!--spring-cloud-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
         <!--swagger2-->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -30,8 +39,8 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.github.xiaoymin</groupId>-->
-            <!--<artifactId>swagger-bootstrap-ui</artifactId>-->
+        <!--<groupId>com.github.xiaoymin</groupId>-->
+        <!--<artifactId>swagger-bootstrap-ui</artifactId>-->
         <!--</dependency>-->
         <!--数据库-->
         <dependency>
