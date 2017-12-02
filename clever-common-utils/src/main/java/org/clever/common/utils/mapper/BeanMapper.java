@@ -23,15 +23,16 @@ public class BeanMapper {
     private static final DozerBeanMapper DOZER_BEAN_MAPPER;
 
     static {
-        DozerBeanMapper dozerBeanMapper = SpringContextHolder.getBean(DozerBeanMapper.class);
-        if (dozerBeanMapper == null) {
-            RuntimeException runtimeException = new RuntimeException("### DozerBeanMapper注入失败, 请配置spring-context-dozer.xml文件");
-            log.error(runtimeException.getMessage(), runtimeException);
-            DOZER_BEAN_MAPPER = null;
-        } else {
-            DOZER_BEAN_MAPPER = dozerBeanMapper;
-            log.info("### DozerBeanMapper注入成功");
-        }
+        DOZER_BEAN_MAPPER = new DozerBeanMapper();
+//        DozerBeanMapper dozerBeanMapper = SpringContextHolder.getBean(DozerBeanMapper.class);
+//        if (dozerBeanMapper == null) {
+//            RuntimeException runtimeException = new RuntimeException("### DozerBeanMapper注入失败, 请配置spring-context-dozer.xml文件");
+//            log.error(runtimeException.getMessage(), runtimeException);
+//            DOZER_BEAN_MAPPER = null;
+//        } else {
+//            DOZER_BEAN_MAPPER = dozerBeanMapper;
+//            log.info("### DozerBeanMapper注入成功");
+//        }
     }
 
     private BeanMapper() {
