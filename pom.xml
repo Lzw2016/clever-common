@@ -23,6 +23,17 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>my-maven-snapshots</id>
+            <url>http://39.108.68.132:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>my-maven-releases</id>
+            <url>http://39.108.68.132:8081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>clever-common-utils</module>
         <module>clever-common-model</module>
