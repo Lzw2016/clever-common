@@ -8,7 +8,6 @@ import org.clever.common.model.ValidMessage;
 import org.clever.common.utils.exception.ExceptionUtils;
 import org.springframework.validation.FieldError;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
 @JsonInclude(Include.NON_NULL)
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AjaxMessage<T extends Serializable> extends BaseResponse {
+public class AjaxMessage<T> extends BaseResponse {
     private static final long serialVersionUID = 1L;
 
     /**
