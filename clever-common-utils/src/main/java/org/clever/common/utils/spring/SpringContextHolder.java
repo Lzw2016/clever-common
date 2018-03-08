@@ -1,8 +1,11 @@
 package org.clever.common.utils.spring;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -17,8 +20,9 @@ import javax.servlet.ServletContext;
  * 作者：LiZW <br/>
  * 创建时间：2016-5-9 14:25 <br/>
  */
+@Component
 @Slf4j
-public class SpringContextHolder {
+public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     /**
      * Spring ApplicationContext容器
@@ -30,20 +34,28 @@ public class SpringContextHolder {
      */
     private static ServletContext servletContext = null;
 
-    /**
-     * 实现ApplicationContextAware接口, 注入Context到静态变量中.
-     */
-    public static void setApplicationContext(ApplicationContext applicationContext) {
-        if (SpringContextHolder.applicationContext != null) {
-            log.info("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringContextHolder.applicationContext);
-        }
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        log.info("初始化ApplicationContext: {}", applicationContext);
         SpringContextHolder.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void destroy() {
+        applicationContext = null;
     }
 
     /**
      * 获取Spring容器applicationContext对象
      */
     public static ApplicationContext getApplicationContext() {
+        while (applicationContext == null) {
+            log.info("等待Spring Context初始化成功...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignore) {
+            }
+        }
         return applicationContext;
     }
 
@@ -53,7 +65,7 @@ public class SpringContextHolder {
     public static String getRootRealPath() {
         String rootRealPath = "";
         try {
-            rootRealPath = applicationContext.getResource("").getFile().getAbsolutePath();
+            rootRealPath = getApplicationContext().getResource("").getFile().getAbsolutePath();
         } catch (Throwable e) {
             log.warn("获取系统根目录失败", e);
         }
@@ -81,7 +93,7 @@ public class SpringContextHolder {
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         try {
-            return (T) applicationContext.getBean(name);
+            return (T) getApplicationContext().getBean(name);
         } catch (Throwable e) {
             log.error("获取Bean失败 name=" + name, e);
             return null;
@@ -95,7 +107,7 @@ public class SpringContextHolder {
      */
     public static <T> T getBean(Class<T> requiredType) {
         try {
-            return applicationContext.getBean(requiredType);
+            return getApplicationContext().getBean(requiredType);
         } catch (Throwable e) {
             log.error("获取Bean失败 class=" + requiredType, e);
             return null;
