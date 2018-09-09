@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.*;
  * 创建时间：2017-09-03 11:48 <br/>
  */
 @Configuration
-public class CustomWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     /**
      * 自定义静态资源访问映射
      */
