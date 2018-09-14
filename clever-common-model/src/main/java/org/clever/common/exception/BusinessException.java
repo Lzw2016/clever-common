@@ -1,4 +1,4 @@
-package org.clever.common.model.exception;
+package org.clever.common.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

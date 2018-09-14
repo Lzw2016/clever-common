@@ -120,6 +120,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     private static ServletContext getServletContext() {
         if (servletContext == null) {
             WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+            assert webApplicationContext != null;
             servletContext = webApplicationContext.getServletContext();
         }
         return servletContext;

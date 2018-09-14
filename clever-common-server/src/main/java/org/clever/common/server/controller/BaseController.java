@@ -16,7 +16,7 @@ public abstract class BaseController {
     protected final static String VIEW_PAGE_SUFFIX = ".html";
 
     /**
-     * 视图页面(JSP)的后缀
+     * 视图页面(Json)的后缀
      */
     protected final static String JSON_SUFFIX = ".json";
 }

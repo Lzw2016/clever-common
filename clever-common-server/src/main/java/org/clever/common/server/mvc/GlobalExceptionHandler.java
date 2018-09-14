@@ -2,7 +2,7 @@ package org.clever.common.server.mvc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.clever.common.model.ValidMessage;
-import org.clever.common.model.exception.BusinessException;
+import org.clever.common.exception.BusinessException;
 import org.clever.common.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
