@@ -12,20 +12,20 @@ public interface BaseEntity extends Serializable {
     /**
      * 表示显示的常值
      */
-    char SHOW = '1';
+    Integer SHOW = 1;
     /**
      * 表示隐藏的常值
      */
-    char HIDE = '0';
+    Integer HIDE = 0;
 
     /**
      * 是
      */
-    char YES = '1';
+    Integer YES = 1;
     /**
      * 否
      */
-    char NO = '0';
+    Integer NO = 0;
 
     /**
      * 删除标记名称
@@ -34,15 +34,15 @@ public interface BaseEntity extends Serializable {
     /**
      * 删除标记,1：正常
      */
-    char DEL_FLAG_NORMAL = '1';
+    Integer DEL_FLAG_NORMAL = 1;
     /**
      * 删除标记,2：删除
      */
-    char DEL_FLAG_DELETE = '2';
+    Integer DEL_FLAG_DELETE = 2;
     /**
      * 删除标记,3：审核
      */
-    char DEL_FLAG_AUDIT = '3';
+    Integer DEL_FLAG_AUDIT = 3;
 
     /**
      * 自身关联实体类的fullPath属性分隔标识
@@ -52,5 +52,5 @@ public interface BaseEntity extends Serializable {
     /**
      * 树结构对象 根节点父级编号
      */
-    long ROOT_PARENT_ID = -1;
+    Long ROOT_PARENT_ID = -1L;
 }
