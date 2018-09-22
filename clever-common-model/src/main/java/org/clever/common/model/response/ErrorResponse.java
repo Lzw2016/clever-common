@@ -3,6 +3,7 @@ package org.clever.common.model.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.clever.common.exception.BusinessException;
 import org.clever.common.model.ValidMessage;
 import org.springframework.validation.FieldError;
 
@@ -28,17 +29,17 @@ public class ErrorResponse extends BaseResponse {
     private Date timestamp;
 
     /**
-     * 响应状态码
-     */
-    private int status;
-
-    /**
-     * 错误消息
+     * 错误消息，用于前端显示
      */
     private String error;
 
     /**
-     * 异常类型
+     * 响应状态码(HTTP 状态码)
+     */
+    private int status;
+
+    /**
+     * 异常类型，异常的具体类型
      */
     private String exception;
 
@@ -48,7 +49,7 @@ public class ErrorResponse extends BaseResponse {
     private String message;
 
     /**
-     * 请求路径
+     * 请求路径，当前请求的路径
      */
     private String path;
 
@@ -56,6 +57,70 @@ public class ErrorResponse extends BaseResponse {
      * 表单数据验证的错误消息
      */
     private List<ValidMessage> validMessageList;
+
+    public ErrorResponse() {
+        this.timestamp = new Date();
+    }
+
+    /**
+     * @param error 错误消息，用于前端显示
+     */
+    public ErrorResponse(String error) {
+        this(error, null, 400, null);
+    }
+
+    /**
+     * @param error  错误消息，用于前端显示
+     * @param status 响应状态码
+     */
+    public ErrorResponse(String error, int status) {
+        this(error, null, status, null);
+    }
+
+    /**
+     * @param error     错误消息，用于前端显示
+     * @param exception 异常
+     */
+    public ErrorResponse(String error, Throwable exception) {
+        this(error, exception, (exception instanceof BusinessException) ? 400 : 500, null);
+    }
+
+    /**
+     * @param error     错误消息，用于前端显示
+     * @param exception 异常
+     * @param path      请求路径
+     */
+    public ErrorResponse(String error, Throwable exception, String path) {
+        this(error, exception, (exception instanceof BusinessException) ? 400 : 500, path);
+    }
+
+    /**
+     * @param error     错误消息，用于前端显示
+     * @param exception 异常
+     * @param status    响应状态码(HTTP 状态码)
+     */
+    public ErrorResponse(String error, Throwable exception, int status) {
+        this(error, exception, status, null);
+    }
+
+    /**
+     * @param error     错误消息，用于前端显示
+     * @param status    响应状态码(HTTP 状态码)
+     * @param exception 异常
+     * @param path      请求路径
+     */
+    public ErrorResponse(String error, Throwable exception, int status, String path) {
+        this.timestamp = new Date();
+        this.error = error;
+        this.status = status;
+        if (exception != null) {
+            this.exception = exception.getClass().getName();
+            this.message = exception.getMessage();
+        } else {
+            this.message = error;
+        }
+        this.path = path;
+    }
 
     /**
      * 添加请求参数校验错误
