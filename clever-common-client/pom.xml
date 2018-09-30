@@ -14,5 +14,17 @@
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.clever</groupId>
+            <artifactId>clever-common-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
     </dependencies>
 </project>

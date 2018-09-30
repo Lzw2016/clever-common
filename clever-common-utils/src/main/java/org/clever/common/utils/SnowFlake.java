@@ -11,6 +11,11 @@ package org.clever.common.utils;
 public class SnowFlake {
 
     /**
+     * SnowFlake 全局单例，“数据中心ID”和“机器号ID”都是0
+     */
+    public static final SnowFlake SNOW_FLAKE = new SnowFlake(0L, 0L);
+
+    /**
      * 起始的时间戳
      */
     private final static long START_STAMP = 1480166465631L;
