@@ -11,7 +11,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * TODO 测试修改
  * 作者： lzw<br/>
  * 创建时间：2018-09-30 14:17 <br/>
  */
@@ -20,9 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config {
 
     @Bean
-    public Docket createActuatorApi() {
+    public Docket createBootApi() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("SpringActuator")
+                .title("SpringBoot")
                 // .description("description")
                 // .termsOfServiceUrl("termsOfServiceUrl")
                 .version("")
@@ -34,9 +33,9 @@ public class Swagger2Config {
                 .build();
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
-                .groupName("SpringActuator")
+                .groupName("SpringBoot")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.springframework.boot.actuate"))
+                .apis(RequestHandlerSelectors.basePackage("org.springframework.boot"))
                 .paths(PathSelectors.any())
                 .build();
     }
