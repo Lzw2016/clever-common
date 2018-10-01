@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * 作者： lzw<br/>
  * 创建时间：2017-12-04 10:37 <br/>
  */
-@Configuration
+@Configuration("CleverCommonServerBeanConfiguration")
 @Slf4j
 public class DefaultBeanConfiguration {
 
