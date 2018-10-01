@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Slf4j
-public class BeanConfiguration {
+public class DefaultBeanConfiguration {
 
     @Autowired(required = false)
     private TtlScheduler ttlScheduler;
