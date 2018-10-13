@@ -24,4 +24,22 @@ public class IDCreateUtils {
     public static String uuid() {
         return UUID.randomUUID().toString();
     }
+
+    /**
+     * 以62进制（字母加数字）生成19位UUID，最短的UUID
+     */
+    public static String shortUuid() {
+        UUID uuid = UUID.randomUUID();
+        return digits(uuid.getMostSignificantBits() >> 32, 8) +
+                digits(uuid.getMostSignificantBits() >> 16, 4) +
+                digits(uuid.getMostSignificantBits(), 4) +
+                digits(uuid.getLeastSignificantBits() >> 48, 4) +
+                digits(uuid.getLeastSignificantBits(), 12);
+    }
+
+    private static String digits(long val, int digits) {
+        long hi = 1L << (digits * 4);
+        return CustomNumbers.toString(hi | (val & (hi - 1)), CustomNumbers.MAX_RADIX)
+                .substring(1);
+    }
 }
