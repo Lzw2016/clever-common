@@ -3,6 +3,8 @@ package org.clever.common.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Conversion;
 
+import java.math.BigDecimal;
+
 /**
  * 对象类型转换工具类，使用类型强制转换实现<br/>
  * 1.把一种类型转换成另一种类型<br/>
@@ -40,5 +42,21 @@ public class ConversionUtils extends Conversion {
             log.error(e.getMessage(), e);
             return defaultValue;
         }
+    }
+
+    /**
+     * 对象toString操作
+     */
+    public static String toString(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof Integer
+                || obj instanceof Long
+                || obj instanceof Float
+                || obj instanceof Double) {
+            return new BigDecimal(obj.toString()).toString();
+        }
+        return obj.toString();
     }
 }
