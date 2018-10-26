@@ -3,6 +3,8 @@ package org.clever.common.utils.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.clever.common.utils.ConversionUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
 
@@ -272,5 +274,85 @@ public class JsonWrapper {
         }
     }
 
+    /**
+     * 根据Json属性路径 获取对应值
+     *
+     * @param jsonPath Json属性路径，如: “hits.hits[0]._source.@timestamp”
+     */
+    public Object getJsonPathValue(String jsonPath) {
+        return getKeyPathValue(this.innerMap, jsonPath);
+    }
 
+    /**
+     * 根据Key路径 获取对应值
+     *
+     * @param map     Map对象
+     * @param keyPath Key路径
+     */
+    public static Object getKeyPathValue(Map map, String keyPath) {
+        final String[] paths = keyPath.split("\\.");
+        if (paths.length <= 0) {
+            throw new RuntimeException("key属性路径错误: [" + keyPath + "]");
+        }
+        Map jsonMap = map;
+        for (int i = 0; i < paths.length; i++) {
+            if (jsonMap == null) {
+                return null;
+            }
+            String path = paths[i];
+            // 当前路径值是否是数组 取出属性 path 和 method
+            Integer index = null;
+            if (path.matches(".+\\[\\d+]")) {
+                path = path.substring(0, path.length() - 1);
+                String key = path.substring(0, path.lastIndexOf('['));
+                String indexStr = path.substring(path.lastIndexOf('[') + 1);
+                path = key;
+                index = NumberUtils.toInt(indexStr);
+            }
+            // 最后一级
+            boolean isLastPath = false;
+            if ((i + 1) == paths.length) {
+                isLastPath = true;
+            }
+            if (StringUtils.isBlank(path)) {
+                if (isLastPath) {
+                    return null;
+                } else {
+                    continue;
+                }
+            }
+            if (!jsonMap.containsKey(path)) {
+                return null;
+            }
+            // 当前路径值是数组
+            if (index != null) {
+                List list = (List) jsonMap.get(path);
+                Object value = list.get(index);
+                if (isLastPath) {
+                    return value;
+                } else {
+                    jsonMap = (Map) value;
+                }
+            } else {
+                Object value = jsonMap.get(path);
+                if (isLastPath) {
+                    return value;
+                } else {
+                    jsonMap = (Map) value;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据Json属性路径 获取对应值
+     *
+     * @param jsonWrapper JsonWrapper对象
+     * @param jsonPath    Json属性路径，如: “hits.hits[0]._source.@timestamp”
+     */
+    @SuppressWarnings("unchecked")
+    public static Object getJsonPathValue(JsonWrapper jsonWrapper, String jsonPath) {
+        return getKeyPathValue(jsonWrapper.getInnerMap(), jsonPath);
+    }
 }
