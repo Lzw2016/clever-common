@@ -1,5 +1,7 @@
 package org.clever.common.utils.javamail;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,39 +28,58 @@ public class ApacheSendMailUtils {
     /**
      * 发送邮件默认的账户
      */
-    private static final String DEFAULT_ACCOUNT;
+    @Getter
+    private final String account;
 
     /**
      * 发送邮件默认账户的密码
      */
-    private static final String DEFAULT_ACCOUNT_PASSWORD;
+    @Getter
+    private final String accountPassword;
 
     /**
      * 发送邮件默认账户的邮箱服务器地址
      */
-    private static final String DEFAULT_ACCOUNT_HOST;
+    @Setter
+    @Getter
+    private String accountHost;
 
-    static {
-        // 测试使用
-        DEFAULT_ACCOUNT = "love520lzw1000000@163.com";
-        DEFAULT_ACCOUNT_PASSWORD = "li19930611";
-        DEFAULT_ACCOUNT_HOST = "smtp.163.com";
+    /**
+     * 发送人的名称
+     */
+    @Setter
+    @Getter
+    private String fromName;
 
-        // 生产环境，读取配置
-//        IConfig config = SpringContextHolder.getBean(SpringBeanNames.Config);
-//        assert config != null;
-//        DEFAULT_ACCOUNT = config.getConfig(BaseConfigNames.JAVA_MAIL_SENDER_USERNAME);
-//        DEFAULT_ACCOUNT_PASSWORD = config.getConfig(BaseConfigNames.JAVA_MAIL_SENDER_PASSWORD);
-//        String host = config.getConfig(BaseConfigNames.JAVA_MAIL_SENDER_HOST);
-//        // 根据邮箱帐号自动获取 Host 属性
-//        if (StringUtils.isBlank(host)) {
-//            host = EmailServerHostUtils.getEmailSmtpHost(DEFAULT_ACCOUNT);
-//            if (StringUtils.isBlank(host)) {
-//                RuntimeException exception = new RuntimeException("DEFAULT_ACCOUNT_HOST 属性获取失败");
-//                logger.error(exception.getMessage(), exception);
-//            }
-//        }
-//        DEFAULT_ACCOUNT_HOST = host;
+    /**
+     * 创建发送邮件工具(帐号需要开通smtp服务)
+     *
+     * @param account         邮箱帐号 - 需要开通smtp服务
+     * @param accountPassword 密码
+     * @param fromName        发送人的名称，可以为空
+     */
+    private ApacheSendMailUtils(String account, String accountPassword, String fromName) {
+        if (StringUtils.isBlank(account) || StringUtils.isBlank(accountPassword)) {
+            throw new IllegalArgumentException("邮箱帐号/密码参数不正确");
+        }
+        this.account = account;
+        this.accountPassword = accountPassword;
+        this.accountHost = EmailServerHostUtils.getEmailSmtpHost(account);
+        if (StringUtils.isBlank(fromName)) {
+            this.fromName = account;
+        } else {
+            this.fromName = fromName;
+        }
+    }
+
+    /**
+     * 创建发送邮件工具(帐号需要开通smtp服务)
+     *
+     * @param account         邮箱帐号 - 需要开通smtp服务
+     * @param accountPassword 密码
+     */
+    public ApacheSendMailUtils(String account, String accountPassword) {
+        this(account, accountPassword, null);
     }
 
     /**
@@ -78,24 +99,24 @@ public class ApacheSendMailUtils {
      * @return 返回传入的邮件信息对象
      */
     @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
-    private static Email emailValueBind(Email email,
-                                        String fromAccount,
-                                        String fromName,
-                                        String password,
-                                        String[] to,
-                                        String subject,
-                                        String text,
-                                        String[] cc,
-                                        String[] bcc,
-                                        String replyTo,
-                                        Date sentDate) {
+    private Email emailValueBind(Email email,
+                                 String fromAccount,
+                                 String fromName,
+                                 String password,
+                                 String[] to,
+                                 String subject,
+                                 String text,
+                                 String[] cc,
+                                 String[] bcc,
+                                 String replyTo,
+                                 Date sentDate) {
         try {
             // 设置邮件编码
             email.setCharset(defaultEncoding);
             // 设置发件人邮箱密码
             email.setAuthentication(fromAccount, password);
             // 设置发件人邮箱服务器地址
-            email.setHostName(DEFAULT_ACCOUNT_HOST);
+            email.setHostName(accountHost);
             // 设置发件人
             if (StringUtils.isBlank(fromName)) {
                 fromName = fromAccount;
@@ -126,7 +147,6 @@ public class ApacheSendMailUtils {
                 email.setSentDate(sentDate);
             }
         } catch (Throwable e) {
-            log.error("emailValueBind-为邮件信息赋值失败", e);
             throw ExceptionUtils.unchecked(e);
         }
         return email;
@@ -142,20 +162,17 @@ public class ApacheSendMailUtils {
      * @param bcc      设置密送人，可以为空
      * @param replyTo  设置邮件回复人，可以为空
      * @param sentDate 设置发送时间，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
+    public void sendSimpleEmail(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         SimpleEmail simpleEmail = new SimpleEmail();
-        emailValueBind(simpleEmail, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT_PASSWORD, to, subject, text, cc, bcc, replyTo, sentDate);
+        emailValueBind(simpleEmail, fromName, account, accountPassword, to, subject, text, cc, bcc, replyTo, sentDate);
         String result;
         try {
             result = simpleEmail.send();
         } catch (Throwable e) {
-            log.error("sendSimpleEmail-邮件发送失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
         log.debug("sendSimpleEmail-邮件发送成功，返回值：[{}]", result);
-        return true;
     }
 
     /**
@@ -164,10 +181,9 @@ public class ApacheSendMailUtils {
      * @param to      设置收件人，不能为空
      * @param subject 设置邮件主题，不能为空
      * @param text    设置邮件内容，不能为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String[] to, String subject, String text) {
-        return sendSimpleEmail(to, subject, text, null, null, null, null);
+    public void sendSimpleEmail(String[] to, String subject, String text) {
+        sendSimpleEmail(to, subject, text, null, null, null, null);
     }
 
     /**
@@ -176,22 +192,19 @@ public class ApacheSendMailUtils {
      * @param to      设置收件人，不能为空
      * @param subject 设置邮件主题，不能为空
      * @param text    设置邮件内容，不能为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String to, String subject, String text) {
+    public void sendSimpleEmail(String to, String subject, String text) {
         SimpleEmail simpleEmail = new SimpleEmail();
-        emailValueBind(simpleEmail, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT_PASSWORD, null, subject, text, null, null, null, null);
+        emailValueBind(simpleEmail, fromName, account, accountPassword, null, subject, text, null, null, null, null);
         String result;
         try {
             // 单独设置收件人
             simpleEmail.addTo(to);
             result = simpleEmail.send();
         } catch (Throwable e) {
-            log.error("sendSimpleEmail-邮件发送失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
         log.debug("sendSimpleEmail-邮件发送成功，返回值：[{}]", result);
-        return true;
     }
 
 
@@ -206,11 +219,10 @@ public class ApacheSendMailUtils {
      * @param bcc            设置密送人，可以为空
      * @param replyTo        设置邮件回复人，可以为空
      * @param sentDate       设置发送时间，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMultiPartEmail(String[] to, String subject, String text, List<EmailAttachment> attachmentList, String[] cc, String[] bcc, String replyTo, Date sentDate) {
+    public void sendMultiPartEmail(String[] to, String subject, String text, List<EmailAttachment> attachmentList, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         MultiPartEmail multiPartEmail = new MultiPartEmail();
-        emailValueBind(multiPartEmail, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT_PASSWORD, to, subject, text, cc, bcc, replyTo, sentDate);
+        emailValueBind(multiPartEmail, fromName, account, accountPassword, to, subject, text, cc, bcc, replyTo, sentDate);
         String result;
         try {
             // 增加附件
@@ -221,11 +233,9 @@ public class ApacheSendMailUtils {
             }
             result = multiPartEmail.send();
         } catch (Throwable e) {
-            log.error("sendMultiPartEmail-邮件发送失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
         log.debug("sendMultiPartEmail-邮件发送成功，返回值：[{}]", result);
-        return true;
     }
 
     /**
@@ -235,10 +245,9 @@ public class ApacheSendMailUtils {
      * @param subject        设置邮件主题，不能为空
      * @param text           设置邮件内容，不能为空
      * @param attachmentList 附件集合，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMultiPartEmail(String[] to, String subject, String text, List<EmailAttachment> attachmentList) {
-        return sendMultiPartEmail(to, subject, text, attachmentList, null, null, null, null);
+    public void sendMultiPartEmail(String[] to, String subject, String text, List<EmailAttachment> attachmentList) {
+        sendMultiPartEmail(to, subject, text, attachmentList, null, null, null, null);
     }
 
     /**
@@ -248,10 +257,9 @@ public class ApacheSendMailUtils {
      * @param subject     设置邮件主题，不能为空
      * @param text        设置邮件内容，不能为空
      * @param attachments 附件集合，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMultiPartEmail(String[] to, String subject, String text, EmailAttachment... attachments) {
-        return sendMultiPartEmail(to, subject, text, Arrays.asList(attachments), null, null, null, null);
+    public void sendMultiPartEmail(String[] to, String subject, String text, EmailAttachment... attachments) {
+        sendMultiPartEmail(to, subject, text, Arrays.asList(attachments), null, null, null, null);
     }
 
     /**
@@ -265,11 +273,10 @@ public class ApacheSendMailUtils {
      * @param bcc            设置密送人，可以为空
      * @param replyTo        设置邮件回复人，可以为空
      * @param sentDate       设置发送时间，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendHtmlEmail(String[] to, String subject, String htmlText, List<EmailAttachment> attachmentList, String[] cc, String[] bcc, String replyTo, Date sentDate) {
+    public void sendHtmlEmail(String[] to, String subject, String htmlText, List<EmailAttachment> attachmentList, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         HtmlEmail htmlEmail = new HtmlEmail();
-        emailValueBind(htmlEmail, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT, DEFAULT_ACCOUNT_PASSWORD, to, subject, null, cc, bcc, replyTo, sentDate);
+        emailValueBind(htmlEmail, fromName, account, accountPassword, to, subject, null, cc, bcc, replyTo, sentDate);
         String result;
         try {
             // 设置html内容
@@ -282,11 +289,9 @@ public class ApacheSendMailUtils {
             }
             result = htmlEmail.send();
         } catch (Throwable e) {
-            log.error("sendHtmlEmail-邮件发送失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
         log.debug("sendHtmlEmail-邮件发送成功，返回值：[{}]", result);
-        return true;
     }
 
     /**
@@ -296,10 +301,9 @@ public class ApacheSendMailUtils {
      * @param subject        设置邮件主题，不能为空
      * @param htmlText       设置邮件内容，不能为空
      * @param attachmentList 附件集合，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendHtmlEmail(String[] to, String subject, String htmlText, List<EmailAttachment> attachmentList) {
-        return sendHtmlEmail(to, subject, htmlText, attachmentList, null, null, null, null);
+    public void sendHtmlEmail(String[] to, String subject, String htmlText, List<EmailAttachment> attachmentList) {
+        sendHtmlEmail(to, subject, htmlText, attachmentList, null, null, null, null);
     }
 
 
@@ -310,9 +314,30 @@ public class ApacheSendMailUtils {
      * @param subject     设置邮件主题，不能为空
      * @param htmlText    设置邮件内容，不能为空
      * @param attachments 附件集合，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendHtmlEmail(String[] to, String subject, String htmlText, EmailAttachment... attachments) {
-        return sendHtmlEmail(to, subject, htmlText, Arrays.asList(attachments), null, null, null, null);
+    public void sendHtmlEmail(String[] to, String subject, String htmlText, EmailAttachment... attachments) {
+        sendHtmlEmail(to, subject, htmlText, Arrays.asList(attachments), null, null, null, null);
+    }
+
+    /**
+     * 发送HTML格式带附件邮件<br/>
+     *
+     * @param to       设置收件人，不能为空
+     * @param subject  设置邮件主题，不能为空
+     * @param htmlText 设置邮件内容，不能为空
+     */
+    public void sendHtmlEmail(String[] to, String subject, String htmlText) {
+        sendHtmlEmail(to, subject, htmlText, null, null, null, null, null);
+    }
+
+    /**
+     * 发送HTML格式带附件邮件<br/>
+     *
+     * @param to       设置收件人，不能为空
+     * @param subject  设置邮件主题，不能为空
+     * @param htmlText 设置邮件内容，不能为空
+     */
+    public void sendHtmlEmail(String to, String subject, String htmlText) {
+        sendHtmlEmail(new String[]{to}, subject, htmlText, null, null, null, null, null);
     }
 }

@@ -1,10 +1,11 @@
 package org.clever.common.utils.javamail;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
-import org.clever.common.utils.spring.SpringContextHolder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -29,66 +30,65 @@ public class SpringSendMailUtils {
     /**
      * Spring 发送邮件类
      */
-    private static final JavaMailSender JAVA_MAIL_SENDER;
+    @Getter
+    private final JavaMailSender javaMailSender;
 
     /**
      * Spring配置的邮件发送帐号
      */
-    private static final String FROM_EMAIL_ACCOUNT;
+    @Setter
+    @Getter
+    private String fromEmailAccount;
 
-//    // 测试使用代码
-//    static {
-//        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-//        javaMailSender.getJavaMailProperties().setProperty("mail.smtp.auth", "true");
-//        javaMailSender.getJavaMailProperties().setProperty("mail.smtp.timeout", "20000");
-//        javaMailSender.setHost("smtp.163.com");
-//        // javaMailSender.setPort(3306);
-//        javaMailSender.setDefaultEncoding("UtF-8");
-//        javaMailSender.setUsername("love520lzw1000000@163.com");
-//        javaMailSender.setPassword("li19930611");
-//
-//        JAVA_MAIL_SENDER = javaMailSender;
-//        FROM_EMAIL_ACCOUNT = javaMailSender.getUsername();
-//    }
-
-    // 生产环境使用
-    static {
-        JAVA_MAIL_SENDER = SpringContextHolder.getBean(JavaMailSender.class);
-        if (JAVA_MAIL_SENDER instanceof JavaMailSenderImpl) {
-            JavaMailSenderImpl javaMailSender = ((JavaMailSenderImpl) JAVA_MAIL_SENDER);
-            FROM_EMAIL_ACCOUNT = javaMailSender.getUsername();
-            // 根据邮箱帐号自动获取 Host 属性
-            if (StringUtils.isBlank(javaMailSender.getHost())) {
-                String host = EmailServerHostUtils.getEmailSmtpHost(FROM_EMAIL_ACCOUNT);
-                if (StringUtils.isNotBlank(host)) {
-                    javaMailSender.setHost(host);
-                } else {
-                    RuntimeException exception = new RuntimeException("JavaMailSenderImpl的Host属性获取失败");
-                    log.error(exception.getMessage(), exception);
-                }
+    /**
+     * 创建发送邮件工具(帐号需要开通smtp服务)
+     *
+     * @param javaMailSender   JavaMailSender对象
+     * @param fromEmailAccount Spring配置的邮件发送帐号
+     */
+    private SpringSendMailUtils(JavaMailSender javaMailSender, String fromEmailAccount) {
+        if (javaMailSender == null) {
+            throw new IllegalArgumentException("JavaMailSender参数不能为空");
+        }
+        this.javaMailSender = javaMailSender;
+        if (StringUtils.isBlank(fromEmailAccount)) {
+            if (javaMailSender instanceof JavaMailSenderImpl) {
+                this.fromEmailAccount = ((JavaMailSenderImpl) javaMailSender).getUsername();
             }
         } else {
-            FROM_EMAIL_ACCOUNT = "";
-            RuntimeException exception = new RuntimeException("Spring发送邮件Bean配置错误，请使用JavaMailSenderImpl实现类");
-            log.error(exception.getMessage(), exception);
+            this.fromEmailAccount = fromEmailAccount;
+        }
+        if (StringUtils.isBlank(this.fromEmailAccount)) {
+            throw new IllegalArgumentException("fromEmailAccount参数不能为空");
         }
     }
 
     /**
-     * 返回Spring发送邮件类<br/>
-     * <b>注意：不能修改此对象的属性</b>
+     * 创建发送邮件工具(帐号需要开通smtp服务)
      *
-     * @return 返回Spring发送邮件类
+     * @param javaMailSender JavaMailSender对象
      */
-    public static JavaMailSender getJavaMailSender() {
-        return JAVA_MAIL_SENDER;
+    public SpringSendMailUtils(JavaMailSender javaMailSender) {
+        this(javaMailSender, null);
     }
 
     /**
-     * @return 返回Spring配置的邮件发送帐号
+     * 创建发送邮件工具(帐号需要开通smtp服务)
+     *
+     * @param account         邮箱帐号 - 需要开通smtp服务
+     * @param accountPassword 密码
      */
-    public static String getFromEmailAccount() {
-        return FROM_EMAIL_ACCOUNT;
+    public SpringSendMailUtils(String account, String accountPassword) {
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.getJavaMailProperties().setProperty("mail.smtp.auth", "true");
+        javaMailSender.getJavaMailProperties().setProperty("mail.smtp.timeout", "20000");
+        javaMailSender.setDefaultEncoding("UtF-8");
+        javaMailSender.setHost(EmailServerHostUtils.getEmailSmtpHost(account));
+        // javaMailSender.setPort(3306);
+        javaMailSender.setUsername(account);
+        javaMailSender.setPassword(accountPassword);
+        this.javaMailSender = javaMailSender;
+        this.fromEmailAccount = javaMailSender.getUsername();
     }
 
     /**
@@ -103,10 +103,11 @@ public class SpringSendMailUtils {
      * @param sentDate 设置发送时间，可以为空
      * @return 返回一个新的 SimpleMailMessage 对象
      */
-    private static SimpleMailMessage newSimpleMailMessage(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
+    @SuppressWarnings("ConstantConditions")
+    private SimpleMailMessage newSimpleMailMessage(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         // 设置发件人
-        simpleMailMessage.setFrom(FROM_EMAIL_ACCOUNT);
+        simpleMailMessage.setFrom(fromEmailAccount);
         // 设置收件人
         simpleMailMessage.setTo(to);
         // 设置邮件主题
@@ -143,17 +144,14 @@ public class SpringSendMailUtils {
      * @param bcc      设置密送人，可以为空
      * @param replyTo  设置邮件回复人，可以为空
      * @param sentDate 设置发送时间，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
+    public void sendSimpleEmail(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         SimpleMailMessage simpleMailMessage = newSimpleMailMessage(to, subject, text, cc, bcc, replyTo, sentDate);
         try {
-            JAVA_MAIL_SENDER.send(simpleMailMessage);
+            javaMailSender.send(simpleMailMessage);
         } catch (Throwable e) {
-            log.error("sendSimpleEmail-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -162,17 +160,14 @@ public class SpringSendMailUtils {
      * @param to      设置收件人，不能为空
      * @param subject 设置邮件主题，不能为空
      * @param text    设置邮件内容，不能为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String[] to, String subject, String text) {
+    public void sendSimpleEmail(String[] to, String subject, String text) {
         SimpleMailMessage simpleMailMessage = newSimpleMailMessage(to, subject, text, null, null, null, null);
         try {
-            JAVA_MAIL_SENDER.send(simpleMailMessage);
+            javaMailSender.send(simpleMailMessage);
         } catch (Throwable e) {
-            log.error("sendSimpleEmail-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -181,18 +176,15 @@ public class SpringSendMailUtils {
      * @param to      设置收件人，不能为空
      * @param subject 设置邮件主题，不能为空
      * @param text    设置邮件内容，不能为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendSimpleEmail(String to, String subject, String text) {
+    public void sendSimpleEmail(String to, String subject, String text) {
         SimpleMailMessage simpleMailMessage = newSimpleMailMessage(null, subject, text, null, null, null, null);
         simpleMailMessage.setTo(to);
         try {
-            JAVA_MAIL_SENDER.send(simpleMailMessage);
+            javaMailSender.send(simpleMailMessage);
         } catch (Throwable e) {
-            log.error("sendSimpleEmail-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -211,21 +203,21 @@ public class SpringSendMailUtils {
      * @param sentDate      设置发送时间，可以为空
      * @return 返回一个新的 MimeMessage 对象
      */
-    private static MimeMessage newMimeMessage(String to,
-                                              String subject,
-                                              String text,
-                                              Map<String, DataSource> inlineMap,
-                                              Map<String, DataSource> attachmentMap,
-                                              String[] cc,
-                                              String[] bcc,
-                                              String replyTo,
-                                              Date sentDate) {
-        MimeMessage mimeMessage = JAVA_MAIL_SENDER.createMimeMessage();
+    private MimeMessage newMimeMessage(String to,
+                                       String subject,
+                                       String text,
+                                       Map<String, DataSource> inlineMap,
+                                       Map<String, DataSource> attachmentMap,
+                                       String[] cc,
+                                       String[] bcc,
+                                       String replyTo,
+                                       Date sentDate) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             //创建MimeMessageHelper对象，处理MimeMessage的辅助类
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             // 设置发件人
-            mimeMessageHelper.setFrom(FROM_EMAIL_ACCOUNT);
+            mimeMessageHelper.setFrom(fromEmailAccount);
             // 设置收件人
             mimeMessageHelper.setTo(to);
             // 设置邮件主题
@@ -265,7 +257,6 @@ public class SpringSendMailUtils {
                 }
             }
         } catch (MessagingException e) {
-            log.error("newMimeMessage-创建复杂的邮件信息失败", e);
             throw ExceptionUtils.unchecked(e);
         }
         return mimeMessage;
@@ -285,25 +276,22 @@ public class SpringSendMailUtils {
      * @param bcc           设置密送人，可以为空
      * @param replyTo       设置邮件回复人，可以为空
      * @param sentDate      设置发送时间，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMimeMessage(String to,
-                                          String subject,
-                                          String text,
-                                          Map<String, DataSource> inlineMap,
-                                          Map<String, DataSource> attachmentMap,
-                                          String[] cc,
-                                          String[] bcc,
-                                          String replyTo,
-                                          Date sentDate) {
+    public void sendMimeMessage(String to,
+                                String subject,
+                                String text,
+                                Map<String, DataSource> inlineMap,
+                                Map<String, DataSource> attachmentMap,
+                                String[] cc,
+                                String[] bcc,
+                                String replyTo,
+                                Date sentDate) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, inlineMap, attachmentMap, cc, bcc, replyTo, sentDate);
         try {
-            JAVA_MAIL_SENDER.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (Throwable e) {
-            log.error("sendMimeMessage-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -316,17 +304,14 @@ public class SpringSendMailUtils {
      * @param text          设置邮件内容(支持html)，不能为空
      * @param inlineMap     设置内联资源(邮件html中的图片)，格式，，可以为空
      * @param attachmentMap 设置附件，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMimeMessage(String to, String subject, String text, Map<String, DataSource> inlineMap, Map<String, DataSource> attachmentMap) {
+    public void sendMimeMessage(String to, String subject, String text, Map<String, DataSource> inlineMap, Map<String, DataSource> attachmentMap) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, inlineMap, attachmentMap, null, null, null, null);
         try {
-            JAVA_MAIL_SENDER.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (Throwable e) {
-            log.error("sendMimeMessage-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -338,17 +323,14 @@ public class SpringSendMailUtils {
      * @param subject       设置邮件主题，不能为空
      * @param text          设置邮件内容(支持html)，不能为空
      * @param attachmentMap 设置附件，可以为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMimeMessage(String to, String subject, String text, Map<String, DataSource> attachmentMap) {
+    public void sendMimeMessage(String to, String subject, String text, Map<String, DataSource> attachmentMap) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, null, attachmentMap, null, null, null, null);
         try {
-            JAVA_MAIL_SENDER.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (Throwable e) {
-            log.error("sendMimeMessage-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 
     /**
@@ -359,16 +341,13 @@ public class SpringSendMailUtils {
      * @param to      设置收件人，不能为空
      * @param subject 设置邮件主题，不能为空
      * @param text    设置邮件内容(支持html)，不能为空
-     * @return 发送成功返回true, 失败返回false
      */
-    public static boolean sendMimeMessage(String to, String subject, String text) {
+    public void sendMimeMessage(String to, String subject, String text) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, null, null, null, null, null, null);
         try {
-            JAVA_MAIL_SENDER.send(mimeMessage);
+            javaMailSender.send(mimeMessage);
         } catch (Throwable e) {
-            log.error("sendMimeMessage-发送邮件失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
-        return true;
     }
 }
