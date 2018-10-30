@@ -84,6 +84,7 @@ public class ReflectionsUtils {
      */
     private static Method getAccessibleMethod(final Object obj, final String methodName, final Class<?>... parameterTypes) {
         Class<?> searchType = obj.getClass();
+        Throwable throwable = null;
         while (searchType != Object.class) {
             try {
                 Method method = searchType.getDeclaredMethod(methodName, parameterTypes);
@@ -95,12 +96,13 @@ public class ReflectionsUtils {
                     continue;
                 }
             } catch (Throwable e) {
-                log.error("getAccessibleMethod-反射错误，找不到方法", e);
+                throwable = e;
                 // Method不在当前类定义,继续向上转型
             }
             // 获取父类类型，继续查找方法
             searchType = searchType.getSuperclass();
         }
+        log.error("getAccessibleMethod-反射错误，找不到方法", throwable);
         return null;
     }
 
@@ -139,6 +141,7 @@ public class ReflectionsUtils {
      */
     private static Field getAccessibleField(final Object obj, final String fieldName) {
         Class<?> superClass = obj.getClass();
+        Throwable throwable = null;
         while (superClass != Object.class) {
             try {
                 Field field = superClass.getDeclaredField(fieldName);
@@ -150,12 +153,13 @@ public class ReflectionsUtils {
                     continue;
                 }
             } catch (Throwable e) {
-                log.error("getAccessibleField-反射错误，找不到字段", e);
+                throwable = e;
                 // Field不在当前类定义,继续向上转型
             }
             // 获取父类类型，继续查找字段
             superClass = superClass.getSuperclass();
         }
+        log.error("getAccessibleField-反射错误，找不到字段", throwable);
         return null;
     }
 

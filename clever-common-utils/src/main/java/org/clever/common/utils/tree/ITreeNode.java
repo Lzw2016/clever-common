@@ -24,7 +24,7 @@ public interface ITreeNode extends Serializable {
     Long getParentId();
 
     /**
-     * 节点全路径
+     * 节点全路径，建议使用“-”分隔，不能为空(根节点全路径等于节点ID)
      */
     String getFullPath();
 
