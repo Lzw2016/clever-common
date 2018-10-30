@@ -203,7 +203,7 @@ public class SpringSendMailUtils {
      * @param sentDate      设置发送时间，可以为空
      * @return 返回一个新的 MimeMessage 对象
      */
-    private MimeMessage newMimeMessage(String to,
+    private MimeMessage newMimeMessage(String[] to,
                                        String subject,
                                        String text,
                                        Map<String, DataSource> inlineMap,
@@ -277,7 +277,7 @@ public class SpringSendMailUtils {
      * @param replyTo       设置邮件回复人，可以为空
      * @param sentDate      设置发送时间，可以为空
      */
-    public void sendMimeMessage(String to,
+    public void sendMimeMessage(String[] to,
                                 String subject,
                                 String text,
                                 Map<String, DataSource> inlineMap,
@@ -305,7 +305,7 @@ public class SpringSendMailUtils {
      * @param inlineMap     设置内联资源(邮件html中的图片)，格式，，可以为空
      * @param attachmentMap 设置附件，可以为空
      */
-    public void sendMimeMessage(String to, String subject, String text, Map<String, DataSource> inlineMap, Map<String, DataSource> attachmentMap) {
+    public void sendMimeMessage(String[] to, String subject, String text, Map<String, DataSource> inlineMap, Map<String, DataSource> attachmentMap) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, inlineMap, attachmentMap, null, null, null, null);
         try {
             javaMailSender.send(mimeMessage);
@@ -324,7 +324,7 @@ public class SpringSendMailUtils {
      * @param text          设置邮件内容(支持html)，不能为空
      * @param attachmentMap 设置附件，可以为空
      */
-    public void sendMimeMessage(String to, String subject, String text, Map<String, DataSource> attachmentMap) {
+    public void sendMimeMessage(String[] to, String subject, String text, Map<String, DataSource> attachmentMap) {
         MimeMessage mimeMessage = newMimeMessage(to, subject, text, null, attachmentMap, null, null, null, null);
         try {
             javaMailSender.send(mimeMessage);
@@ -343,7 +343,7 @@ public class SpringSendMailUtils {
      * @param text    设置邮件内容(支持html)，不能为空
      */
     public void sendMimeMessage(String to, String subject, String text) {
-        MimeMessage mimeMessage = newMimeMessage(to, subject, text, null, null, null, null, null, null);
+        MimeMessage mimeMessage = newMimeMessage(new String[]{to}, subject, text, null, null, null, null, null, null);
         try {
             javaMailSender.send(mimeMessage);
         } catch (Throwable e) {
