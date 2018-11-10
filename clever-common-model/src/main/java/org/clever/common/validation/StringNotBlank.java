@@ -10,7 +10,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 校验字符串不为空字符串，但可以为null<br />
+ * 校验字符串不为空字符串，但可以为null(不校验null数据)<br />
  * null -> true<br />
  * "" -> false<br />
  * "  " -> false<br />

@@ -23,6 +23,9 @@ public class StatusStringValidator implements ConstraintValidator<ValidStringSta
 
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
+        if (str == null) {
+            return true;
+        }
         return validStatus.contains(str);
     }
 }

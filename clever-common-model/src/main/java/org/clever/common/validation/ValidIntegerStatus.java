@@ -10,7 +10,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 状态校验 Integer 类型
+ * 状态校验 Integer 类型(不校验null数据)
  * <p>
  * 作者： lzw<br/>
  * 创建时间：2018-11-09 21:27 <br/>

@@ -25,8 +25,11 @@ public class StatusIntegerValidator implements ConstraintValidator<ValidIntegerS
     }
 
     @Override
-    public boolean isValid(Integer n, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Integer integer, ConstraintValidatorContext constraintValidatorContext) {
+        if (integer == null) {
+            return true;
+        }
         List<Integer> status = Arrays.asList(validStatus);
-        return status.contains(n);
+        return status.contains(integer);
     }
 }
