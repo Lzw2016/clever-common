@@ -43,6 +43,7 @@ public class DefaultBeanConfiguration {
      * 在metrics增加application纬度
      */
     @Bean
+    @ConditionalOnProperty(name = "spring.application.name")
     protected MeterRegistryCustomizer<MeterRegistry> metricsCommonTags(Environment environment) {
         String name = environment.getProperty("spring.application.name");
         final String application = StringUtils.hasText(name) ? name : "application";
