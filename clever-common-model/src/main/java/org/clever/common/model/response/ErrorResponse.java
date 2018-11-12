@@ -29,7 +29,7 @@ public class ErrorResponse extends BaseResponse {
     private Date timestamp;
 
     /**
-     * 错误消息，用于前端显示
+     * 异常消息(exception.message)
      */
     private String error;
 
@@ -44,7 +44,7 @@ public class ErrorResponse extends BaseResponse {
     private String exception;
 
     /**
-     * 异常消息(exception.message)
+     * 错误消息，用于前端显示
      */
     private String message;
 
@@ -63,61 +63,61 @@ public class ErrorResponse extends BaseResponse {
     }
 
     /**
-     * @param error 错误消息，用于前端显示
+     * @param message 错误消息，用于前端显示
      */
-    public ErrorResponse(String error) {
-        this(error, null, 400, null);
+    public ErrorResponse(String message) {
+        this(message, null, 400, null);
     }
 
     /**
-     * @param error  错误消息，用于前端显示
-     * @param status 响应状态码
+     * @param message 错误消息，用于前端显示
+     * @param status  响应状态码
      */
-    public ErrorResponse(String error, int status) {
-        this(error, null, status, null);
+    public ErrorResponse(String message, int status) {
+        this(message, null, status, null);
     }
 
     /**
-     * @param error     错误消息，用于前端显示
+     * @param message   错误消息，用于前端显示
      * @param exception 异常
      */
-    public ErrorResponse(String error, Throwable exception) {
-        this(error, exception, (exception instanceof BusinessException) ? 400 : 500, null);
+    public ErrorResponse(String message, Throwable exception) {
+        this(message, exception, (exception instanceof BusinessException) ? 400 : 500, null);
     }
 
     /**
-     * @param error     错误消息，用于前端显示
-     * @param exception 异常
-     * @param path      请求路径
-     */
-    public ErrorResponse(String error, Throwable exception, String path) {
-        this(error, exception, (exception instanceof BusinessException) ? 400 : 500, path);
-    }
-
-    /**
-     * @param error     错误消息，用于前端显示
-     * @param exception 异常
-     * @param status    响应状态码(HTTP 状态码)
-     */
-    public ErrorResponse(String error, Throwable exception, int status) {
-        this(error, exception, status, null);
-    }
-
-    /**
-     * @param error     错误消息，用于前端显示
-     * @param status    响应状态码(HTTP 状态码)
+     * @param message   错误消息，用于前端显示
      * @param exception 异常
      * @param path      请求路径
      */
-    public ErrorResponse(String error, Throwable exception, int status, String path) {
+    public ErrorResponse(String message, Throwable exception, String path) {
+        this(message, exception, (exception instanceof BusinessException) ? 400 : 500, path);
+    }
+
+    /**
+     * @param message   错误消息，用于前端显示
+     * @param exception 异常
+     * @param status    响应状态码(HTTP 状态码)
+     */
+    public ErrorResponse(String message, Throwable exception, int status) {
+        this(message, exception, status, null);
+    }
+
+    /**
+     * @param message   错误消息，用于前端显示
+     * @param status    响应状态码(HTTP 状态码)
+     * @param exception 异常
+     * @param path      请求路径
+     */
+    public ErrorResponse(String message, Throwable exception, int status, String path) {
         this.timestamp = new Date();
-        this.error = error;
+        this.message = message;
         this.status = status;
         if (exception != null) {
             this.exception = exception.getClass().getName();
-            this.message = exception.getMessage();
+            this.error = exception.getMessage();
         } else {
-            this.message = error;
+            this.error = message;
         }
         this.path = path;
     }
