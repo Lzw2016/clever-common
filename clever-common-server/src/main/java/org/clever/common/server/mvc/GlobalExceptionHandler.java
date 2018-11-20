@@ -132,7 +132,8 @@ public class GlobalExceptionHandler {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
-        errorResponse.setMessage("业务异常");
+        errorResponse.setError("业务异常");
+        errorResponse.setMessage(e.getMessage());
         return errorResponse;
     }
 
