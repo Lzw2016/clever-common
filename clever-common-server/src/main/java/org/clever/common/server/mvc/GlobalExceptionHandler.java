@@ -17,10 +17,13 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 全局异常处理
@@ -46,6 +49,20 @@ public class GlobalExceptionHandler {
         List<FieldError> validError = bindingResult.getFieldErrors();
         for (FieldError fieldError : validError) {
             validMessageList.add(new ValidMessage(fieldError));
+        }
+        return validMessageList;
+    }
+
+    private List<ValidMessage> getValidMessages(Set<? extends ConstraintViolation> constraintViolations) {
+        List<ValidMessage> validMessageList = new ArrayList<>();
+        for (ConstraintViolation violation : constraintViolations) {
+            ValidMessage validMessage = new ValidMessage();
+            validMessage.setEntityName(violation.getRootBeanClass().getSimpleName());
+            validMessage.setFiled(violation.getPropertyPath().toString());
+            validMessage.setValue(violation.getInvalidValue() == null ? "null" : violation.getInvalidValue().toString());
+            validMessage.setErrorMessage(violation.getMessage());
+            validMessage.setCode(violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName());
+            validMessageList.add(validMessage);
         }
         return validMessageList;
     }
@@ -76,6 +93,20 @@ public class GlobalExceptionHandler {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("上传文件大小超限");
+        return errorResponse;
+    }
+
+    /**
+     * 数据校验异常
+     */
+    @ResponseBody
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ConstraintViolationException e) {
+        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        ErrorResponse errorResponse = newErrorResponse(request, response, e);
+        errorResponse.setValidMessageList(getValidMessages(e.getConstraintViolations()));
+        errorResponse.setMessage("请求参数校验失败");
         return errorResponse;
     }
 
