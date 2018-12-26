@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,6 +65,19 @@ public class GlobalExceptionHandler {
     }
 
     // TODO 常见SQL异常处理友好提示
+
+    /**
+     * 文件上传大小超过配置的最大值
+     */
+    @ResponseBody
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, MaxUploadSizeExceededException e) {
+        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        ErrorResponse errorResponse = newErrorResponse(request, response, e);
+        errorResponse.setMessage("上传文件大小超限");
+        return errorResponse;
+    }
 
     /**
      * 数据校验异常
