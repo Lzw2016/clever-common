@@ -72,183 +72,6 @@ public class JsonWrapper {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<String, ?> getInnerMap() {
-        return (Map<String, ?>) innerMap;
-    }
-
-    /**
-     * 判断是否包含某个属性，属性名按层级传参
-     *
-     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
-     */
-    public boolean contains(String... args) {
-        assert (args.length >= 1);
-        List<String> lst = Arrays.asList(args);
-        Map cnode = this.innerMap;
-        for (int i = 0; i < lst.size() - 1; i++) {
-            String v = lst.get(i);
-            if (!cnode.containsKey(v) || !(cnode.get(v) instanceof Map)) {
-                return false;
-            }
-            cnode = (Map) cnode.get(v);
-        }
-        return (cnode.containsKey(lst.get(lst.size() - 1)));
-    }
-
-    /**
-     * 读取属性值，属性名按层级传参
-     *
-     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
-     */
-    public Object get(String... args) {
-        assert (args.length >= 1);
-        List<String> lst = Arrays.asList(args);
-        Map cnode = this.innerMap;
-        for (int i = 0; i < lst.size() - 1; i++) {
-            String v = lst.get(i);
-            if (!cnode.containsKey(v)) {
-                return null;
-            }
-            cnode = (Map) cnode.get(v);
-        }
-        if (cnode == null || !cnode.containsKey(lst.get(lst.size() - 1))) {
-            return null;
-        }
-        return cnode.get(lst.get(lst.size() - 1));
-    }
-
-    public String asStr(String... args) {
-        return ConversionUtils.toString(get(args));
-    }
-
-    public BigDecimal asBigDec(String... args) {
-        return ConversionUtils.converter(get(args));
-    }
-
-    public <T> T asObject(Class<T> clazz) {
-        try {
-            String jsonStr = mapper.writeValueAsString(getInnerMap());
-            return mapper.readValue(jsonStr, clazz);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T> T asObject(Class<T> clazz, String... args) {
-        try {
-            String jsonStr = mapper.writeValueAsString(get(args));
-            return mapper.readValue(jsonStr, clazz);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T> T asObject(TypeReference valueTypeRef, String... args) {
-        try {
-            String jsonStr = mapper.writeValueAsString(get(args));
-            return mapper.readValue(jsonStr, valueTypeRef);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public int asInt(String... args) {
-        return ConversionUtils.converter(get(args));
-    }
-
-    public long asLong(String... args) {
-        return ConversionUtils.converter(get(args));
-    }
-
-    public void remove(String key) {
-        innerMap.remove(key);
-    }
-
-    public boolean asBoolean(String... args) {
-        return ConversionUtils.converter(get(args));
-    }
-
-    @SuppressWarnings("unchecked")
-    public Collection<String> keys() {
-        return innerMap.keySet();
-    }
-
-    public int size() {
-        return innerMap.size();
-    }
-
-    @SuppressWarnings("unchecked")
-    public JsonWrapper asDic(String... args) {
-        assert (args.length >= 1);
-        List<String> lst = Arrays.asList(args);
-        Map jb;
-        if (lst.size() >= 2) {
-            jb = buildPath(lst.subList(0, lst.size() - 1));
-        } else {
-            jb = innerMap;
-        }
-        Object v = lst.get(lst.size() - 1);
-        Map lr;
-        if (!jb.containsKey(v)) {
-            lr = new LinkedHashMap<String, Object>();
-            jb.put(v, lr);
-        } else {
-            lr = (Map) jb.get(v);
-        }
-        return new JsonWrapper(lr);
-    }
-
-    @SuppressWarnings("unchecked")
-    public JsonArrayWrapper asList(String... args) {
-        assert (args.length >= 1);
-        List<String> lst = Arrays.asList(args);
-        Map jb;
-        if (lst.size() >= 2) {
-            jb = buildPath(lst.subList(0, lst.size() - 1));
-        } else {
-            jb = innerMap;
-        }
-        Object v = lst.get(lst.size() - 1);
-        List lr;
-        if (!jb.containsKey(v)) {
-            lr = new ArrayList();
-            jb.put(v, lr);
-        } else {
-            lr = (List) jb.get(v);
-        }
-        return new JsonArrayWrapper(lr);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Map buildPath(List<?> lst) {
-        Map cnode = this.innerMap;
-        for (Object obj : lst) {
-            assert ((obj instanceof String) && obj.toString().length() > 0);
-            String v = (String) obj;
-            if (!cnode.containsKey(v)) {
-                cnode.put(v, new LinkedHashMap<String, Object>());
-            }
-            cnode = (Map) cnode.get(v);
-        }
-        return cnode;
-    }
-
-    @SuppressWarnings("unchecked")
-    public JsonWrapper set(Object... args) {
-        assert (args.length >= 2);
-        List<Object> lst = Arrays.asList(args);
-        Map jb = buildPath(lst.subList(0, lst.size() - 2));
-        Object v = lst.get(lst.size() - 1);
-        jb.put(lst.get(lst.size() - 2).toString(), v);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return toJsonPretty(innerMap);
-    }
-
     /**
      * 将对象序列化成json
      */
@@ -275,19 +98,10 @@ public class JsonWrapper {
     }
 
     /**
-     * 根据Json属性路径 获取对应值
-     *
-     * @param jsonPath Json属性路径，如: “hits.hits[0]._source.@timestamp”
-     */
-    public Object getJsonPathValue(String jsonPath) {
-        return getKeyPathValue(this.innerMap, jsonPath);
-    }
-
-    /**
      * 根据Key路径 获取对应值
      *
      * @param map     Map对象
-     * @param keyPath Key路径
+     * @param keyPath Key路径，如: “hits.hits[0]._source.@timestamp”
      */
     public static Object getKeyPathValue(Map map, String keyPath) {
         final String[] paths = keyPath.split("\\.");
@@ -351,8 +165,243 @@ public class JsonWrapper {
      * @param jsonWrapper JsonWrapper对象
      * @param jsonPath    Json属性路径，如: “hits.hits[0]._source.@timestamp”
      */
-    @SuppressWarnings("unchecked")
     public static Object getJsonPathValue(JsonWrapper jsonWrapper, String jsonPath) {
         return getKeyPathValue(jsonWrapper.getInnerMap(), jsonPath);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, ?> getInnerMap() {
+        return (Map<String, ?>) innerMap;
+    }
+
+    /**
+     * 判断是否包含某个属性，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public boolean contains(String... args) {
+        assert (args.length >= 1);
+        List<String> lst = Arrays.asList(args);
+        Map cnode = this.innerMap;
+        for (int i = 0; i < lst.size() - 1; i++) {
+            String v = lst.get(i);
+            if (!cnode.containsKey(v) || !(cnode.get(v) instanceof Map)) {
+                return false;
+            }
+            cnode = (Map) cnode.get(v);
+        }
+        return (cnode.containsKey(lst.get(lst.size() - 1)));
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public Object get(String... args) {
+        assert (args.length >= 1);
+        List<String> lst = Arrays.asList(args);
+        Map cnode = this.innerMap;
+        for (int i = 0; i < lst.size() - 1; i++) {
+            String v = lst.get(i);
+            if (!cnode.containsKey(v)) {
+                return null;
+            }
+            cnode = (Map) cnode.get(v);
+        }
+        if (cnode == null || !cnode.containsKey(lst.get(lst.size() - 1))) {
+            return null;
+        }
+        return cnode.get(lst.get(lst.size() - 1));
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public String asStr(String... args) {
+        return ConversionUtils.toString(get(args));
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public BigDecimal asBigDec(String... args) {
+        return ConversionUtils.converter(get(args));
+    }
+
+    /**
+     * 把整个JsonWrapper转换数据类型
+     */
+    public <T> T asObject(Class<T> clazz) {
+        try {
+            String jsonStr = mapper.writeValueAsString(getInnerMap());
+            return mapper.readValue(jsonStr, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 读取属性值(属性名按层级传参)
+     *
+     * @param clazz 读取的数据类型
+     * @param args  属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public <T> T asObject(Class<T> clazz, String... args) {
+        try {
+            String jsonStr = mapper.writeValueAsString(get(args));
+            return mapper.readValue(jsonStr, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 读取属性值(属性名按层级传参)
+     *
+     * @param valueTypeRef 读取的数据类型
+     * @param args         属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public <T> T asObject(TypeReference valueTypeRef, String... args) {
+        try {
+            String jsonStr = mapper.writeValueAsString(get(args));
+            return mapper.readValue(jsonStr, valueTypeRef);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public int asInt(String... args) {
+        return ConversionUtils.converter(get(args));
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public long asLong(String... args) {
+        return ConversionUtils.converter(get(args));
+    }
+
+    /**
+     * 读取属性值，属性名按层级传参
+     *
+     * @param args 属性名，按层级依次传参。如：userInfo, contacts, qq, account
+     */
+    public boolean asBoolean(String... args) {
+        return ConversionUtils.converter(get(args));
+    }
+
+    /**
+     * 删除属性数据
+     * @param key 属性key
+     */
+    public void remove(String key) {
+        innerMap.remove(key);
+    }
+
+    /**
+     * 返回所有的属性key
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<String> keys() {
+        return innerMap.keySet();
+    }
+
+    /***
+     * 数据属性数量
+     */
+    public int size() {
+        return innerMap.size();
+    }
+
+    @SuppressWarnings({"unchecked", "Duplicates"})
+    public JsonWrapper asDic(String... args) {
+        assert (args.length >= 1);
+        List<String> lst = Arrays.asList(args);
+        Map jb;
+        if (lst.size() >= 2) {
+            jb = buildPath(lst.subList(0, lst.size() - 1));
+        } else {
+            jb = innerMap;
+        }
+        Object v = lst.get(lst.size() - 1);
+        Map lr;
+        if (!jb.containsKey(v)) {
+            lr = new LinkedHashMap<String, Object>();
+            jb.put(v, lr);
+        } else {
+            lr = (Map) jb.get(v);
+        }
+        return new JsonWrapper(lr);
+    }
+
+    @SuppressWarnings({"unchecked", "Duplicates"})
+    public JsonArrayWrapper asList(String... args) {
+        assert (args.length >= 1);
+        List<String> lst = Arrays.asList(args);
+        Map jb;
+        if (lst.size() >= 2) {
+            jb = buildPath(lst.subList(0, lst.size() - 1));
+        } else {
+            jb = innerMap;
+        }
+        Object v = lst.get(lst.size() - 1);
+        List lr;
+        if (!jb.containsKey(v)) {
+            lr = new ArrayList();
+            jb.put(v, lr);
+        } else {
+            lr = (List) jb.get(v);
+        }
+        return new JsonArrayWrapper(lr);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map buildPath(List<?> lst) {
+        Map cnode = this.innerMap;
+        for (Object obj : lst) {
+            assert ((obj instanceof String) && obj.toString().length() > 0);
+            String v = (String) obj;
+            if (!cnode.containsKey(v)) {
+                cnode.put(v, new LinkedHashMap<String, Object>());
+            }
+            cnode = (Map) cnode.get(v);
+        }
+        return cnode;
+    }
+
+    @SuppressWarnings("unchecked")
+    public JsonWrapper set(Object... args) {
+        assert (args.length >= 2);
+        List<Object> lst = Arrays.asList(args);
+        Map jb = buildPath(lst.subList(0, lst.size() - 2));
+        Object v = lst.get(lst.size() - 1);
+        jb.put(lst.get(lst.size() - 2).toString(), v);
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return toJsonPretty(innerMap);
+    }
+
+    /**
+     * 根据Json属性路径 获取对应值
+     *
+     * @param jsonPath Json属性路径，如: “hits.hits[0]._source.@timestamp”
+     */
+    public Object getJsonPathValue(String jsonPath) {
+        return getKeyPathValue(this.innerMap, jsonPath);
     }
 }
