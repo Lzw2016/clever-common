@@ -2,6 +2,7 @@ package org.clever.common.feign;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class GetParamRequestInterceptor implements RequestInterceptor {
         if (template.method().equals("GET") && template.body() != null) {
             try {
                 JsonNode jsonNode = objectMapper.readTree(template.body());
-                template.body(null);
+                template.body(Request.Body.empty());
 
                 Map<String, Collection<String>> queries = new HashMap<>();
                 buildQuery(jsonNode, "", queries);
