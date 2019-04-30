@@ -137,7 +137,6 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     }
 
     @Override
-    @Deprecated
     public void addChildren(ITreeNode node) {
         if (this.children == null) {
             this.children = new ArrayList<>();

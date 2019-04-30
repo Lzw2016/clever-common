@@ -21,17 +21,17 @@ public class BuildTreeUtils {
      * @param nodes 所有要构建树的节点
      * @return 构建的所有树的根节点
      */
-    public static List<ITreeNode> buildTree(Collection<ITreeNode> nodes) {
+    public static <T extends ITreeNode> List<T> buildTree(Collection<T> nodes) {
         log.debug("开始构建树结构...");
         final long startTime = System.currentTimeMillis();
         // 需要构建树的节点，还未构建到树中的节点
-        List<ITreeNode> allTreeNodeList = getCanBuildTreeNodes(nodes);
+        List<T> allTreeNodeList = getCanBuildTreeNodes(nodes);
         // 清除构建状态
         clearBuild(allTreeNodeList);
         // 查找所有根节点
-        List<ITreeNode> rootNodeList = findRootNode(allTreeNodeList);
+        List<T> rootNodeList = findRootNode(allTreeNodeList);
         // 刷新还未构建到树中的节点，减少循环次数
-        List<ITreeNode> noBuildTreeNodeList = refreshNoBuildNodes(allTreeNodeList);
+        List<T> noBuildTreeNodeList = refreshNoBuildNodes(allTreeNodeList);
         // 循环根节点，构建多棵树
         // 递归生成树
         buildTree(rootNodeList, noBuildTreeNodeList);
@@ -47,7 +47,7 @@ public class BuildTreeUtils {
         return rootNodeList;
     }
 
-    private static String nodesToString(Collection<ITreeNode> nodes) {
+    private static <T extends ITreeNode> String nodesToString(Collection<T> nodes) {
         StringBuilder sb = new StringBuilder();
         for (ITreeNode treeNode : nodes) {
             if (sb.length() > 0) {
@@ -64,9 +64,9 @@ public class BuildTreeUtils {
      * @param noBuildTreeNodeList 还未构建到树中的节点集合
      * @return 刷新后的还未构建到树中的节点集合
      */
-    private static List<ITreeNode> refreshNoBuildNodes(List<ITreeNode> noBuildTreeNodeList) {
-        List<ITreeNode> newNoBuildTreeNodeList = new ArrayList<>();
-        for (ITreeNode node : noBuildTreeNodeList) {
+    private static <T extends ITreeNode> List<T> refreshNoBuildNodes(List<T> noBuildTreeNodeList) {
+        List<T> newNoBuildTreeNodeList = new ArrayList<>();
+        for (T node : noBuildTreeNodeList) {
             if (!node.isBuild()) {
                 newNoBuildTreeNodeList.add(node);
             }
@@ -100,12 +100,12 @@ public class BuildTreeUtils {
      * @param parentNodeList      父节点集合
      * @param noBuildTreeNodeList 所有未被添加到父节点下的节点
      */
-    private static void buildTree(List<ITreeNode> parentNodeList, List<ITreeNode> noBuildTreeNodeList) {
+    private static <T extends ITreeNode> void buildTree(List<T> parentNodeList, List<T> noBuildTreeNodeList) {
         while (true) {
             // 下一次遍历的父节点
-            List<ITreeNode> nextParentNodeList = new ArrayList<>();
-            for (ITreeNode childNode : noBuildTreeNodeList) {
-                for (ITreeNode parentNode : parentNodeList) {
+            List<T> nextParentNodeList = new ArrayList<>();
+            for (T childNode : noBuildTreeNodeList) {
+                for (T parentNode : parentNodeList) {
                     if (!childNode.isBuild() && Objects.equals(childNode.getParentId(), parentNode.getId())) {
                         // 设置已经被添加到父节点下了
                         childNode.setBuild(true);
@@ -139,10 +139,10 @@ public class BuildTreeUtils {
      * @param nodes 所有要构建树的节点
      * @return 所有可以构建树的节点，即节点数据验证通过的节点
      */
-    private static List<ITreeNode> getCanBuildTreeNodes(Collection<ITreeNode> nodes) {
-        List<ITreeNode> treeNodeList = new ArrayList<>();
+    private static <T extends ITreeNode> List<T> getCanBuildTreeNodes(Collection<T> nodes) {
+        List<T> treeNodeList = new ArrayList<>();
         // 初始化需要构建树的节点
-        for (ITreeNode node : nodes) {
+        for (T node : nodes) {
             if (node != null && node.getId() != null && node.getParentId() != null) {
                 treeNodeList.add(node);
             }
@@ -155,8 +155,8 @@ public class BuildTreeUtils {
      *
      * @param noBuildTreeNodeList 所有要构建树的节点
      */
-    private static void clearBuild(List<ITreeNode> noBuildTreeNodeList) {
-        for (ITreeNode node : noBuildTreeNodeList) {
+    private static <T extends ITreeNode> void clearBuild(List<T> noBuildTreeNodeList) {
+        for (T node : noBuildTreeNodeList) {
             node.setBuild(false);
         }
     }
@@ -169,10 +169,10 @@ public class BuildTreeUtils {
      * @param noBuildTreeNodeList 所有要构建树的节点
      * @return 所有根节点
      */
-    private static List<ITreeNode> findRootNode(List<ITreeNode> noBuildTreeNodeList) {
+    private static <T extends ITreeNode> List<T> findRootNode(List<T> noBuildTreeNodeList) {
         // 所有根节点
-        List<ITreeNode> rootNodeList = new ArrayList<>();
-        for (ITreeNode node : noBuildTreeNodeList) {
+        List<T> rootNodeList = new ArrayList<>();
+        for (T node : noBuildTreeNodeList) {
             // 节点的父节点ID等于-1
             if (node.getParentId() == -1L) {
                 rootNodeList.add(node);
@@ -181,7 +181,7 @@ public class BuildTreeUtils {
             }
             // 在节点集合中找不到某个节点的父节点，那么这个节点就是根节点
             boolean flag = true;// 当前节点(node)是否是根节点
-            for (ITreeNode n : noBuildTreeNodeList) {
+            for (T n : noBuildTreeNodeList) {
                 if (!node.equals(n) && Objects.equals(node.getParentId(), n.getId())) {
                     flag = false;// 当前节点不是根节点
                     break;
