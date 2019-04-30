@@ -14,29 +14,25 @@ import java.util.List;
 public interface ITreeNode extends Serializable {
 
     /**
-     * 节点ID
+     * 节点ID(必须大于0)
      */
     Long getId();
 
     /**
-     * 父节点ID
+     * 父节点ID(根节点的ParentId等于-1)
      */
     Long getParentId();
 
     /**
-     * 节点全路径，建议使用“-”分隔，不能为空(根节点全路径等于节点ID)
-     */
-    String getFullPath();
-
-    /**
      * 判断当前节点是否被构建到树中了
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean isBuild();
 
     /**
      * 设置当前节点是否构建到树中
      */
-    void setBuild(boolean isBulid);
+    void setBuild(boolean isBuild);
 
     /**
      * 返回所有子节点，必须是List否则顺序会不一致

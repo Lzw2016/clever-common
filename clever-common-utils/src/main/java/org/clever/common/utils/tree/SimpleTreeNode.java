@@ -29,10 +29,6 @@ public class SimpleTreeNode implements ITreeNode {
      */
     private Long parentId;
     /**
-     * 树节点全路径
-     */
-    private String fullPath = "-";
-    /**
      * 是否被添加到父节点下
      */
     private boolean isBuild = false;
@@ -71,26 +67,23 @@ public class SimpleTreeNode implements ITreeNode {
      * @param id       节点标识
      * @param text     显示节点文本
      */
-    public SimpleTreeNode(Long parentId, Long id, String fullPath, String text) {
+    public SimpleTreeNode(Long parentId, Long id, String text) {
         this.parentId = parentId;
         this.id = id;
-        this.fullPath = fullPath;
         this.text = text;
     }
 
     /**
      * @param parentId 父级编号
      * @param id       节点标识
-     * @param fullPath 节点路径
      * @param text     显示节点文本
      * @param iconCls  节点图标
      * @param checked  是否勾选状态
      * @param state    节点状态 'open' 或 'closed'
      */
-    public SimpleTreeNode(Long parentId, Long id, String fullPath, String text, String iconCls, boolean checked, String state) {
+    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state) {
         this.parentId = parentId;
         this.id = id;
-        this.fullPath = fullPath;
         this.text = text;
         this.iconCls = iconCls;
         this.checked = checked;
@@ -100,7 +93,6 @@ public class SimpleTreeNode implements ITreeNode {
     /**
      * @param parentId   父级编号
      * @param id         节点标识
-     * @param fullPath   节点路径
      * @param text       显示节点文本
      * @param iconCls    节点图标
      * @param checked    是否勾选状态
@@ -108,10 +100,9 @@ public class SimpleTreeNode implements ITreeNode {
      * @param children   子节点
      * @param attributes 被添加到节点的自定义属性
      */
-    public SimpleTreeNode(Long parentId, Long id, String fullPath, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode> children, Serializable attributes) {
+    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode> children, Serializable attributes) {
         this.parentId = parentId;
         this.id = id;
-        this.fullPath = fullPath;
         this.text = text;
         this.iconCls = iconCls;
         this.checked = checked;
@@ -128,11 +119,6 @@ public class SimpleTreeNode implements ITreeNode {
     @Override
     public Long getParentId() {
         return parentId;
-    }
-
-    @Override
-    public String getFullPath() {
-        return fullPath;
     }
 
     @Override
