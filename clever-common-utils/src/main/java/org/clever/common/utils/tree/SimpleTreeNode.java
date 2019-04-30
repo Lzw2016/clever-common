@@ -18,7 +18,7 @@ import java.util.Set;
  */
 @JsonInclude(Include.NON_NULL)
 @Data
-public class SimpleTreeNode implements ITreeNode {
+public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     private static final long serialVersionUID = 1L;
     /**
      * 节点标识
@@ -56,7 +56,7 @@ public class SimpleTreeNode implements ITreeNode {
     /**
      * 绑定到节点的对象
      */
-    private Serializable attributes;
+    private T attributes;
 
     public SimpleTreeNode() {
 
@@ -100,7 +100,7 @@ public class SimpleTreeNode implements ITreeNode {
      * @param children   子节点
      * @param attributes 被添加到节点的自定义属性
      */
-    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode> children, Serializable attributes) {
+    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode> children, T attributes) {
         this.parentId = parentId;
         this.id = id;
         this.text = text;
