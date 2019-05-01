@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class GlobalJob {
 
-    private static boolean LOCK = false;
+    private static volatile boolean LOCK = false;
 
     /**
      * 全局执行的任务(JVM内同一时刻只有一个线程执行)
@@ -26,18 +26,23 @@ public abstract class GlobalJob {
 
     /**
      * 任务处理内部逻辑
+     *
+     * @return 执行成功返回true
      */
-    public void execute() {
+    public boolean execute() {
+        boolean success = false;
         if (LOCK) {
-            return;
+            return false;
         }
         try {
             LOCK = true;
             internalExecute();
+            success = true;
         } catch (Throwable e) {
             exceptionHandle(e);
         } finally {
             LOCK = false;
         }
+        return success;
     }
 }
