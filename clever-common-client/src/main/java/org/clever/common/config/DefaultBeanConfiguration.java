@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * 作者： lzw<br/>
  * 创建时间：2018-10-01 16:34 <br/>
  */
-@Configuration("CleverCommonClientBeanConfiguration")
+@Configuration("clever-common-client_DefaultBeanConfiguration")
 @Slf4j
 public class DefaultBeanConfiguration {
 
@@ -32,7 +32,7 @@ public class DefaultBeanConfiguration {
         return new SpringMvcContract() {
             @Override
             protected void processAnnotationOnMethod(MethodMetadata data, Annotation methodAnnotation, Method method) {
-                if (!NotDecodeSlash.class.isInstance(methodAnnotation) && !methodAnnotation.annotationType().isAnnotationPresent(NotDecodeSlash.class)) {
+                if (!(methodAnnotation instanceof NotDecodeSlash) && !methodAnnotation.annotationType().isAnnotationPresent(NotDecodeSlash.class)) {
                     data.template().decodeSlash(false);
                 }
                 super.processAnnotationOnMethod(data, methodAnnotation, method);

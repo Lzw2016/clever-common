@@ -5,24 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
 
 /**
- * 处理GET请求的Java POJO对象参数
+ * 处理GET请求的Java POJO对象参数 <br/>
+ * Feign @QueryMap support <br/>
+ * https://cloud.spring.io/spring-cloud-static/spring-cloud-openfeign/2.1.0.RELEASE/single/spring-cloud-openfeign.html#_feign_querymap_support
  * <p>
  * 作者： lzw<br/>
  * 创建时间：2018-09-25 20:20 <br/>
  */
-@Component
+//@Component
 public class GetParamRequestInterceptor implements RequestInterceptor {
 
-    @Autowired
     private ObjectMapper objectMapper;
+
+    public GetParamRequestInterceptor(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void apply(RequestTemplate template) {
