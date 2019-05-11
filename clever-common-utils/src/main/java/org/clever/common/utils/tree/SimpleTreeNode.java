@@ -2,6 +2,7 @@ package org.clever.common.utils.tree;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -56,6 +57,7 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     /**
      * 绑定到节点的对象
      */
+    @JsonUnwrapped
     private T attributes;
 
     public SimpleTreeNode() {
