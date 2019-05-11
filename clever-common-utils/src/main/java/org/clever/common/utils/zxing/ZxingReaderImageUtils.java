@@ -43,7 +43,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param image 条形码、二维码图片对象
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     private static Result readerImage(BinaryBitmap image) {
         Result result;
@@ -59,7 +59,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param bufferedImage 条形码、二维码图片对象
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     public static String readerImage(BufferedImage bufferedImage) {
         String contents = null;
@@ -80,7 +80,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param inputStream 条形码、二维码图片输入流
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     public static String readerImage(InputStream inputStream) {
         String contents;
@@ -97,7 +97,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param filePath 条形码、二维码图片路径
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     public static String readerImage(String filePath) {
         String contents;
@@ -114,7 +114,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param imageData 条形码、二维码图片数据
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     public static String readerImage(byte[] imageData) {
         String contents;
@@ -131,7 +131,7 @@ public class ZxingReaderImageUtils {
      * 读取条形码、二维码图片里的数据
      *
      * @param uriAddress 条形码、二维码图片URI地址
-     * @return 返回读取结果，失败返回null
+     * @return 返回读取结果
      */
     public static String readerImageByUri(String uriAddress) {
         String contents;

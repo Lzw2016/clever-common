@@ -116,7 +116,7 @@ public class ImageValidateKaptchaUtils {
      * 创建验证码图片，并返回图片数据<br/>
      *
      * @param code 要生成的验证码字符串
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage(String code) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -141,7 +141,7 @@ public class ImageValidateKaptchaUtils {
      * 创建验证码图片，并返回图片数据<br/>
      * 图片验证码随机生成，长度是4位<br/>
      *
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage() {
         String code = ValidateCodeSourceUtils.getRandString(LENGTH);

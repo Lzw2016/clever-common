@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 public class ValidateCode implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * 验证码创建时间
      */

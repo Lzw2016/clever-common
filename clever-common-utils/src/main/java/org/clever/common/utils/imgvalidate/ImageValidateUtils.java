@@ -157,7 +157,7 @@ public class ImageValidateUtils {
      * 验证码图片高度：26px，宽度根据验证码长度计算<br/>
      *
      * @param code 要生成的验证码字符串
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage(String code) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -191,7 +191,7 @@ public class ImageValidateUtils {
      * 验证码图片高度：26px，宽度根据验证码长度计算<br/>
      * 图片验证码随机生成，长度是4位<br/>
      *
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage() {
         String code = ValidateCodeSourceUtils.getRandString(LENGTH);

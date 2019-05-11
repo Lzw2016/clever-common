@@ -25,8 +25,6 @@ public class IPAddressUtils {
 
     /**
      * 获取本机所有的IPv4地址
-     *
-     * @return 失败返回null
      */
     private static Set<String> getAllIPv4() {
         Set<String> inet4Address = new HashSet<>();
@@ -51,8 +49,6 @@ public class IPAddressUtils {
 
     /**
      * 获取本机所有的IPv4地址,已经获取过就直接返回
-     *
-     * @return 失败返回null
      */
     public static Set<String> getInet4Address() {
         if (Inet4AddressSet == null) {
@@ -63,8 +59,6 @@ public class IPAddressUtils {
 
     /**
      * 重新获取本机所有的IPv4地址
-     *
-     * @return 失败返回null
      */
     public static Set<String> refreshInet4Address() {
         Inet4AddressSet = getAllIPv4();

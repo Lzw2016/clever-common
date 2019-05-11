@@ -108,7 +108,7 @@ public class XStreamMapper {
      * 对象序列化成XML字符串
      *
      * @param object 需要序列化xml的对象
-     * @return 返回xml，失败返回null
+     * @return 返回xml
      */
     public String toXml(Object object) {
         if (null == object) {

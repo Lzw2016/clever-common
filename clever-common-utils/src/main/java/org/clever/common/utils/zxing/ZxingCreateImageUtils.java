@@ -73,7 +73,7 @@ public class ZxingCreateImageUtils {
      * @param format   二维码、条形码的类型
      * @param width    图片宽
      * @param height   图片高
-     * @return 图片对象BitMatrix，失败返回null
+     * @return 图片对象BitMatrix
      */
     private static BitMatrix createImageBitMatrix(String contents, BarcodeFormat format, int width, int height) {
         BitMatrix matrix = null;
@@ -127,7 +127,7 @@ public class ZxingCreateImageUtils {
      * @param format   二维码、条形码的类型
      * @param width    图片宽
      * @param height   图片高
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage(String contents, BarcodeFormat format, int width, int height) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -153,7 +153,7 @@ public class ZxingCreateImageUtils {
      *
      * @param contents 二维码、条形码内容
      * @param format   二维码、条形码的类型
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage(String contents, BarcodeFormat format) {
         return createImage(contents, format, WIDTH, HEIGHT);

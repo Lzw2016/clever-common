@@ -43,7 +43,7 @@ public class BeanMapper {
      * @param source           数据源JavaBean
      * @param destinationClass 需要转换之后的JavaBean类型
      * @param <T>              需要转换之后的JavaBean类型
-     * @return 转换之后的对象，失败返回null
+     * @return 转换之后的对象
      */
     public static <T> T mapper(Object source, Class<T> destinationClass) {
         if (source == null) {
@@ -63,7 +63,7 @@ public class BeanMapper {
      * @param sourceList       数据源JavaBean集合
      * @param destinationClass 需要转换之后的JavaBean类型
      * @param <T>              需要转换之后的JavaBean类型
-     * @return 转换之后的对象集合，失败返回null
+     * @return 转换之后的对象集合
      */
     public static <T> List<T> mapperCollection(Collection sourceList, Class<T> destinationClass) {
         if (sourceList == null) {

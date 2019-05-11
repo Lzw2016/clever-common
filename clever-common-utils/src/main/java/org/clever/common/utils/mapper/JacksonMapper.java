@@ -105,7 +105,7 @@ public class JacksonMapper {
      * Object可以是POJO，也可以是Collection或数组。 如果对象为Null, 返回"null". 如果集合为空集合, 返回"[]".<br/>
      *
      * @param object 需要序列化的对象
-     * @return 序列化后的Json字符串，失败返回null
+     * @return 序列化后的Json字符串
      */
     public String toJson(Object object) {
         try {
@@ -129,7 +129,7 @@ public class JacksonMapper {
      *
      * @param jsonString Json字符串
      * @param clazz      反序列化的对象类型
-     * @return 反序列化的对象，失败返回null
+     * @return 反序列化的对象
      * @see #fromJson(String, JavaType)
      */
     public <T> T fromJson(String jsonString, Class<T> clazz) {
@@ -149,7 +149,7 @@ public class JacksonMapper {
      *
      * @param jsonString Json字符串
      * @param javaType   JavaType
-     * @return 反序列化的对象，失败返回null
+     * @return 反序列化的对象
      * @see #contructCollectionType(Class, Class)
      * @see #contructMapType(Class, Class, Class)
      */

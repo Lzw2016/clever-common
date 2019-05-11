@@ -20,7 +20,7 @@ public class JsonXmlConverter {
      * XML字符串转换成Json字符串<br/>
      *
      * @param xml XML字符串
-     * @return Json字符串，转换失败返回null
+     * @return Json字符串
      */
     public static String xmlToJson(String xml) {
         if (StringUtils.isBlank(xml)) {
@@ -38,7 +38,7 @@ public class JsonXmlConverter {
      * Json字符串转换成XML字符串<br/>
      *
      * @param json Json字符串
-     * @return XML字符串，转换失败返回null
+     * @return XML字符串
      */
     public static String jsonToXml(String json) {
         if (StringUtils.isBlank(json)) {

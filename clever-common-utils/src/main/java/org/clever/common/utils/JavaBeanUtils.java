@@ -28,7 +28,7 @@ public class JavaBeanUtils {
      * @param bean 对象
      * @param name 对象属性名，支持多场景
      * @param <T>  对象属性类型
-     * @return 对象属性值，失败返回null
+     * @return 对象属性值
      */
     @SuppressWarnings("unchecked")
     public static <T> T getProperty(Object bean, String name) {
@@ -68,7 +68,7 @@ public class JavaBeanUtils {
      *
      * @param bean 对象
      * @param name 对象属性名，支持多场景
-     * @return 返回对象属性类型，失败返回null
+     * @return 返回对象属性类型
      */
     public static Class getPropertyType(Object bean, String name) {
         try {
@@ -84,7 +84,7 @@ public class JavaBeanUtils {
      * @param clzz JavaBean类型
      * @param args 构造函数参数
      * @param <T>  JavaBean类型
-     * @return 成功返回Bean对象，失败返回null
+     * @return 成功返回Bean对象
      */
     public static <T> T newObject(Class<T> clzz, Object... args) {
         try {
@@ -101,7 +101,7 @@ public class JavaBeanUtils {
      * @param methodName 方法名
      * @param parameter  调用参数
      * @param <T>        返回值类型
-     * @return 成功返回调用结果，失败返回null
+     * @return 成功返回调用结果
      */
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Object bean, String methodName, Object... parameter) {
@@ -117,7 +117,7 @@ public class JavaBeanUtils {
      *
      * @param bean JavaBean对象
      * @param <T>  JavaBean类型
-     * @return 返回深clone之后的新的Java对象，失败返回null
+     * @return 返回深clone之后的新的Java对象
      */
     @SuppressWarnings("unchecked")
     public static <T> T clone(Object bean) {

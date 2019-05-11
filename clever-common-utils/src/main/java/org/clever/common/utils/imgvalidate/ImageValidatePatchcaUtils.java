@@ -162,7 +162,7 @@ public class ImageValidatePatchcaUtils {
      * 图片验证码随机生成，长度是4位<br/>
      *
      * @param outputStream 输出流
-     * @return 成功返回图片验证码，失败返回null
+     * @return 成功返回图片验证码
      */
     public static String createImageStream(OutputStream outputStream) {
         String captcha;
@@ -178,7 +178,7 @@ public class ImageValidatePatchcaUtils {
      * 创建验证码图片，并返回图片数据<br/>
      * 图片验证码随机生成，长度是4位<br/>
      *
-     * @return 成功返回图片数据，失败返回null
+     * @return 成功返回图片数据
      */
     public static byte[] createImage() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

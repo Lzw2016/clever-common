@@ -42,7 +42,7 @@ public class PinyinUtils {
      *
      * @param c      汉字字符
      * @param format 设置拼音的格式
-     * @return 如果参数c不是汉字或转换失败返回null，成功返回所有拼音
+     * @return 如果参数c不是汉字或转换，成功返回所有拼音
      */
     public static String[] toAllPinYin(char c, HanyuPinyinOutputFormat format) {
         String[] pinyin;
@@ -174,7 +174,7 @@ public class PinyinUtils {
      *
      * @param str       汉字字符串
      * @param separator 拼音之间的分隔符
-     * @return 转换后的字符串，转换失败返回null
+     * @return 转换后的字符串
      */
     public static String getStringPurePinYin(String str, String separator) {
         return getStringPurePinYin(str, separator, DEFAULT_FORMAT);
@@ -185,10 +185,10 @@ public class PinyinUtils {
      * 获取汉字的拼音首字母<br/>
      *
      * @param c 汉字字符
-     * @return 成功返回首字母，失败返回字符'0'
+     * @return 成功返回首字母
      */
     public static char toHeadPinYin(char c) {
-        Character headChar = '0';
+        char headChar = '0';
         try {
             String[] pinyin = PinyinHelper.toHanyuPinyinStringArray(c);
             if (pinyin != null && pinyin.length > 0) {

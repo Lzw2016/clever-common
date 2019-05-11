@@ -54,7 +54,7 @@ public class BeanMapConverter {
      * 把JavaBean对象转换成Map<String, Object>
      *
      * @param bean JavaBean对象
-     * @return 转换后的Map对象，失败返回null
+     * @return 转换后的Map对象
      */
     public static Map<String, Object> toMap(Object bean) {
         Map<String, Object> map = null;
