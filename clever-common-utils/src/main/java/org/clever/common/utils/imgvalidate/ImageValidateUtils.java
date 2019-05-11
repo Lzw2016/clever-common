@@ -2,6 +2,7 @@ package org.clever.common.utils.imgvalidate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.util.Random;
  * 作者：LiZW <br/>
  * 创建时间：2016-5-3 23:59 <br/>
  */
+@SuppressWarnings("Duplicates")
 @Slf4j
 public class ImageValidateUtils {
     /**
@@ -159,7 +161,7 @@ public class ImageValidateUtils {
      */
     public static byte[] createImage(String code) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] data = null;
+        byte[] data;
         try {
             int width = WIDTH / LENGTH * code.length();
             // 得到参数高，宽，都为数字时，则使用设置高宽，否则使用默认值
@@ -173,7 +175,7 @@ public class ImageValidateUtils {
             ImageIO.write(image, TYPE, out);
             data = out.toByteArray();
         } catch (Throwable e) {
-            log.error("生成图片验证码失败", e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 out.close();

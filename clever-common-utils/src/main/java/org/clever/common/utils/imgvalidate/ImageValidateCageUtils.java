@@ -5,6 +5,7 @@ import com.github.cage.IGenerator;
 import com.github.cage.ObjectRoulette;
 import com.github.cage.image.Painter;
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
@@ -102,7 +103,7 @@ public class ImageValidateCageUtils {
                 data = out.toByteArray();
             }
         } catch (Throwable e) {
-            log.error("Cage 生成图片验证码失败", e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 out.close();

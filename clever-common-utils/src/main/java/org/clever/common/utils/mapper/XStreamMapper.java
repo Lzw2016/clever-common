@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 /**
  * 实现XML与Java对象的相互转换<br/>
@@ -116,8 +117,7 @@ public class XStreamMapper {
         try {
             return xstream.toXML(object);
         } catch (Throwable e) {
-            log.error("XStream对象序列化XML失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -136,8 +136,7 @@ public class XStreamMapper {
         try {
             return (T) xstream.fromXML(xmlString);
         } catch (Throwable e) {
-            log.error("XStream序列化XML失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 

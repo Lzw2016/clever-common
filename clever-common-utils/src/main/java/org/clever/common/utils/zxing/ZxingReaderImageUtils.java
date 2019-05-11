@@ -5,6 +5,7 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.ImageReader;
 import com.google.zxing.common.HybridBinarizer;
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -45,11 +46,11 @@ public class ZxingReaderImageUtils {
      * @return 返回读取结果，失败返回null
      */
     private static Result readerImage(BinaryBitmap image) {
-        Result result = null;
+        Result result;
         try {
             result = MULTI_FORMAT_READER.decode(image, HINTS);
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return result;
     }
@@ -70,7 +71,7 @@ public class ZxingReaderImageUtils {
                 contents = result.getText();
             }
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return contents;
     }
@@ -82,12 +83,12 @@ public class ZxingReaderImageUtils {
      * @return 返回读取结果，失败返回null
      */
     public static String readerImage(InputStream inputStream) {
-        String contents = null;
+        String contents;
         try {
             BufferedImage bufferedImage = ImageIO.read(inputStream);
             contents = readerImage(bufferedImage);
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return contents;
     }
@@ -99,12 +100,12 @@ public class ZxingReaderImageUtils {
      * @return 返回读取结果，失败返回null
      */
     public static String readerImage(String filePath) {
-        String contents = null;
+        String contents;
         try {
             BufferedImage bufferedImage = ImageIO.read(new File(filePath));
             contents = readerImage(bufferedImage);
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return contents;
     }
@@ -116,12 +117,12 @@ public class ZxingReaderImageUtils {
      * @return 返回读取结果，失败返回null
      */
     public static String readerImage(byte[] imageData) {
-        String contents = null;
+        String contents;
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(imageData);
             contents = readerImage(inputStream);
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return contents;
     }
@@ -133,13 +134,13 @@ public class ZxingReaderImageUtils {
      * @return 返回读取结果，失败返回null
      */
     public static String readerImageByUri(String uriAddress) {
-        String contents = null;
+        String contents;
         try {
             URI uri = new URI(uriAddress);
             BufferedImage bufferedImage = ImageReader.readImage(uri);
             contents = readerImage(bufferedImage);
         } catch (Throwable e) {
-            log.error("Zxing 读取条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return contents;
     }

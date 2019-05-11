@@ -7,6 +7,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 /**
  * 汉字转换成拼音的工具类，使用pinyin4j实现<br/>
@@ -48,8 +49,7 @@ public class PinyinUtils {
         try {
             pinyin = PinyinHelper.toHanyuPinyinStringArray(c, format);
         } catch (Throwable e) {
-            log.error("汉字转拼音失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
         if (pinyin == null || pinyin.length <= 0) {
             return null;
@@ -195,7 +195,7 @@ public class PinyinUtils {
                 headChar = pinyin[0].charAt(0);
             }
         } catch (Throwable e) {
-            log.error("获取汉字拼音首字母失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return headChar;
     }

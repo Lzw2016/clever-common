@@ -4,6 +4,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.util.Properties;
  * 作者：LiZW <br/>
  * 创建时间：2016-5-5 18:45 <br/>
  */
+@SuppressWarnings("Duplicates")
 @Slf4j
 public class ImageValidateKaptchaUtils {
     /**
@@ -124,7 +126,7 @@ public class ImageValidateKaptchaUtils {
                 data = out.toByteArray();
             }
         } catch (Throwable e) {
-            log.error("Kaptcha 生成图片验证码失败", e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 out.close();

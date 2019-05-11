@@ -53,7 +53,6 @@ public class JsonTypeUtils {
                 //是array类型
                 return JSON_ARRAY;
             } else {
-                log.error("json 字符串的json类型未知", new Exception("json 字符串的json类型未知"));
                 return JSON_STR_ERROR;
             }
         } catch (Throwable e) {

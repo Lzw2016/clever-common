@@ -1,6 +1,7 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -37,14 +38,13 @@ public class IPAddressUtils {
                 Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
                 while (addresses.hasMoreElements()) {
                     ip = addresses.nextElement();
-                    if (ip != null && ip instanceof Inet4Address) {
+                    if (ip instanceof Inet4Address) {
                         inet4Address.add(ip.getHostAddress());
                     }
                 }
             }
         } catch (Throwable e) {
-            log.error("### 获取Inet4Address失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
         return inet4Address;
     }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -110,8 +111,7 @@ public class JacksonMapper {
         try {
             return mapper.writeValueAsString(object);
         } catch (IOException e) {
-            log.error("write to json string error:" + object, e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -139,8 +139,7 @@ public class JacksonMapper {
         try {
             return mapper.readValue(jsonString, clazz);
         } catch (IOException e) {
-            log.error("parse json string error:" + jsonString, e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -162,8 +161,7 @@ public class JacksonMapper {
         try {
             return (T) mapper.readValue(jsonString, javaType);
         } catch (IOException e) {
-            log.error("parse json string error:" + jsonString, e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 

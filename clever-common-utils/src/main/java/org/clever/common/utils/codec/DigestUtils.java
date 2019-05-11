@@ -44,7 +44,6 @@ public class DigestUtils {
                 result = messageDigest.digest(result);
             }
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
         return result;
@@ -70,7 +69,6 @@ public class DigestUtils {
             }
             result = messageDigest.digest();
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
         return result;

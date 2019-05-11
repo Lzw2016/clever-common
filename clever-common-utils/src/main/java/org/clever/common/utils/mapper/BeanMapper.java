@@ -52,7 +52,6 @@ public class BeanMapper {
         try {
             return DOZER_BEAN_MAPPER.map(source, destinationClass);
         } catch (Throwable e) {
-            log.error("DozerBeanMapper 转换JavaBean失败", e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -78,7 +77,6 @@ public class BeanMapper {
             }
             return destinationList;
         } catch (Throwable e) {
-            log.error("DozerBeanMapper 转换Collection<JavaBean>失败", e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -94,7 +92,6 @@ public class BeanMapper {
         try {
             DOZER_BEAN_MAPPER.map(source, destinationObject);
         } catch (Throwable e) {
-            log.error("DozerBeanMapper 转换对象拷贝属性值失败", e);
             throw ExceptionUtils.unchecked(e);
         }
     }

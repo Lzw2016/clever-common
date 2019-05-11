@@ -1,6 +1,7 @@
 package org.clever.common.utils.spring;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -95,8 +96,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         try {
             return (T) getApplicationContext().getBean(name);
         } catch (Throwable e) {
-            log.error("获取Bean失败 name=" + name, e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -109,8 +109,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         try {
             return getApplicationContext().getBean(requiredType);
         } catch (Throwable e) {
-            log.error("获取Bean失败 class=" + requiredType, e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 

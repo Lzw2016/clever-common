@@ -9,6 +9,7 @@ import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 各种格式的编码、解码工具类：<br/>
@@ -56,7 +57,6 @@ public class EncodeDecodeUtils {
         try {
             return Hex.decodeHex(input.toCharArray());
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -181,7 +181,6 @@ public class EncodeDecodeUtils {
         try {
             return URLEncoder.encode(url, DEFAULT_URL_ENCODING);
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -213,7 +212,7 @@ public class EncodeDecodeUtils {
             if (userAgent.toUpperCase().indexOf("MSIE") > 0 || userAgent.toUpperCase().indexOf("LIKE GECKO") > 0) {
                 fileName = URLEncoder.encode(fileName, "UTF-8");
             } else {
-                fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+                fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
             }
         } catch (Throwable e) {
             log.error("字符串编码转码失败", e);

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.clever.common.utils.mapper.BeanMapConverter;
 
 import java.util.Map;
@@ -34,8 +35,7 @@ public class JavaBeanUtils {
         try {
             return (T) PropertyUtils.getProperty(bean, name);
         } catch (Throwable e) {
-            log.error("获取Bean属性失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -74,8 +74,7 @@ public class JavaBeanUtils {
         try {
             return PropertyUtils.getPropertyType(bean, name);
         } catch (Throwable e) {
-            log.error("获取Bean属性类型失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -91,8 +90,7 @@ public class JavaBeanUtils {
         try {
             return ConstructorUtils.invokeConstructor(clzz, args);
         } catch (Throwable e) {
-            log.error("创建Bean实例失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -110,8 +108,7 @@ public class JavaBeanUtils {
         try {
             return (T) MethodUtils.invokeMethod(bean, methodName, parameter);
         } catch (Throwable e) {
-            log.error("动态调用Bean方法失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -128,8 +125,7 @@ public class JavaBeanUtils {
             String json = JSON.toJSONString(bean);
             return (T) JSON.toJavaObject(JSON.parseObject(json), bean.getClass());
         } catch (Throwable e) {
-            log.error("深克隆Bean实例失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 

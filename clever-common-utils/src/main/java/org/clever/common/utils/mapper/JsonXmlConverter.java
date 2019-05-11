@@ -3,6 +3,7 @@ package org.clever.common.utils.mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.JsonTypeUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
@@ -29,8 +30,7 @@ public class JsonXmlConverter {
             JSONObject jsonObject = XML.toJSONObject(xml);
             return jsonObject.toString();
         } catch (Throwable e) {
-            log.error("XML字符串转换成Json字符串失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 
@@ -56,8 +56,7 @@ public class JsonXmlConverter {
             }
             return XML.toString(object);
         } catch (Throwable e) {
-            log.error("Json字符串转换成XML字符串失败", e);
-            return null;
+            throw ExceptionUtils.unchecked(e);
         }
     }
 }

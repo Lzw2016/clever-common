@@ -1,6 +1,7 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -140,7 +141,7 @@ public class IdCardUtils {
                 iArr[i] = Integer.parseInt(String.valueOf(ca[i]));
             }
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+            throw ExceptionUtils.unchecked(e);
         }
         return iArr;
     }
@@ -321,17 +322,15 @@ public class IdCardUtils {
                 log.error(e.getMessage(), e);
             }
             Calendar cal = Calendar.getInstance();
-            if (birthDate != null)
+            if (birthDate != null) {
                 cal.setTime(birthDate);
-            if (!valiDate(cal.get(Calendar.YEAR),
-                    Integer.valueOf(birthCode.substring(2, 4)),
-                    Integer.valueOf(birthCode.substring(4, 6)))) {
-                return false;
             }
+            return valiDate(cal.get(Calendar.YEAR),
+                    Integer.valueOf(birthCode.substring(2, 4)),
+                    Integer.valueOf(birthCode.substring(4, 6)));
         } else {
             return false;
         }
-        return true;
     }
 
     /**

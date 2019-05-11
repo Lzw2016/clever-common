@@ -59,7 +59,6 @@ public class CryptoUtils {
             SecretKey secretKey = keyGenerator.generateKey();
             return secretKey.getEncoded();
         } catch (Throwable e) {
-            log.error("生成密钥 失败", e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -102,7 +101,6 @@ public class CryptoUtils {
             mac.init(secretKey);
             return mac.doFinal(input);
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -147,7 +145,6 @@ public class CryptoUtils {
             cipher.init(mode, secretKey);
             return cipher.doFinal(input);
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -191,7 +188,6 @@ public class CryptoUtils {
             cipher.init(mode, secretKey, ivSpec);
             return cipher.doFinal(input);
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
             throw ExceptionUtils.unchecked(e);
         }
     }

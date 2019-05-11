@@ -3,6 +3,7 @@ package org.clever.common.utils.mapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -60,7 +61,7 @@ public class BeanMapConverter {
         try {
             map = PropertyUtils.describe(bean);
         } catch (Throwable e) {
-            log.error("把JavaBean对象转换成Map出错", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return map;
     }

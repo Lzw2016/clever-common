@@ -7,6 +7,7 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -79,7 +80,7 @@ public class ZxingCreateImageUtils {
         try {
             matrix = MULTI_FORMAT_WRITER.encode(contents, format, width, height, HINTS);
         } catch (Throwable e) {
-            log.error("Zxing 生成条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return matrix;
     }
@@ -101,7 +102,7 @@ public class ZxingCreateImageUtils {
                 MatrixToImageWriter.writeToStream(matrix, TYPE, outputStream, MATRIX_TO_IMAGE_CONFIG);
                 return true;
             } catch (Throwable e) {
-                log.error("Zxing 二维码数据写入输出流失败", e);
+                throw ExceptionUtils.unchecked(e);
             }
         }
         return false;
@@ -136,7 +137,7 @@ public class ZxingCreateImageUtils {
                 data = out.toByteArray();
             }
         } catch (Throwable e) {
-            log.error("Zxing 生成条形码、二维码失败", e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 out.close();

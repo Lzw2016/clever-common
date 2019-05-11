@@ -1,6 +1,7 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -47,7 +48,7 @@ public class MacAddressUtils {
                 }
             }
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 if (bufferedReader != null) {
@@ -86,7 +87,7 @@ public class MacAddressUtils {
                 }
             }
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 if (bufferedReader != null) {
@@ -141,7 +142,7 @@ public class MacAddressUtils {
                 }
             }
         } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 if (bufferedReader != null) {

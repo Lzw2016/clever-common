@@ -1,6 +1,7 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,7 +131,7 @@ public class HttpServletRequestUtils {
         try {
             result = URLDecoder.decode(result, "UTF-8");
         } catch (Throwable e) {
-            log.error("### URL解码失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return result;
     }

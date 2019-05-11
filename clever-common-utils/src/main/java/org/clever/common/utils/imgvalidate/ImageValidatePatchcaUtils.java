@@ -16,6 +16,7 @@ import com.github.bingoohuang.patchca.word.RandomWordFactory;
 import com.github.bingoohuang.patchca.word.WordFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
@@ -164,11 +165,11 @@ public class ImageValidatePatchcaUtils {
      * @return 成功返回图片验证码，失败返回null
      */
     public static String createImageStream(OutputStream outputStream) {
-        String captcha = null;
+        String captcha;
         try {
             captcha = EncoderHelper.getChallangeAndWriteImage(CUSTOM_CONFIGURABLE_CAPTCHA_SERVICE, TYPE, outputStream);
         } catch (Throwable e) {
-            log.error("Patchca 图片验证码生成失败", e);
+            throw ExceptionUtils.unchecked(e);
         }
         return captcha;
     }
@@ -187,7 +188,7 @@ public class ImageValidatePatchcaUtils {
                 data = out.toByteArray();
             }
         } catch (Throwable e) {
-            log.error("Patchca 生成图片验证码失败", e);
+            throw ExceptionUtils.unchecked(e);
         } finally {
             try {
                 out.close();
