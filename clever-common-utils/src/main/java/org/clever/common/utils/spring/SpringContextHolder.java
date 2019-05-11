@@ -35,6 +35,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     private static ServletContext servletContext = null;
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         log.info("初始化ApplicationContext: {}", applicationContext);
