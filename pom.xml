@@ -186,6 +186,16 @@
                 <artifactId>UserAgentUtils</artifactId>
                 <version>1.21</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>1.1.2-beta5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.6</version>
+            </dependency>
             <!--数据库-->
             <dependency>
                 <groupId>javax.persistence</groupId>
