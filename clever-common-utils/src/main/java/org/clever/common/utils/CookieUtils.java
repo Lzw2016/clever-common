@@ -1,6 +1,8 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -32,21 +34,21 @@ public class CookieUtils {
      * @param name     名称
      * @param value    值
      * @param maxAge   Cookie生存时间，单位：秒。负数表示Cookie永不过期，0表示删除Cookie
-     * @return 成功返回true 失败返回false
      */
-    @SuppressWarnings("UnusedReturnValue")
-    public static boolean setCookie(HttpServletResponse response, String path, String name, String value, int maxAge) {
+    public static void setCookie(HttpServletResponse response, String path, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath(path);
-        cookie.setMaxAge(maxAge);
+        if (StringUtils.isNotBlank(path)) {
+            cookie.setPath(path);
+        }
+        if (maxAge >= 0) {
+            cookie.setMaxAge(maxAge);
+        }
         try {
             cookie.setValue(URLEncoder.encode(value, DEFAULT_COOKIE_Encode));
         } catch (Throwable e) {
-            log.error("设置Cookie失败", e);
-            return false;
+            throw ExceptionUtils.unchecked(e);
         }
         response.addCookie(cookie);
-        return true;
     }
 
     /**
@@ -56,7 +58,7 @@ public class CookieUtils {
      * @param value 值
      */
     public static void setCookie(HttpServletResponse response, String name, String value) {
-        setCookie(response, DEFAULT_COOKIE_PATH, name, value, 60 * 60 * 24);
+        setCookie(response, null, name, value, -1);
     }
 
     /**
