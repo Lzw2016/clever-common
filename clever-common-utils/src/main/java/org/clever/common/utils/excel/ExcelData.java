@@ -179,6 +179,7 @@ public class ExcelData<T> implements Serializable {
      *
      * @param repeat 增加的数量
      */
+    @SuppressWarnings("SameParameterValue")
     private synchronized void addRepeat(int repeat) {
         if (excelImportState == null) {
             excelImportState = new ExcelImportState();
