@@ -52,7 +52,17 @@ public class CookieUtils {
     }
 
     /**
-     * 设置Cookie，默认 生存时间：1天；路径："/"
+     * 设置Cookie
+     *
+     * @param name  名称
+     * @param value 值
+     */
+    public static void setRooPathCookie(HttpServletResponse response, String name, String value) {
+        setCookie(response, "/", name, value, -1);
+    }
+
+    /**
+     * 设置Cookie
      *
      * @param name  名称
      * @param value 值
