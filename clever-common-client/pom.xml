@@ -14,10 +14,13 @@
     </parent>
 
     <dependencies>
+        <!--spring-->
         <dependency>
-            <groupId>org.clever</groupId>
-            <artifactId>clever-common-model</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
+        <!--spring-cloud-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -25,6 +28,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+        <!--clever-common-->
+        <dependency>
+            <groupId>org.clever</groupId>
+            <artifactId>clever-common-model</artifactId>
         </dependency>
     </dependencies>
 </project>
