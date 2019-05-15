@@ -10,6 +10,7 @@ import com.alibaba.excel.metadata.Table;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.util.TypeUtil;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.codec.EncodeDecodeUtils;
@@ -20,15 +21,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 作者： lzw<br/>
  * 创建时间：2019-05-14 17:58 <br/>
  */
+@Slf4j
 public class ExcelDataWriter {
 
     /**
@@ -185,7 +184,9 @@ public class ExcelDataWriter {
         fileName = EncodeDecodeUtils.browserDownloadFileName(request.getHeader("User-Agent"), fileName);
         response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        try (OutputStream outputStream = response.getOutputStream()) {
+        try {
+            // 不需要close当前 response.getOutputStream, Servlet容器会自动关闭
+            OutputStream outputStream = response.getOutputStream();
             writeExcel(outputStream);
         } catch (IOException e) {
             throw new ExcelGenerateException("生成Excel文件失败", e);
@@ -210,6 +211,7 @@ public class ExcelDataWriter {
      * @param outputStream 目标数据流
      */
     public void writeExcel(OutputStream outputStream) {
+        long startTime = System.currentTimeMillis();
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
         int index = 0;
         for (List<?> sheetData : sheetDataList) {
@@ -261,6 +263,7 @@ public class ExcelDataWriter {
             writer.write0(sheetRows, sheet, table);
         }
         writer.finish();
+        log.info("[Excel数据导出] 耗时:{}秒", (System.currentTimeMillis() - startTime) / 1000.0);
     }
 
     /**
@@ -330,6 +333,7 @@ public class ExcelDataWriter {
                 columnPropertyList.add(excelHeadProperty);
             }
         }
+        Collections.sort(columnPropertyList);
         return columnPropertyList;
     }
 }

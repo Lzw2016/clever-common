@@ -308,7 +308,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-        log.info("[Excel数据导入]，文件：{}，耗时：{}秒，Excel数据行：{}", filename, (System.currentTimeMillis() - startTime) / 1000.0, context.getCurrentRowNum());
+        log.info("[Excel数据导入] 文件：{}，耗时：{}秒，Excel数据行：{}", filename, (System.currentTimeMillis() - startTime) / 1000.0, context.getCurrentRowNum());
         startTime = null;
         // log.info("CurrentRowNum: {}", context.getCurrentRowNum());
         if (excelData.getRows().size() <= 0) {
