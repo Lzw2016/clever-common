@@ -88,6 +88,18 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
     /**
      * 创建ExcelDataReader，并读取Excel
      *
+     * @param request        上传文件的请求
+     * @param clazz          Excel读取对应的实体类型
+     * @param limitRows      最大读取行数
+     * @param excelRowReader 自定义的行处理
+     */
+    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader) {
+        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader);
+    }
+
+    /**
+     * 创建ExcelDataReader，并读取Excel
+     *
      * @param request   上传文件的请求
      * @param clazz     Excel读取对应的实体类型
      * @param limitRows 最大读取行数
