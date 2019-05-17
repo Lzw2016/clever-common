@@ -68,6 +68,18 @@ public class ExcelData<T> implements Serializable {
     }
 
     /**
+     * 清除导入数据
+     */
+    public void clearData() {
+        if (rows == null) {
+            rows = new ArrayList<>();
+        }
+        rows.clear();
+        importData = null;
+        excelImportState = new ExcelImportState();
+    }
+
+    /**
      * Excel表格头所占行数(复杂嵌套表格头行数大于1)
      */
     public int getHeadRowNum() {

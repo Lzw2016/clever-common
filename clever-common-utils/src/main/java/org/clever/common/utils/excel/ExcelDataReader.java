@@ -253,9 +253,10 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param context context
      */
     @Override
-    public void invoke(List<String> object, AnalysisContext context) {
+    public synchronized void invoke(List<String> object, AnalysisContext context) {
         if (startTime == null) {
             startTime = System.currentTimeMillis();
+            excelData.clearData();
         }
         if (limitRows > 0 && (context.getCurrentRowNum() + 1 - headRowNum) > limitRows) {
             throw new ExcelAnalysisException(String.format("导入数据量超限，最多只能导入%s条数据，请分多批导入", limitRows));
