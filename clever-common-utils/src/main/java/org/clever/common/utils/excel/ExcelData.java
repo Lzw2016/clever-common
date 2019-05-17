@@ -70,7 +70,7 @@ public class ExcelData<T> implements Serializable {
     /**
      * 清除导入数据
      */
-    public void clearData() {
+    public synchronized void clearData() {
         if (rows == null) {
             rows = new ArrayList<>();
         }

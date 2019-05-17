@@ -1,8 +1,6 @@
 package org.clever.common.utils.excel;
 
 import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.annotation.ExcelColumnNum;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.exception.ExcelGenerateException;
 import com.alibaba.excel.metadata.ExcelColumnProperty;
 import com.alibaba.excel.metadata.Sheet;
@@ -21,7 +19,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 作者： lzw<br/>
@@ -220,6 +221,7 @@ public class ExcelDataWriter {
             index++;
             Sheet sheet = new Sheet(index);
             sheet.setSheetName(sheetName);
+            sheet.setAutoWidth(true);
             List<ExcelColumnProperty> columnPropertyList = initColumnProperty(clazz);
             if (columnPropertyList.size() <= 0) {
                 throw new ExcelGenerateException(String.format("Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", clazz));
@@ -311,27 +313,11 @@ public class ExcelDataWriter {
         List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
-            ExcelColumnProperty excelHeadProperty = null;
-            if (excelProperty != null) {
-                excelHeadProperty = new ExcelColumnProperty();
-                excelHeadProperty.setField(field);
-                excelHeadProperty.setHead(Arrays.asList(excelProperty.value()));
-                excelHeadProperty.setIndex(excelProperty.index());
-                excelHeadProperty.setFormat(excelProperty.format());
-            }
+            ExcelColumnProperty excelHeadProperty = InternalUtils.getExcelColumnProperty(field);
             if (excelHeadProperty == null) {
-                ExcelColumnNum columnNum = field.getAnnotation(ExcelColumnNum.class);
-                if (columnNum != null) {
-                    excelHeadProperty = new ExcelColumnProperty();
-                    excelHeadProperty.setField(field);
-                    excelHeadProperty.setIndex(columnNum.value());
-                    excelHeadProperty.setFormat(columnNum.format());
-                }
+                continue;
             }
-            if (excelHeadProperty != null) {
-                columnPropertyList.add(excelHeadProperty);
-            }
+            columnPropertyList.add(excelHeadProperty);
         }
         Collections.sort(columnPropertyList);
         return columnPropertyList;

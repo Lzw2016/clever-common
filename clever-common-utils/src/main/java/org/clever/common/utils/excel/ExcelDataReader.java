@@ -1,8 +1,6 @@
 package org.clever.common.utils.excel;
 
 import com.alibaba.excel.EasyExcelFactory;
-import com.alibaba.excel.annotation.ExcelColumnNum;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
@@ -132,14 +130,20 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
 
     /**
      * 列头信息
+     *
+     * @see com.alibaba.excel.metadata.ExcelHeadProperty
      */
     private List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
     /**
      * 列头元数据(列index -> 列头信息)
+     *
+     * @see com.alibaba.excel.metadata.ExcelHeadProperty
      */
     private Map<Integer, ExcelColumnProperty> excelColumnPropertyMap = new HashMap<>();
 
-    // TODO 两种读取方式 index 和 表头！！！
+    /**
+     * 列头元数据(列名称 -> 列头信息)
+     */
     private Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
 
     /**
@@ -189,31 +193,22 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         this.excelData = new ExcelData<>(clazz, columnPropertyList);
     }
 
-    // TODO  需要优化
+    /**
+     * 读取Excel列信息
+     *
+     * @see com.alibaba.excel.metadata.ExcelHeadProperty
+     */
     private void initColumnProperty(Field field) {
-        ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
-        ExcelColumnProperty excelHeadProperty = null;
-        if (excelProperty != null) {
-            excelHeadProperty = new ExcelColumnProperty();
-            excelHeadProperty.setField(field);
-            excelHeadProperty.setHead(Arrays.asList(excelProperty.value()));
-            excelHeadProperty.setIndex(excelProperty.index());
-            excelHeadProperty.setFormat(excelProperty.format());
-            this.excelColumnPropertyMap.put(excelProperty.index(), excelHeadProperty);
-        }
+        ExcelColumnProperty excelHeadProperty = InternalUtils.getExcelColumnProperty(field);
         if (excelHeadProperty == null) {
-            ExcelColumnNum columnNum = field.getAnnotation(ExcelColumnNum.class);
-            if (columnNum != null) {
-                excelHeadProperty = new ExcelColumnProperty();
-                excelHeadProperty.setField(field);
-                excelHeadProperty.setIndex(columnNum.value());
-                excelHeadProperty.setFormat(columnNum.format());
-                this.excelColumnPropertyMap.put(columnNum.value(), excelHeadProperty);
-            }
+            return;
         }
-        if (excelHeadProperty != null) {
-            this.columnPropertyList.add(excelHeadProperty);
+        this.excelColumnPropertyMap.put(excelHeadProperty.getIndex(), excelHeadProperty);
+        List<String> head = excelHeadProperty.getHead();
+        if (head != null && head.size() > 0) {
+            this.excelColumnPropertyMap2.put(head.get(head.size() - 1), excelHeadProperty);
         }
+        this.columnPropertyList.add(excelHeadProperty);
     }
 
     /**
@@ -269,13 +264,21 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new ExcelAnalysisException(String.format("读取Excel失败，Excel解析对象: %s，没有默认构造函数，必须定义默认构造函数", excelData.getClazz()), e);
         }
+        boolean readRowSuccess = false;
         Map<String, Object> rowMap = new HashMap<>();
         for (int index = 0; index < object.size(); index++) {
-            // TODO 两种读取方式 index 和 表头！！！
             ExcelColumnProperty columnProperty = excelColumnPropertyMap.get(index);
             if (columnProperty == null) {
-                throw new ExcelAnalysisException(String.format("解析Excel文件失败，Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", excelData.getClazz()));
+                // TODO 两种读取方式 index 和 表头！！！
+                // columnProperty = excelColumnPropertyMap2.get("??");
             }
+            if (columnProperty == null && columnPropertyList.size() == object.size()) {
+                columnProperty = columnPropertyList.get(index);
+            }
+            if (columnProperty == null) {
+                continue;
+            }
+            readRowSuccess = true;
             String cellStr = object.get(index);
             try {
                 Object value = TypeUtil.convert(cellStr, columnProperty.getField(), columnProperty.getFormat(), context.use1904WindowDate());
@@ -285,6 +288,9 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
             } catch (Exception e) {
                 excelRow.addErrorInColumn(columnProperty.getField().getName(), String.format("读取值失败，值:%s，格式:%s，类型:%s", cellStr, columnProperty.getFormat(), columnProperty.getField().getType()));
             }
+        }
+        if (!readRowSuccess) {
+            throw new ExcelAnalysisException(String.format("解析Excel文件失败，Excel解析对象: %s，@ExcelProperty或者@ExcelColumnNum修饰字段是必须使用index属性", excelData.getClazz()));
         }
         BeanMap.create(excelRow.getData()).putAll(rowMap);
         // 数据去重
@@ -326,7 +332,11 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-        log.info("[Excel数据导入] 文件：{}，耗时：{}秒，Excel数据行：{}", filename, (System.currentTimeMillis() - startTime) / 1000.0, context.getCurrentRowNum());
+        long time = 0;
+        if (startTime != null) {
+            time = System.currentTimeMillis() - startTime;
+        }
+        log.info("[Excel数据导入] 文件：{}，耗时：{}秒，Excel数据行：{}", filename, time / 1000.0, context.getCurrentRowNum());
         startTime = null;
         // log.info("CurrentRowNum: {}", context.getCurrentRowNum());
         if (excelData.getRows().size() <= 0) {
