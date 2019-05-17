@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.codec.DigestUtils;
 import org.clever.common.utils.codec.EncodeDecodeUtils;
+import org.clever.common.utils.exception.ExceptionUtils;
 import org.clever.common.utils.validator.ValidatorFactoryUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+
 
 /**
  * 作者： lzw<br/>
@@ -65,7 +67,11 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
             throw new ExcelAnalysisException("不支持同时导入多个Excel文件");
         }
         MultipartFile file = multipartFileList.get(0);
-        return new ExcelDataReader<>(file, clazz, limitRows);
+        try {
+            return new ExcelDataReader<>(file, clazz, limitRows);
+        } catch (IOException e) {
+            throw ExceptionUtils.unchecked(e);
+        }
     }
 
     /**
@@ -107,14 +113,20 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
     }
 
     /**
+     * 默认最大读取数据行数
+     */
+    public static final int LIMIT_ROWS = 2000;
+
+    /**
      * 上传的Excel文件名称
      */
     @Getter
     private String filename;
     /**
-     * 上传的文件内容
+     * 上传的文件数据流
      */
-    private MultipartFile multipartFile;
+    // private MultipartFile multipartFile;
+    private InputStream inputStream;
 
     /**
      * 读取Excel文件最大行数
@@ -168,8 +180,8 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param multipartFile 上传的文件内容
      * @param clazz         Excel解析对应的数据类型
      */
-    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz) {
-        this(multipartFile, clazz, 2000);
+    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz) throws IOException {
+        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, LIMIT_ROWS);
     }
 
     /**
@@ -177,9 +189,28 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param clazz         Excel解析对应的数据类型
      * @param limitRows     读取Excel文件最大行数
      */
-    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) {
-        this.filename = multipartFile.getOriginalFilename();
-        this.multipartFile = multipartFile;
+    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) throws IOException {
+        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows);
+    }
+
+    /**
+     * @param filename    上传的文件名称
+     * @param inputStream 上传的文件内容
+     * @param clazz       Excel解析对应的数据类型
+     */
+    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz) {
+        this(filename, inputStream, clazz, LIMIT_ROWS);
+    }
+
+    /**
+     * @param filename    上传的文件名称
+     * @param inputStream 上传的文件内容
+     * @param clazz       Excel解析对应的数据类型
+     * @param limitRows   读取Excel文件最大行数
+     */
+    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, int limitRows) {
+        this.filename = filename;
+        this.inputStream = inputStream;
         this.limitRows = limitRows;
         // 解析定义的列头元数据
         Field[] fields = clazz.getDeclaredFields();
@@ -234,10 +265,17 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         started = true;
         this.excelRowReader = excelRowReader;
         headRowNum = excelData.getHeadRowNum();
-        try (InputStream inputStream = multipartFile.getInputStream(); BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
             EasyExcelFactory.readBySax(bufferedInputStream, new Sheet(sheetNo, headRowNum), this);
         } catch (IOException e) {
             throw new ExcelAnalysisException("读取Excel文件失败", e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 
