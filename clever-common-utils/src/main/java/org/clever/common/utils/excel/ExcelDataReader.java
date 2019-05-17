@@ -139,6 +139,9 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     private Map<Integer, ExcelColumnProperty> excelColumnPropertyMap = new HashMap<>();
 
+    // TODO 两种读取方式 index 和 表头！！！
+    private Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
+
     /**
      * 是否已经开始解析
      */
@@ -186,6 +189,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         this.excelData = new ExcelData<>(clazz, columnPropertyList);
     }
 
+    // TODO  需要优化
     private void initColumnProperty(Field field) {
         ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
         ExcelColumnProperty excelHeadProperty = null;
@@ -266,6 +270,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         }
         Map<String, Object> rowMap = new HashMap<>();
         for (int index = 0; index < object.size(); index++) {
+            // TODO 两种读取方式 index 和 表头！！！
             ExcelColumnProperty columnProperty = excelColumnPropertyMap.get(index);
             if (columnProperty == null) {
                 throw new ExcelAnalysisException(String.format("解析Excel文件失败，Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", excelData.getClazz()));
