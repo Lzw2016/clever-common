@@ -18,7 +18,7 @@ public class ExcelModelDto4 implements Serializable {
     @NotBlank
     private String column2;
 
-    @ExcelProperty(value = {"第3列"})
+    @ExcelProperty(value = {"第3列"}, index = 2)
     @NotBlank
     private String column3;
 
@@ -26,11 +26,11 @@ public class ExcelModelDto4 implements Serializable {
     @NotBlank
     private String column4;
 
-    @ExcelProperty(value = {"第5列"}, index = 4)
+    @ExcelProperty(value = {"第5列"})
     @NotBlank
     private String column5;
 
-    @ExcelProperty(value = {"第6列"}, index = 5)
+    @ExcelProperty(value = {"第6列"})
     @NotBlank
     private String column6;
 

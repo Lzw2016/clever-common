@@ -394,6 +394,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @see com.alibaba.excel.analysis.BaseSaxAnalyser
      */
     private void initColumnProperty(Class<T> clazz) {
+        int useIndexNum = 0;
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             ExcelColumnProperty excelHeadProperty = InternalUtils.getExcelColumnProperty(field);
@@ -401,6 +402,9 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
                 continue;
             }
             excelColumnPropertyMap1.put(excelHeadProperty.getIndex(), excelHeadProperty);
+            if (excelHeadProperty.getIndex() < 99999) {
+                useIndexNum++;
+            }
             List<String> head = excelHeadProperty.getHead();
             if (head != null && head.size() > 0) {
                 excelColumnPropertyMap2.put(head.get(head.size() - 1), excelHeadProperty);
@@ -411,5 +415,8 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
             throw new ExcelAnalysisException(String.format("Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", clazz));
         }
         Collections.sort(columnPropertyList);
+        if (useIndexNum < columnPropertyList.size()) {
+            log.warn("Excel解析对象: {}，@ExcelProperty或者@ExcelColumnNum修饰字段只有部分使用了index属性", clazz);
+        }
     }
 }

@@ -18,13 +18,15 @@ public class ExcelTest {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------- 读取Excel
 
+    private static final String filename = "G:\\SourceCode\\clever\\clever-common\\clever-common-utils\\src\\test\\resources\\数据导出.xlsx";
+
     /**
      * 不继承 BaseRowModel
      * 不使用 index
      */
     @Test
     public void t01() throws IOException {
-        FileInputStream inputStream = FileUtils.openInputStream(new File("C:\\Users\\lzw\\Downloads\\数据导出.xlsx"));
+        FileInputStream inputStream = FileUtils.openInputStream(new File(filename));
         ExcelDataReader<ExcelModelDto> excelDataReader = new ExcelDataReader<>("", inputStream, ExcelModelDto.class, 200);
         excelDataReader.readExcel(1, (data, excelRow) -> {
             log.info("Excel数据 -> {}", data);
@@ -38,7 +40,7 @@ public class ExcelTest {
      */
     @Test
     public void t02() throws IOException {
-        FileInputStream inputStream = FileUtils.openInputStream(new File("C:\\Users\\lzw\\Downloads\\数据导出.xlsx"));
+        FileInputStream inputStream = FileUtils.openInputStream(new File(filename));
         ExcelDataReader<ExcelModelDto2> excelDataReader = new ExcelDataReader<>("", inputStream, ExcelModelDto2.class, 200);
         excelDataReader.readExcel(1, (data, excelRow) -> {
             log.info("Excel数据 -> {}", data);
@@ -52,7 +54,7 @@ public class ExcelTest {
      */
     @Test
     public void t03() throws IOException {
-        FileInputStream inputStream = FileUtils.openInputStream(new File("C:\\Users\\lzw\\Downloads\\数据导出.xlsx"));
+        FileInputStream inputStream = FileUtils.openInputStream(new File(filename));
         ExcelDataReader<ExcelModelDto3> excelDataReader = new ExcelDataReader<>("", inputStream, ExcelModelDto3.class, 200);
         excelDataReader.readExcel(1, (data, excelRow) -> {
             log.info("Excel数据 -> {}", data);
@@ -66,7 +68,7 @@ public class ExcelTest {
      */
     @Test
     public void t04() throws IOException {
-        FileInputStream inputStream = FileUtils.openInputStream(new File("C:\\Users\\lzw\\Downloads\\数据导出.xlsx"));
+        FileInputStream inputStream = FileUtils.openInputStream(new File(filename));
         ExcelDataReader<ExcelModelDto4> excelDataReader = new ExcelDataReader<>("", inputStream, ExcelModelDto4.class, 200);
         excelDataReader.readExcel(1, (data, excelRow) -> {
             log.info("Excel数据 -> {}", data);
