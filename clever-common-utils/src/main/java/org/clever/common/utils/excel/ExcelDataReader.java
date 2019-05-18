@@ -312,7 +312,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         for (int index = 0; index < object.size(); index++) {
             // 先读取index对应的 ExcelColumnProperty
             ExcelColumnProperty columnProperty = excelColumnPropertyMap1.get(index);
-            if (columnProperty == null && lastExcelHeadRealData != null && lastExcelHeadRealData.size() == object.size()) {
+            if (columnProperty == null && lastExcelHeadRealData != null && lastExcelHeadRealData.size() > 0) {
                 // 根据Excel表格头读取对应的 ExcelColumnProperty
                 columnProperty = excelColumnPropertyMap2.get(StringUtils.trim(lastExcelHeadRealData.get(index)));
             }
