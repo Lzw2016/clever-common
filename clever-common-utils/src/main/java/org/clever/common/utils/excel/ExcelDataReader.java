@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -116,7 +117,6 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * 默认最大读取数据行数
      */
     public static final int LIMIT_ROWS = 2000;
-
     /**
      * 上传的Excel文件名称
      */
@@ -125,55 +125,53 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
     /**
      * 上传的文件数据流
      */
-    // private MultipartFile multipartFile;
     private InputStream inputStream;
-
     /**
      * 读取Excel文件最大行数
      */
     @Getter
     private int limitRows;
-
     /**
      * Excel读取结果
      */
     @Getter
     private ExcelData<T> excelData;
-
-    /**
-     * 列头信息
-     *
-     * @see com.alibaba.excel.metadata.ExcelHeadProperty
-     */
-    private List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
-    /**
-     * 列头元数据(列index -> 列头信息)
-     *
-     * @see com.alibaba.excel.metadata.ExcelHeadProperty
-     */
-    private Map<Integer, ExcelColumnProperty> excelColumnPropertyMap = new HashMap<>();
-
-    /**
-     * 列头元数据(列名称 -> 列头信息)
-     */
-    private Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
-
     /**
      * 是否已经开始解析
      */
     @Getter
     private volatile boolean started = false;
-
     /**
      * 开始解析的时间
      */
     private Long startTime;
-
     /**
      * 表格头行数
      */
     private int headRowNum;
-
+    /**
+     * 列头信息
+     */
+    private List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
+    /**
+     * 列头元数据(列index -> 列头信息)
+     */
+    private Map<Integer, ExcelColumnProperty> excelColumnPropertyMap1 = new HashMap<>();
+    /**
+     * 列头元数据(列名称 -> 列头信息)
+     */
+    private Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
+    // /**
+    //  * Excel表格头数据 - 导入Excel表格中的真实数据
+    //  */
+    // private List<List<String>> excelHeadRealData = new ArrayList<>();
+    /**
+     * Excel表格头数据(最后一行) - 导入Excel表格中的真实数据
+     */
+    private List<String> lastExcelHeadRealData;
+    /**
+     * 处理Excel行数据
+     */
     private ExcelRowReader<T> excelRowReader;
 
     /**
@@ -191,6 +189,14 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) throws IOException {
         this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows);
+    }
+
+    /**
+     * @param inputStream 上传的文件内容
+     * @param clazz       Excel解析对应的数据类型
+     */
+    public ExcelDataReader(InputStream inputStream, Class<T> clazz) {
+        this("", inputStream, clazz, LIMIT_ROWS);
     }
 
     /**
@@ -212,34 +218,15 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         this.filename = filename;
         this.inputStream = inputStream;
         this.limitRows = limitRows;
-        // 解析定义的列头元数据
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            initColumnProperty(field);
-        }
-        if (columnPropertyList.size() <= 0) {
-            throw new ExcelAnalysisException(String.format("Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", clazz));
-        }
-        Collections.sort(columnPropertyList);
+        initColumnProperty(clazz);
         this.excelData = new ExcelData<>(clazz, columnPropertyList);
     }
 
     /**
-     * 读取Excel列信息
-     *
-     * @see com.alibaba.excel.metadata.ExcelHeadProperty
+     * 开始解析读取Excel
      */
-    private void initColumnProperty(Field field) {
-        ExcelColumnProperty excelHeadProperty = InternalUtils.getExcelColumnProperty(field);
-        if (excelHeadProperty == null) {
-            return;
-        }
-        this.excelColumnPropertyMap.put(excelHeadProperty.getIndex(), excelHeadProperty);
-        List<String> head = excelHeadProperty.getHead();
-        if (head != null && head.size() > 0) {
-            this.excelColumnPropertyMap2.put(head.get(head.size() - 1), excelHeadProperty);
-        }
-        this.columnPropertyList.add(excelHeadProperty);
+    public void readExcel() {
+        readExcel(1, null);
     }
 
     /**
@@ -249,6 +236,15 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     public void readExcel(int sheetNo) {
         readExcel(sheetNo, null);
+    }
+
+    /**
+     * 开始解析读取Excel
+     *
+     * @param excelRowReader 自定义的行处理
+     */
+    public void readExcel(ExcelRowReader<T> excelRowReader) {
+        readExcel(1, excelRowReader);
     }
 
     /**
@@ -266,7 +262,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         this.excelRowReader = excelRowReader;
         headRowNum = excelData.getHeadRowNum();
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
-            EasyExcelFactory.readBySax(bufferedInputStream, new Sheet(sheetNo, headRowNum), this);
+            EasyExcelFactory.readBySax(bufferedInputStream, new Sheet(sheetNo, 0), this);
         } catch (IOException e) {
             throw new ExcelAnalysisException("读取Excel文件失败", e);
         } finally {
@@ -287,30 +283,41 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      */
     @Override
     public synchronized void invoke(List<String> object, AnalysisContext context) {
+        final int currentRowNum = context.getCurrentRowNum() + 1;
+        // 解析初始化 - 开始解析时执行一次
         if (startTime == null) {
             startTime = System.currentTimeMillis();
             excelData.clearData();
         }
-        if (limitRows > 0 && (context.getCurrentRowNum() + 1 - headRowNum) > limitRows) {
+        // 当前行是表格头
+        if (currentRowNum <= headRowNum) {
+            lastExcelHeadRealData = object.stream().map(StringUtils::trim).collect(Collectors.toList());
+            // excelHeadRealData.add(lastExcelHeadRealData);
+            return;
+        }
+        // 超出解析数据最大行数
+        if (limitRows > 0 && (currentRowNum - headRowNum) > limitRows) {
             throw new ExcelAnalysisException(String.format("导入数据量超限，最多只能导入%s条数据，请分多批导入", limitRows));
         }
         // 构造数据对象
         ExcelRow<T> excelRow;
         try {
             T dataRow = excelData.getClazz().newInstance();
-            excelRow = new ExcelRow<>(dataRow, context.getCurrentRowNum() + 1);
+            excelRow = new ExcelRow<>(dataRow, currentRowNum);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new ExcelAnalysisException(String.format("读取Excel失败，Excel解析对象: %s，没有默认构造函数，必须定义默认构造函数", excelData.getClazz()), e);
         }
         boolean readRowSuccess = false;
         Map<String, Object> rowMap = new HashMap<>();
         for (int index = 0; index < object.size(); index++) {
-            ExcelColumnProperty columnProperty = excelColumnPropertyMap.get(index);
-            if (columnProperty == null) {
-                // TODO 两种读取方式 index 和 表头！！！
-                // columnProperty = excelColumnPropertyMap2.get("??");
+            // 先读取index对应的 ExcelColumnProperty
+            ExcelColumnProperty columnProperty = excelColumnPropertyMap1.get(index);
+            if (columnProperty == null && lastExcelHeadRealData != null && lastExcelHeadRealData.size() == object.size()) {
+                // 根据Excel表格头读取对应的 ExcelColumnProperty
+                columnProperty = excelColumnPropertyMap2.get(StringUtils.trim(lastExcelHeadRealData.get(index)));
             }
             if (columnProperty == null && columnPropertyList.size() == object.size()) {
+                // 最后只能根据Excel单元格位置读取对应的 ExcelColumnProperty
                 columnProperty = columnPropertyList.get(index);
             }
             if (columnProperty == null) {
@@ -333,11 +340,9 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         BeanMap.create(excelRow.getData()).putAll(rowMap);
         // 数据去重
         StringBuilder sb = new StringBuilder();
-        object.forEach(str -> {
-            if (StringUtils.isNotBlank(str)) {
-                sb.append(str);
-            }
-        });
+        for (int index = 0; index < object.size(); index++) {
+            sb.append(index).append('=').append(object.get(index)).append('|');
+        }
         if (sb.length() > 0) {
             excelRow.setDataSignature(EncodeDecodeUtils.encodeHex(DigestUtils.sha1(sb.toString().getBytes())));
         }
@@ -376,9 +381,35 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
         }
         log.info("[Excel数据导入] 文件：{}，耗时：{}秒，Excel数据行：{}", filename, time / 1000.0, context.getCurrentRowNum());
         startTime = null;
-        // log.info("CurrentRowNum: {}", context.getCurrentRowNum());
         if (excelData.getRows().size() <= 0) {
             throw new ExcelAnalysisException("导入的Excel文件没有任何数据");
         }
+    }
+
+    /**
+     * 读取Excel列信息
+     *
+     * @see com.alibaba.excel.metadata.ExcelHeadProperty
+     * @see com.alibaba.excel.modelbuild.ModelBuildEventListener
+     * @see com.alibaba.excel.analysis.BaseSaxAnalyser
+     */
+    private void initColumnProperty(Class<T> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            ExcelColumnProperty excelHeadProperty = InternalUtils.getExcelColumnProperty(field);
+            if (excelHeadProperty == null) {
+                continue;
+            }
+            excelColumnPropertyMap1.put(excelHeadProperty.getIndex(), excelHeadProperty);
+            List<String> head = excelHeadProperty.getHead();
+            if (head != null && head.size() > 0) {
+                excelColumnPropertyMap2.put(head.get(head.size() - 1), excelHeadProperty);
+            }
+            columnPropertyList.add(excelHeadProperty);
+        }
+        if (columnPropertyList.size() <= 0) {
+            throw new ExcelAnalysisException(String.format("Excel解析对象: %s，字段未使用@ExcelProperty或者@ExcelColumnNum修饰声明与Excel的映射关系", clazz));
+        }
+        Collections.sort(columnPropertyList);
     }
 }

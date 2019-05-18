@@ -60,8 +60,23 @@ public class ExcelData<T> implements Serializable {
     /**
      * @param clazz Excel解析对应的数据类型
      */
+    public ExcelData(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+    /**
+     * @param clazz            Excel解析对应的数据类型
+     * @param columnProperties Excel列属性
+     */
     public ExcelData(Class<T> clazz, List<ExcelColumnProperty> columnProperties) {
         this.clazz = clazz;
+        init(columnProperties);
+    }
+
+    /**
+     * @param columnProperties Excel列属性
+     */
+    public void init(List<ExcelColumnProperty> columnProperties) {
         for (ExcelColumnProperty columnProperty : columnProperties) {
             heads.add(new ExcelHead(columnProperty));
         }
@@ -173,18 +188,6 @@ public class ExcelData<T> implements Serializable {
     public void setImportData(List<?> importData) {
         this.importData = importData;
     }
-
-//    /**
-//     * 设置重复的数据量
-//     *
-//     * @param repeat 重复数据量
-//     */
-//    public synchronized void setRepeat(int repeat) {
-//        if (excelImportState == null) {
-//            excelImportState = new ExcelImportState();
-//        }
-//        excelImportState.setRepeat(repeat);
-//    }
 
     /**
      * 增加重复数据数量

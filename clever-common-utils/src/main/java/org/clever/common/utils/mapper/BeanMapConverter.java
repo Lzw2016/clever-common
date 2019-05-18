@@ -57,7 +57,7 @@ public class BeanMapConverter {
      * @return 转换后的Map对象
      */
     public static Map<String, Object> toMap(Object bean) {
-        Map<String, Object> map = null;
+        Map<String, Object> map;
         try {
             map = PropertyUtils.describe(bean);
         } catch (Throwable e) {

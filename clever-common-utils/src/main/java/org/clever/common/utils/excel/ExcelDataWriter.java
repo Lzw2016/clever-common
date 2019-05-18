@@ -6,10 +6,8 @@ import com.alibaba.excel.metadata.ExcelColumnProperty;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.metadata.Table;
 import com.alibaba.excel.support.ExcelTypeEnum;
-import com.alibaba.excel.util.TypeUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.codec.EncodeDecodeUtils;
 
@@ -229,13 +227,8 @@ public class ExcelDataWriter {
             //获取数据
             List<List<String>> sheetRows = new ArrayList<>();
             for (Object object : sheetData) {
-                BeanMap beanMap = BeanMap.create(object);
-                List<String> row = new ArrayList<>();
-                for (ExcelColumnProperty excelColumnProperty : columnPropertyList) {
-                    String cellValue = TypeUtil.getFieldStringValue(beanMap, excelColumnProperty.getField().getName(), excelColumnProperty.getFormat());
-                    row.add(cellValue);
-                }
-                sheetRows.add(row);
+                List<String> rowList = InternalUtils.getRowList(object, columnPropertyList);
+                sheetRows.add(rowList);
             }
             //构造表头
             List<List<String>> headsByHorizontal = new ArrayList<>();
