@@ -8,6 +8,7 @@ import com.alibaba.excel.metadata.ExcelColumnProperty;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.util.TypeUtil;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.io.FilenameUtils;
@@ -78,15 +79,16 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
     /**
      * 创建ExcelDataReader，并读取Excel
      *
-     * @param request        上传文件的请求
-     * @param clazz          Excel读取对应的实体类型
-     * @param limitRows      最大读取行数
-     * @param sheetNo        Excel也签号，从1开始
-     * @param excelRowReader 自定义的行处理
+     * @param request               上传文件的请求
+     * @param clazz                 Excel读取对应的实体类型
+     * @param limitRows             最大读取行数
+     * @param sheetNo               Excel也签号，从1开始
+     * @param excelRowReader        自定义的行处理
+     * @param excelCellExceptionHan 自定义的单元格读取异常处理
      */
-    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, int sheetNo, ExcelRowReader<T> excelRowReader) {
+    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, int sheetNo, ExcelRowReader<T> excelRowReader, ExcelCellExceptionHand<T> excelCellExceptionHan) {
         ExcelDataReader<T> excelDataReader = newExcelDataReader(request, clazz, limitRows);
-        excelDataReader.readExcel(sheetNo, excelRowReader);
+        excelDataReader.readExcel(sheetNo, excelRowReader, excelCellExceptionHan);
         return excelDataReader;
     }
 
@@ -99,7 +101,19 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param excelRowReader 自定义的行处理
      */
     public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader) {
-        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader);
+        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader, null);
+    }
+
+    /**
+     * 创建ExcelDataReader，并读取Excel
+     *
+     * @param request               上传文件的请求
+     * @param clazz                 Excel读取对应的实体类型
+     * @param limitRows             最大读取行数
+     * @param excelCellExceptionHan 自定义的单元格读取异常处理
+     */
+    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelCellExceptionHand<T> excelCellExceptionHan) {
+        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, excelCellExceptionHan);
     }
 
     /**
@@ -110,7 +124,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param limitRows 最大读取行数
      */
     public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows) {
-        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null);
+        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, null);
     }
 
     /**
@@ -173,6 +187,12 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * 处理Excel行数据
      */
     private ExcelRowReader<T> excelRowReader;
+    /**
+     * 处理单元格异常
+     */
+    @Setter
+    @Getter
+    private ExcelCellExceptionHand<T> excelCellExceptionHand;
 
     /**
      * @param multipartFile 上传的文件内容
@@ -226,7 +246,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * 开始解析读取Excel
      */
     public void readExcel() {
-        readExcel(1, null);
+        readExcel(1, null, null);
     }
 
     /**
@@ -235,7 +255,7 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param sheetNo Excel也签号，从1开始
      */
     public void readExcel(int sheetNo) {
-        readExcel(sheetNo, null);
+        readExcel(sheetNo, null, null);
     }
 
     /**
@@ -244,7 +264,16 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param excelRowReader 自定义的行处理
      */
     public void readExcel(ExcelRowReader<T> excelRowReader) {
-        readExcel(1, excelRowReader);
+        readExcel(1, excelRowReader, null);
+    }
+
+    /**
+     * 开始解析读取Excel
+     *
+     * @param excelCellExceptionHand 自定义的单元格读取异常处理
+     */
+    public void readExcel(ExcelCellExceptionHand<T> excelCellExceptionHand) {
+        readExcel(1, null, excelCellExceptionHand);
     }
 
     /**
@@ -253,13 +282,35 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param sheetNo        Excel也签号，从1开始
      * @param excelRowReader 自定义的行处理
      */
-    public synchronized void readExcel(int sheetNo, ExcelRowReader<T> excelRowReader) {
+    public void readExcel(int sheetNo, ExcelRowReader<T> excelRowReader) {
+        readExcel(sheetNo, excelRowReader, null);
+    }
+
+    /**
+     * 开始解析读取Excel
+     *
+     * @param sheetNo                Excel也签号，从1开始
+     * @param excelCellExceptionHand 自定义的单元格读取异常处理
+     */
+    public void readExcel(int sheetNo, ExcelCellExceptionHand<T> excelCellExceptionHand) {
+        readExcel(sheetNo, null, excelCellExceptionHand);
+    }
+
+    /**
+     * 开始解析读取Excel
+     *
+     * @param sheetNo                Excel也签号，从1开始
+     * @param excelRowReader         自定义的行处理
+     * @param excelCellExceptionHand 自定义的单元格读取异常处理
+     */
+    public synchronized void readExcel(int sheetNo, ExcelRowReader<T> excelRowReader, ExcelCellExceptionHand<T> excelCellExceptionHand) {
         if (started) {
             log.warn("正在解析Excel，当前调用无效");
             return;
         }
         started = true;
         this.excelRowReader = excelRowReader;
+        this.excelCellExceptionHand = excelCellExceptionHand;
         headRowNum = excelData.getHeadRowNum();
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
             EasyExcelFactory.readBySax(bufferedInputStream, new Sheet(sheetNo, 0), this);
@@ -324,14 +375,22 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
                 continue;
             }
             readRowSuccess = true;
-            String cellStr = object.get(index);
+            String cellStr = StringUtils.trim(object.get(index));
             try {
                 Object value = TypeUtil.convert(cellStr, columnProperty.getField(), columnProperty.getFormat(), context.use1904WindowDate());
                 if (value != null) {
                     rowMap.put(columnProperty.getField().getName(), value);
                 }
-            } catch (Exception e) {
-                excelRow.addErrorInColumn(columnProperty.getField().getName(), String.format("读取值失败，值:%s，格式:%s，类型:%s", cellStr, columnProperty.getFormat(), columnProperty.getField().getType()));
+            } catch (Throwable e) {
+                if (excelCellExceptionHand != null) {
+                    try {
+                        excelCellExceptionHand.exceptionHand(e, cellStr, object, excelRow, columnProperty);
+                    } catch (Throwable e2) {
+                        excelRow.addErrorInColumn(columnProperty.getField().getName(), e2.getMessage());
+                    }
+                } else {
+                    excelRow.addErrorInColumn(columnProperty.getField().getName(), String.format("读取值失败，值:%s，格式:%s，类型:%s", cellStr, columnProperty.getFormat(), columnProperty.getField().getType()));
+                }
             }
         }
         if (!readRowSuccess) {
