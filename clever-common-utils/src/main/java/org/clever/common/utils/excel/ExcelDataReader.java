@@ -18,7 +18,7 @@ import org.clever.common.utils.codec.EncodeDecodeUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
 import org.clever.common.utils.validator.ValidatorFactoryUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -46,10 +46,10 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * @param limitRows 最大读取行数
      */
     public static <T> ExcelDataReader<T> newExcelDataReader(HttpServletRequest request, Class<T> clazz, int limitRows) {
-        if (!(request instanceof StandardMultipartHttpServletRequest)) {
+        if (!(request instanceof MultipartRequest)) {
             throw new ExcelAnalysisException("当前请求未上传文件");
         }
-        StandardMultipartHttpServletRequest multipartRequest = (StandardMultipartHttpServletRequest) request;
+        MultipartRequest multipartRequest = (MultipartRequest) request;
         Map<String, MultipartFile> multipartFileMap = multipartRequest.getFileMap();
         if (multipartFileMap.size() <= 0) {
             throw new ExcelAnalysisException("当前请求未上传文件");
