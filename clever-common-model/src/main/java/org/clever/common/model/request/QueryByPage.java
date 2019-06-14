@@ -1,7 +1,8 @@
 package org.clever.common.model.request;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -10,8 +11,7 @@ import lombok.EqualsAndHashCode;
  * 作者：lzw <br/>
  * 创建时间：2017-09-02 00:41 <br/>
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
+@EqualsAndHashCode(callSuper = false)
 public class QueryByPage extends QueryBySort {
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +31,11 @@ public class QueryByPage extends QueryBySort {
      */
     @ApiModelProperty("当前页面的页码数")
     private int pageNo = 1;
+
+    /**
+     * 分页
+     */
+    private IPage<?> page;
 
     /*--------------------------------------------------------------
      * 			getter、setter
@@ -68,5 +73,16 @@ public class QueryByPage extends QueryBySort {
             pageNo = 1;
         }
         this.pageNo = pageNo;
+    }
+
+    public IPage<?> getPage() {
+        if (page == null) {
+            page = new Page<>(getPageNo(), getPageSize());
+        }
+        return page;
+    }
+
+    public void setPage(IPage<?> page) {
+        this.page = page;
     }
 }
