@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * 分页查询基础类
  * <p>
@@ -77,19 +79,32 @@ public class QueryByPage extends QueryBySort {
     }
 
     /**
-     * 获取请求参数对应的 IPage 对象
-     */
-    public IPage<?> result() {
-        if (page == null) {
-            page = new Page<>(getPageNo(), getPageSize());
-        }
-        return page;
-    }
-
-    /**
      * 设置分页对象
      */
     public void page(IPage<?> page) {
         this.page = page;
+    }
+
+    /**
+     * 获取请求参数对应的 IPage 对象<br />
+     * <strong>注意: 当前方法指定要在分页查询执行之后调用否则数据不准确</strong>
+     * <pre>
+     *     {@code
+     *     return query.result(permissionMapper.findByPage(query));
+     *     }
+     * </pre>
+     */
+    public <T> Page<T> result(List<T> records) {
+        if (page == null) {
+            page = new Page<>(getPageNo(), getPageSize());
+        }
+        Page<T> newPage = new Page<>();
+        newPage.setTotal(page.getTotal());
+        newPage.setSize(page.getSize());
+        newPage.setCurrent(page.getCurrent());
+        newPage.setSearchCount(page.isSearchCount());
+        newPage.setPages(page.getPages());
+        newPage.setRecords(records);
+        return newPage;
     }
 }
