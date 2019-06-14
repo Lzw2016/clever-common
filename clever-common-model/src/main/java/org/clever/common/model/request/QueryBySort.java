@@ -104,7 +104,7 @@ public class QueryBySort extends BaseRequest {
      * @param fieldParam 前端参数
      * @param fieldSql   排序字段
      */
-    public Map<String, String> addFieldMapping(String fieldParam, String fieldSql) {
+    public Map<String, String> addOrderField(String fieldParam, String fieldSql) {
         if (fieldsMapping == null) {
             fieldsMapping = new HashMap<>(1);
         }
