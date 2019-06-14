@@ -19,8 +19,8 @@ import java.util.Map;
 public class QueryBySort extends BaseRequest {
     private static final long serialVersionUID = 1L;
 
-    private static final String ASC = "ASC";
-    private static final String DESC = "DESC";
+    public static final String ASC = "ASC";
+    public static final String DESC = "DESC";
 
     /**
      * 排序字段(单字段排序-低优先级)
@@ -99,12 +99,32 @@ public class QueryBySort extends BaseRequest {
     }
 
     /**
+     * 手动添加排序字段
+     *
+     * @param fieldParam 前端参数
+     * @param sort       排序类型 ASC DESC
+     */
+    public QueryBySort addOrderField(String fieldParam, String sort) {
+        if (orderFields == null) {
+            orderFields = new ArrayList<>(1);
+        }
+        if (sorts == null) {
+            sorts = new ArrayList<>(1);
+        }
+        if (StringUtils.isNotBlank(fieldParam)) {
+            orderFields.add(StringUtils.trim(fieldParam));
+            sorts.add(StringUtils.isNotBlank(sort) ? StringUtils.trim(sort) : ASC);
+        }
+        return this;
+    }
+
+    /**
      * 排序字段与前端参数映射
      *
      * @param fieldParam 前端参数
      * @param fieldSql   排序字段
      */
-    public QueryBySort addOrderField(String fieldParam, String fieldSql) {
+    public QueryBySort addOrderFieldMapping(String fieldParam, String fieldSql) {
         if (fieldsMapping == null) {
             fieldsMapping = new HashMap<>(1);
         }
@@ -117,8 +137,7 @@ public class QueryBySort extends BaseRequest {
     public List<String> getOrderFieldsSql() {
         List<String> orderFieldsSql = new ArrayList<>();
         List<String> orderFieldsTmp = getOrderFields();
-        for (int index = 0; index < orderFieldsTmp.size(); index++) {
-            String fieldParam = orderFieldsTmp.get(index);
+        for (String fieldParam : orderFieldsTmp) {
             String fieldSql = fieldsMapping.get(StringUtils.trim(fieldParam));
             if (StringUtils.isNotBlank(fieldSql)) {
                 orderFieldsSql.add(StringUtils.trim(fieldSql));
