@@ -1,11 +1,14 @@
 package org.clever.common.model.request;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 排序查询基础类
@@ -13,8 +16,6 @@ import java.util.List;
  * 作者：lzw <br/>
  * 创建时间：2017-09-03 22:15 <br/>
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class QueryBySort extends BaseRequest {
     private static final long serialVersionUID = 1L;
 
@@ -24,21 +25,39 @@ public class QueryBySort extends BaseRequest {
     /**
      * 排序字段(单字段排序-低优先级)
      */
+    @ApiModelProperty("排序字段(单字段排序-低优先级)")
+    @Setter
+    @Getter
     private String orderField;
     /**
      * 排序类型ASC DESC(单字段排序-低优先级)
      */
+    @ApiModelProperty("排序类型ASC DESC(单字段排序-低优先级)")
+    @Setter
+    @Getter
     private String sort;
 
     /**
      * 排序字段集合
      */
+    @ApiModelProperty("排序字段集合")
+    @Setter
     private List<String> orderFields = new ArrayList<>(1);
     /**
      * 排序类型 ASC DESC
      */
+    @ApiModelProperty("排序类型 ASC DESC")
+    @Setter
     private List<String> sorts = new ArrayList<>(1);
 
+    /**
+     * 排序字段 映射Map
+     */
+    private Map<String, String> fieldsMapping = new HashMap<>(1);
+
+    /**
+     * 排序字段集合
+     */
     public List<String> getOrderFields() {
         if (orderFields == null) {
             orderFields = new ArrayList<>(1);
@@ -49,6 +68,9 @@ public class QueryBySort extends BaseRequest {
         return orderFields;
     }
 
+    /**
+     * 排序类型
+     */
     public List<String> getSorts() {
         if (sorts == null) {
             sorts = new ArrayList<>(1);
@@ -74,5 +96,52 @@ public class QueryBySort extends BaseRequest {
         }
         sorts = sortsTmp;
         return sorts;
+    }
+
+    /**
+     * 排序字段与前端参数映射
+     *
+     * @param fieldParam 前端参数
+     * @param fieldSql   排序字段
+     */
+    public Map<String, String> addFieldMapping(String fieldParam, String fieldSql) {
+        if (fieldsMapping == null) {
+            fieldsMapping = new HashMap<>(1);
+        }
+        if (StringUtils.isNotBlank(fieldParam) && StringUtils.isNotBlank(fieldSql)) {
+            fieldsMapping.put(StringUtils.trim(fieldParam), StringUtils.trim(fieldSql));
+        }
+        return fieldsMapping;
+    }
+
+    public List<String> getOrderFieldsSql() {
+        List<String> orderFieldsSql = new ArrayList<>();
+        List<String> orderFieldsTmp = getOrderFields();
+        for (int index = 0; index < orderFieldsTmp.size(); index++) {
+            String fieldParam = orderFieldsTmp.get(index);
+            String fieldSql = fieldsMapping.get(StringUtils.trim(fieldParam));
+            if (StringUtils.isNotBlank(fieldSql)) {
+                orderFieldsSql.add(StringUtils.trim(fieldSql));
+            }
+        }
+        return orderFieldsSql;
+    }
+
+    public List<String> getSortsSql() {
+        List<String> sortsSql = new ArrayList<>();
+        List<String> orderFieldsTmp = getOrderFields();
+        List<String> sortsTmp = getSorts();
+        for (int index = 0; index < orderFieldsTmp.size(); index++) {
+            String fieldParam = orderFieldsTmp.get(index);
+            String fieldSql = fieldsMapping.get(StringUtils.trim(fieldParam));
+            if (StringUtils.isNotBlank(fieldSql)) {
+                if (index < sortsTmp.size()) {
+                    sortsSql.add(sortsTmp.get(index));
+                } else {
+                    sortsSql.add(ASC);
+                }
+            }
+        }
+        return sortsSql;
     }
 }
