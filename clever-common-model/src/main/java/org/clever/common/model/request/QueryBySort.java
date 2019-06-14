@@ -104,14 +104,14 @@ public class QueryBySort extends BaseRequest {
      * @param fieldParam 前端参数
      * @param fieldSql   排序字段
      */
-    public Map<String, String> addOrderField(String fieldParam, String fieldSql) {
+    public QueryBySort addOrderField(String fieldParam, String fieldSql) {
         if (fieldsMapping == null) {
             fieldsMapping = new HashMap<>(1);
         }
         if (StringUtils.isNotBlank(fieldParam) && StringUtils.isNotBlank(fieldSql)) {
             fieldsMapping.put(StringUtils.trim(fieldParam), StringUtils.trim(fieldSql));
         }
-        return fieldsMapping;
+        return this;
     }
 
     public List<String> getOrderFieldsSql() {
