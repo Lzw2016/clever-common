@@ -23,18 +23,19 @@ public class QueryByPage extends QueryBySort {
     /**
      * 每页的数据量(1 <= pageSize <= 100)
      */
-    @ApiModelProperty("每页的数据量")
+    @ApiModelProperty(value = "每页的数据量", position = 5)
     private int pageSize = 10;
 
     /**
      * 当前页面的页码数(pageNo >= 1)
      */
-    @ApiModelProperty("当前页面的页码数")
+    @ApiModelProperty(value = "当前页面的页码数", position = 6)
     private int pageNo = 1;
 
     /**
      * 分页
      */
+    @ApiModelProperty(hidden = true, accessMode = ApiModelProperty.AccessMode.READ_ONLY, readOnly = true, position = 999999999)
     private IPage<?> page;
 
     /*--------------------------------------------------------------
@@ -75,14 +76,20 @@ public class QueryByPage extends QueryBySort {
         this.pageNo = pageNo;
     }
 
-    public IPage<?> getPage() {
+    /**
+     * 获取请求参数对应的 IPage 对象
+     */
+    public IPage<?> result() {
         if (page == null) {
             page = new Page<>(getPageNo(), getPageSize());
         }
         return page;
     }
 
-    public void setPage(IPage<?> page) {
+    /**
+     * 设置分页对象
+     */
+    public void page(IPage<?> page) {
         this.page = page;
     }
 }

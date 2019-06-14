@@ -25,14 +25,14 @@ public class QueryBySort extends BaseRequest {
     /**
      * 排序字段(单字段排序-低优先级)
      */
-    @ApiModelProperty("排序字段(单字段排序-低优先级)")
+    @ApiModelProperty(value = "排序字段(单字段排序-低优先级)", position = 1)
     @Setter
     @Getter
     private String orderField;
     /**
      * 排序类型ASC DESC(单字段排序-低优先级)
      */
-    @ApiModelProperty("排序类型ASC DESC(单字段排序-低优先级)")
+    @ApiModelProperty(value = "排序类型ASC DESC(单字段排序-低优先级)", position = 2)
     @Setter
     @Getter
     private String sort;
@@ -40,13 +40,13 @@ public class QueryBySort extends BaseRequest {
     /**
      * 排序字段集合
      */
-    @ApiModelProperty("排序字段集合")
+    @ApiModelProperty(value = "排序字段集合", position = 3)
     @Setter
     private List<String> orderFields = new ArrayList<>(1);
     /**
      * 排序类型 ASC DESC
      */
-    @ApiModelProperty("排序类型 ASC DESC")
+    @ApiModelProperty(value = "排序类型 ASC DESC", position = 4)
     @Setter
     private List<String> sorts = new ArrayList<>(1);
 
