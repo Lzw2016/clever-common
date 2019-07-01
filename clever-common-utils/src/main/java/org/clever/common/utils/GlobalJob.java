@@ -17,7 +17,7 @@ public abstract class GlobalJob {
     /**
      * 全局执行的任务(JVM内同一时刻只有一个线程执行)
      */
-    protected abstract void internalExecute();
+    protected abstract void internalExecute() throws Throwable;
 
     /**
      * 任务执行的异常处理
