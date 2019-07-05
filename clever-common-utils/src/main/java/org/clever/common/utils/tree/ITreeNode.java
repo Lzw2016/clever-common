@@ -14,14 +14,14 @@ import java.util.List;
 public interface ITreeNode extends Serializable {
 
     /**
-     * 节点ID(必须大于0)
+     * 节点ID(必须非空)
      */
-    Long getId();
+    Object getId();
 
     /**
-     * 父节点ID(根节点的ParentId等于-1)
+     * 父节点ID(根节点的ParentId等于null 或 空字符串)
      */
-    Long getParentId();
+    Object getParentId();
 
     /**
      * 判断当前节点是否被构建到树中了
@@ -45,4 +45,13 @@ public interface ITreeNode extends Serializable {
      * @param node 子节点
      */
     void addChildren(ITreeNode node);
+
+    /**
+     * 当前节点时候是根节点
+     *
+     * @return true:是根节点 false:不是根节点 null:未知
+     */
+    default Boolean isRoot() {
+        return null;
+    }
 }

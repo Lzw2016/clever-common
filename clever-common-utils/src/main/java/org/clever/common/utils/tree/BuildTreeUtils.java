@@ -1,6 +1,7 @@
 package org.clever.common.utils.tree;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,25 +23,34 @@ public class BuildTreeUtils {
      * @return 构建的所有树的根节点
      */
     public static <T extends ITreeNode> List<T> buildTree(Collection<T> nodes) {
-        log.debug("开始构建树结构...");
+        log.info("开始构建树结构...");
         final long startTime = System.currentTimeMillis();
+        long tmpTime = System.currentTimeMillis();
         // 需要构建树的节点，还未构建到树中的节点
         List<T> allTreeNodeList = getCanBuildTreeNodes(nodes);
+        log.info("1 耗时：{}ms", (System.currentTimeMillis() - tmpTime));
         // 清除构建状态
+        tmpTime = System.currentTimeMillis();
         clearBuild(allTreeNodeList);
+        log.info("2 耗时：{}ms", (System.currentTimeMillis() - tmpTime));
         // 查找所有根节点
+        tmpTime = System.currentTimeMillis();
         List<T> rootNodeList = findRootNode(allTreeNodeList);
+        log.info("3 耗时：{}ms", (System.currentTimeMillis() - tmpTime));
         // 刷新还未构建到树中的节点，减少循环次数
+        tmpTime = System.currentTimeMillis();
         List<T> noBuildTreeNodeList = refreshNoBuildNodes(allTreeNodeList);
+        log.info("4 耗时：{}ms", (System.currentTimeMillis() - tmpTime));
         // 循环根节点，构建多棵树
-        // 递归生成树
+        tmpTime = System.currentTimeMillis();
         buildTree(rootNodeList, noBuildTreeNodeList);
+        log.info("5 耗时：{}ms", (System.currentTimeMillis() - tmpTime));
         // 刷新还未构建到树中的节点，减少循环次数
         noBuildTreeNodeList = refreshNoBuildNodes(noBuildTreeNodeList);
         final long endTime = System.currentTimeMillis();
         // 校验构建是否正确
         if (noBuildTreeNodeList.size() <= 0) {
-            log.info("树构建成功！耗时：{}ms", (endTime - startTime));
+            log.info("树构建成功！耗时：{}ms | 数据量：{}", (endTime - startTime), nodes.size());
         } else {
             log.error("树构建失败！耗时：{}ms | [{}]", (endTime - startTime), nodesToString(noBuildTreeNodeList));
         }
@@ -134,19 +144,17 @@ public class BuildTreeUtils {
      * 过滤节点对象，排除不能构建树的节点，不能构建树的节点满足以下条件：<br/>
      * 1.节点对象为null (node == null)<br/>
      * 2.节点ID为null (node.getId() == null)<br/>
-     * 3.父节点ID为null (node.getParentId() == null)<br/>
      *
      * @param nodes 所有要构建树的节点
      * @return 所有可以构建树的节点，即节点数据验证通过的节点
      */
     private static <T extends ITreeNode> List<T> getCanBuildTreeNodes(Collection<T> nodes) {
         List<T> treeNodeList = new ArrayList<>();
-        // 初始化需要构建树的节点
-        for (T node : nodes) {
-            if (node != null && node.getId() != null && node.getParentId() != null) {
+        nodes.forEach(node -> {
+            if (node != null && node.getId() != null) {
                 treeNodeList.add(node);
             }
-        }
+        });
         return treeNodeList;
     }
 
@@ -163,7 +171,7 @@ public class BuildTreeUtils {
 
     /**
      * 在节点中查找所有根节点，根节点满足以下条件：<br/>
-     * 1.节点的父节点ID等于-1<br/>
+     * 1.节点的父节点ID等于 null 或 空字符串<br/>
      * 2.在节点集合中找不到某个节点的父节点，那么这个节点就是根节点<br/>
      *
      * @param noBuildTreeNodeList 所有要构建树的节点
@@ -172,24 +180,26 @@ public class BuildTreeUtils {
     private static <T extends ITreeNode> List<T> findRootNode(List<T> noBuildTreeNodeList) {
         // 所有根节点
         List<T> rootNodeList = new ArrayList<>();
-        for (T node : noBuildTreeNodeList) {
+        for (T root : noBuildTreeNodeList) {
             // 节点的父节点ID等于-1
-            if (node.getParentId() == -1L) {
-                rootNodeList.add(node);
-                node.setBuild(true);
+            if (root.getParentId() == null || StringUtils.isBlank(String.valueOf(root.getParentId()))) {
+                rootNodeList.add(root);
+                root.setBuild(true);
+                continue;
+            }
+            Boolean isRoot = root.isRoot();
+            if (Objects.equals(isRoot, true)) {
+                rootNodeList.add(root);
+                root.setBuild(true);
+                continue;
+            }
+            if (Objects.equals(isRoot, false)) {
                 continue;
             }
             // 在节点集合中找不到某个节点的父节点，那么这个节点就是根节点
-            boolean flag = true;// 当前节点(node)是否是根节点
-            for (T n : noBuildTreeNodeList) {
-                if (!node.equals(n) && Objects.equals(node.getParentId(), n.getId())) {
-                    flag = false;// 当前节点不是根节点
-                    break;
-                }
-            }
-            if (flag) {
-                rootNodeList.add(node);
-                node.setBuild(true);
+            if (noBuildTreeNodeList.stream().noneMatch(children -> !root.equals(children) && Objects.equals(root.getParentId(), children.getId()))) {
+                rootNodeList.add(root);
+                root.setBuild(true);
             }
         }
         return rootNodeList;
