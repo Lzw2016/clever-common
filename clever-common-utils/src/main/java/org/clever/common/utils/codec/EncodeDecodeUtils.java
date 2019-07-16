@@ -209,7 +209,9 @@ public class EncodeDecodeUtils {
      */
     public static String browserDownloadFileName(String userAgent, String fileName) {
         try {
-            if (userAgent.toUpperCase().indexOf("MSIE") > 0 || userAgent.toUpperCase().indexOf("LIKE GECKO") > 0) {
+            if (userAgent.toUpperCase().indexOf("SAFARI") > 0) {
+                fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
+            } else if (userAgent.toUpperCase().indexOf("MSIE") > 0 || userAgent.toUpperCase().indexOf("LIKE GECKO") > 0) {
                 fileName = URLEncoder.encode(fileName, "UTF-8");
             } else {
                 fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
