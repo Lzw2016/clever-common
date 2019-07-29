@@ -3,10 +3,12 @@ package org.clever.common.server.config;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.MybatisDefaultParameterHandler;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.core.parser.SqlInfo;
 import com.baomidou.mybatisplus.core.toolkit.*;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.DialectFactory;
 import com.baomidou.mybatisplus.extension.plugins.pagination.DialectModel;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,7 +16,15 @@ import com.baomidou.mybatisplus.extension.toolkit.JdbcUtils;
 import com.baomidou.mybatisplus.extension.toolkit.SqlParserUtils;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.statement.select.OrderByElement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
@@ -28,16 +38,16 @@ import org.clever.common.model.request.QueryBySort;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
-
-import static java.util.stream.Collectors.joining;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 自定义分页插件
- * TODO 升级到最新
  * <p>
  * 作者： lzw<br/>
- * 创建时间：2019-06-14 11:22 <br/>
+ * 创建时间：2019-07-29 20:27 <br/>
  *
  * @see com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor
  */
@@ -45,6 +55,8 @@ import static java.util.stream.Collectors.joining;
 @Accessors(chain = true)
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class CustomPaginationInterceptor extends AbstractSqlParserHandler implements Interceptor {
+
+    protected static final Log logger = LogFactory.getLog(PaginationInterceptor.class);
 
     private static final String ASC = "ASC";
     private static final String DESC = "DESC";
@@ -66,7 +78,8 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      */
     private String dialectType;
     /**
-     * 方言实现类
+     * 方言实现类<br>
+     * 注意！实现 com.baomidou.mybatisplus.extension.plugins.pagination.dialects.IDialect 接口的子类
      */
     private String dialectClazz;
 
@@ -75,22 +88,29 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      *
      * @param originalSql 需要拼接的SQL
      * @param page        page对象
-     * @param orderBy     是否需要拼接Order By
      * @return ignore
      */
-    public static String concatOrderBy(String originalSql, IPage<?> page, boolean orderBy) {
-        if (orderBy && (ArrayUtils.isNotEmpty(page.ascs())
-                || ArrayUtils.isNotEmpty(page.descs()))) {
-            StringBuilder buildSql = new StringBuilder(originalSql);
-            String ascStr = concatOrderBuilder(page.ascs(), " ASC");
-            String descStr = concatOrderBuilder(page.descs(), " DESC");
-            if (StringUtils.isNotEmpty(ascStr) && StringUtils.isNotEmpty(descStr)) {
-                ascStr += ", ";
+    public static String concatOrderBy(String originalSql, IPage<?> page) {
+        if (CollectionUtils.isNotEmpty(page.orders())) {
+            try {
+                List<OrderItem> orderList = page.orders();
+                Select selectStatement = (Select) CCJSqlParserUtil.parse(originalSql);
+                PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
+                List<OrderByElement> orderByElements = plainSelect.getOrderByElements();
+                if (orderByElements == null || orderByElements.isEmpty()) {
+                    orderByElements = new ArrayList<>(orderList.size());
+                }
+                for (OrderItem item : orderList) {
+                    OrderByElement element = new OrderByElement();
+                    element.setExpression(new Column(item.getColumn()));
+                    element.setAsc(item.isAsc());
+                    orderByElements.add(element);
+                }
+                plainSelect.setOrderByElements(orderByElements);
+                return plainSelect.toString();
+            } catch (JSQLParserException e) {
+                logger.warn("failed to concat orderBy from IPage, exception=" + e.getMessage());
             }
-            if (StringUtils.isNotEmpty(ascStr) || StringUtils.isNotEmpty(descStr)) {
-                buildSql.append(" ORDER BY ").append(ascStr).append(descStr);
-            }
-            return buildSql.toString();
         }
         return originalSql;
     }
@@ -100,11 +120,10 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      *
      * @param originalSql 需要拼接的SQL
      * @param queryBySort 排序对象
-     * @param orderBy     是否需要拼接Order By
      * @return ignore
      */
-    public static String concatOrderBy(String originalSql, QueryBySort queryBySort, boolean orderBy) {
-        if (orderBy && null != queryBySort && queryBySort.getOrderFields() != null && queryBySort.getOrderFields().size() > 0) {
+    public static String concatOrderBy(String originalSql, QueryBySort queryBySort) {
+        if (null != queryBySort && queryBySort.getOrderFields() != null && queryBySort.getOrderFields().size() > 0) {
             List<String> orderFields = queryBySort.getOrderFieldsSql();
             List<String> sorts = queryBySort.getSortsSql();
             StringBuilder buildSql = new StringBuilder(originalSql);
@@ -152,20 +171,6 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
     private static String concatOrderBuilder(String column, String orderWord) {
         if (StringUtils.isNotEmpty(column)) {
             return column + ' ' + orderWord;
-        }
-        return StringUtils.EMPTY;
-    }
-
-    /**
-     * 拼接多个排序方法
-     *
-     * @param columns   ignore
-     * @param orderWord ignore
-     */
-    private static String concatOrderBuilder(String[] columns, String orderWord) {
-        if (ArrayUtils.isNotEmpty(columns)) {
-            return Arrays.stream(columns).filter(StringUtils::isNotEmpty)
-                    .map(i -> i + orderWord).collect(joining(StringPool.COMMA));
         }
         return StringUtils.EMPTY;
     }
@@ -242,7 +247,6 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
         boolean orderBy = true;
         if (page.isSearchCount()) {
             SqlInfo sqlInfo = SqlParserUtils.getOptimizeCountSql(page.optimizeCountSql(), countSqlParser, originalSql);
-            orderBy = sqlInfo.isOrderBy();
             this.queryTotal(overflow, sqlInfo.getSql(), mappedStatement, boundSql, page, connection);
             if (page.getTotal() <= 0) {
                 return null;
@@ -250,9 +254,9 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
         }
         String buildSql;
         if (queryByPage != null || queryBySort != null) {
-            buildSql = concatOrderBy(originalSql, (queryByPage != null ? queryByPage : queryBySort), orderBy);
+            buildSql = concatOrderBy(originalSql, (queryByPage != null ? queryByPage : queryBySort));
         } else {
-            buildSql = concatOrderBy(originalSql, page, orderBy);
+            buildSql = concatOrderBy(originalSql, page);
         }
         DialectModel model = DialectFactory.buildPaginationSql(page, buildSql, dbType, dialectClazz);
         Configuration configuration = mappedStatement.getConfiguration();
@@ -316,4 +320,5 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
             this.dialectClazz = dialectClazz;
         }
     }
+
 }
