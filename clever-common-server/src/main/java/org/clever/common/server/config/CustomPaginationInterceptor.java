@@ -90,7 +90,7 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      * @param page        page对象
      * @return ignore
      */
-    public static String concatOrderBy(String originalSql, IPage<?> page) {
+    private static String concatOrderBy(String originalSql, IPage<?> page) {
         if (CollectionUtils.isNotEmpty(page.orders())) {
             try {
                 List<OrderItem> orderList = page.orders();
@@ -122,7 +122,7 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      * @param queryBySort 排序对象
      * @return ignore
      */
-    public static String concatOrderBy(String originalSql, QueryBySort queryBySort) {
+    private static String concatOrderBy(String originalSql, QueryBySort queryBySort) {
         if (null != queryBySort && queryBySort.getOrderFields() != null && queryBySort.getOrderFields().size() > 0) {
             List<String> orderFields = queryBySort.getOrderFieldsSql();
             List<String> sorts = queryBySort.getSortsSql();
@@ -244,7 +244,6 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
         DbType dbType = StringUtils.isNotEmpty(dialectType) ? DbType.getDbType(dialectType)
                 : JdbcUtils.getDbType(connection.getMetaData().getURL());
 
-        boolean orderBy = true;
         if (page.isSearchCount()) {
             SqlInfo sqlInfo = SqlParserUtils.getOptimizeCountSql(page.optimizeCountSql(), countSqlParser, originalSql);
             this.queryTotal(overflow, sqlInfo.getSql(), mappedStatement, boundSql, page, connection);
@@ -277,7 +276,7 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
      * @param page            IPage
      * @param connection      Connection
      */
-    protected void queryTotal(boolean overflowCurrent, String sql, MappedStatement mappedStatement, BoundSql boundSql, IPage<?> page, Connection connection) {
+    private void queryTotal(boolean overflowCurrent, String sql, MappedStatement mappedStatement, BoundSql boundSql, IPage<?> page, Connection connection) {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             DefaultParameterHandler parameterHandler = new MybatisDefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), boundSql);
             parameterHandler.setParameters(statement);
