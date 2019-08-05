@@ -332,12 +332,6 @@
                             <goal>jar</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
             <!-- 设置资源文件的编码方式 -->
