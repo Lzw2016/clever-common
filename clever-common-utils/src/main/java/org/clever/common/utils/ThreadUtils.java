@@ -1,6 +1,7 @@
 package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 线程工具类
@@ -11,11 +12,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ThreadUtils {
 
     /**
-     * 打印线程栈信息
+     * 线程栈信息
+     *
+     * @return 线程栈信息字符串
      */
-    public static void printTrack(Thread thread) {
+    public static String track(Thread thread) {
         if (thread == null) {
-            return;
+            return "";
         }
         StackTraceElement[] stackTrace = thread.getStackTrace();
         StringBuilder stringBuilder = new StringBuilder();
@@ -31,7 +34,27 @@ public class ThreadUtils {
                     )
             );
         }
-        log.info(stringBuilder.toString());
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 当前线程栈信息
+     *
+     * @return 线程栈信息字符串
+     */
+    public static String track() {
+        return track(Thread.currentThread());
+    }
+
+    /**
+     * 打印线程栈信息
+     */
+    public static void printTrack(Thread thread) {
+        String str = track(thread);
+        if (StringUtils.isBlank(str)) {
+            return;
+        }
+        log.info(str);
     }
 
     /**
