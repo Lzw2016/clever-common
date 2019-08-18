@@ -11,7 +11,9 @@
 
 - [增强]
     - ThreadUtils
-
+    - DateTimeUtils
+    - Long类型 json 序列化反序列化问题 (ObjectMapper)
+    - Date类型 json 序列化反序列化问题 (ObjectMapper)
 
 - [新增]
     - Tuple 增加元组支持

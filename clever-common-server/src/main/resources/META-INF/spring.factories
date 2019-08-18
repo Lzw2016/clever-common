@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.clever.common.server.config.DefaultBeanConfiguration
+org.clever.common.server.config.DefaultBeanConfiguration,\
+org.clever.common.server.config.Jackson2Customizer

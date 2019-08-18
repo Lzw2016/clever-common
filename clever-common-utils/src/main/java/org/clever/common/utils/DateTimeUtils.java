@@ -2,6 +2,7 @@ package org.clever.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.*;
@@ -26,9 +27,15 @@ public class DateTimeUtils extends DateUtils {
     public static final String yyyy_MM_dd_HH_mm = "yyyy-MM-dd HH:mm";
 
     /**
-     * 定义可能出现的时间日期格式
+     * 定义可能出现的时间日期格式<br />
+     * 参考 https://blog.csdn.net/solocoder/article/details/83655885
      */
-    private static String[] parsePatterns = {yyyy_MM_dd, yyyy_MM_dd_HH_mm_ss, yyyy_MM_dd_HH_mm, "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm"};
+    private static String[] parsePatterns = {
+            yyyy_MM_dd, yyyy_MM_dd_HH_mm_ss, yyyy_MM_dd_HH_mm,
+            "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm",
+            "yyyyMMdd", "yyyyMMdd HH:mm:ss", "yyyyMMdd HH:mm",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    };
 
     /**
      * 得到当前时间的日期字符串，如：2016-4-27、2016-4-27 21:57:15<br/>
@@ -158,6 +165,12 @@ public class DateTimeUtils extends DateUtils {
      * "yyyy/MM/dd"<br/>
      * "yyyy/MM/dd HH:mm:ss"<br/>
      * "yyyy/MM/dd HH:mm"<br/>
+     * "yyyyMMdd"<br/>
+     * "yyyyMMdd HH:mm:ss"<br/>
+     * "yyyyMMdd HH:mm"<br/>
+     * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"<br/>
+     * "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"<br/>
+     * 时间搓(毫秒)<br/>
      *
      * @param str 日期字符串，如：2014/03/01 12:15:10
      * @return 失败返回 null
@@ -166,8 +179,18 @@ public class DateTimeUtils extends DateUtils {
         if (str == null) {
             return null;
         }
+        if (str instanceof Long || str instanceof Integer) {
+            long time = (long) str;
+            return new Date(time);
+        }
+        if (String.valueOf(str).length() != 8) {
+            long time = NumberUtils.toLong(String.valueOf(str), -1L);
+            if (time != -1L) {
+                return new Date(time);
+            }
+        }
         try {
-            return parseDate(str.toString(), parsePatterns);
+            return parseDate(String.valueOf(str), parsePatterns);
         } catch (ParseException e) {
             return null;
         }

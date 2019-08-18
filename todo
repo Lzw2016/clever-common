@@ -1,8 +1,5 @@
 1. mybatis-plus 批量接口增强
     参考 https://gitee.com/baomidou/mybatis-plus-samples/tree/master/mybatis-plus-sample-deluxe/src/main/java/com/baomidou/mybatisplus/samples/deluxe
-2. Long类型 json 序列化反序列化问题 (ObjectMapper)
-
-3. Date类型 json 序列化反序列化问题 (ObjectMapper)
 
 4. hutool-all 工具借鉴
 
