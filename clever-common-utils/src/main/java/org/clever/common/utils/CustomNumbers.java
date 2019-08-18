@@ -1,5 +1,6 @@
 package org.clever.common.utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +29,14 @@ public class CustomNumbers {
 //            '`', '{', '|', '}', '~',
     };
 
-    private final static Map<Character, Integer> digitMap = new HashMap<>();
+    private final static Map<Character, Integer> digitMap;
 
     static {
+        Map<Character, Integer> tmp = new HashMap<>(digits.length);
         for (int i = 0; i < digits.length; i++) {
-            digitMap.put(digits[i], i);
+            tmp.put(digits[i], i);
         }
+        digitMap = Collections.unmodifiableMap(tmp);
     }
 
     /**

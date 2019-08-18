@@ -38,5 +38,7 @@ public class DateTimeUtilsTest {
 
         date = DateTimeUtils.parseDate("20190818");
         log.info("### {}", DateTimeUtils.formatToString(date));
+
+
     }
 }

@@ -183,7 +183,7 @@ public class DateTimeUtils extends DateUtils {
             long time = (long) str;
             return new Date(time);
         }
-        if (String.valueOf(str).length() != 8) {
+        if (String.valueOf(str).length() != 8 && NumberUtils.isDigits(String.valueOf(str))) {
             long time = NumberUtils.toLong(String.valueOf(str), -1L);
             if (time != -1L) {
                 return new Date(time);
