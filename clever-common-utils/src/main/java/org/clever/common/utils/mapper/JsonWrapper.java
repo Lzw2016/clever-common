@@ -22,7 +22,7 @@ import java.util.*;
  */
 public class JsonWrapper {
 
-    private static final ObjectMapper mapper = JacksonMapper.nonEmptyMapper().getMapper();
+    private static final ObjectMapper mapper = JacksonMapper.getInstance().getMapper();
 
     private final Map innerMap;
 

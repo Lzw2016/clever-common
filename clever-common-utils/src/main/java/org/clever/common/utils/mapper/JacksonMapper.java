@@ -1,20 +1,32 @@
 package org.clever.common.utils.mapper;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.datatype.joda.cfg.JacksonJodaDateFormat;
+import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
+import org.clever.common.utils.mapper.jackson.CustomizerDateDeserializer;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.springframework.beans.BeanUtils;
+import org.springframework.core.KotlinDetector;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TimeZone;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Json串与Java对象的相互转换工具<br/>
@@ -25,24 +37,11 @@ import java.util.TimeZone;
  */
 @Slf4j
 public class JacksonMapper {
-    /**
-     * 创建只输出非Null且非Empty(如List.isEmpty)的属性到Json字符串的Mapper，建议在外部接口中使用<br/>
-     */
-    private static final JacksonMapper NON_EMPTY_MAPPER;
+    private static volatile boolean kotlinWarningLogged = false;
+    private static final JacksonMapper Instance;
 
-    /**
-     * 创建只输出初始值被改变的属性到Json字符串的Mapper，最节约的存储方式，建议在内部接口中使用<br/>
-     */
-    private static final JacksonMapper NON_DEFAULT_MAPPER;
-
-    /*
-     * 创建单例的JacksonMapper，使用全局共享的ObjectMapper对象，节省内存空间<br/>
-     * 可以根据需求增加<br/>
-     */
     static {
-        NON_EMPTY_MAPPER = new JacksonMapper(Include.NON_EMPTY);
-
-        NON_DEFAULT_MAPPER = new JacksonMapper(Include.NON_DEFAULT);
+        Instance = new JacksonMapper();
     }
 
     /**
@@ -50,55 +49,107 @@ public class JacksonMapper {
      */
     private ObjectMapper mapper;
 
+    public JacksonMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     /**
-     * 构造函数创建新的ObjectMapper
-     *
-     * @param include 设置Include属性
+     * 通用配置,参考 Jackson2ObjectMapperBuilder
      */
-    private JacksonMapper(Include include) {
+    private JacksonMapper() {
+        final String dateFormatPattern = "yyyy-MM-dd HH:mm:ss";
+        final ClassLoader moduleClassLoader = getClass().getClassLoader();
+        // 创建 ObjectMapper
         mapper = new ObjectMapper();
-        // 设置输出时包含属性的风格
-        if (include != null) {
-            mapper.setSerializationInclusion(include);
-        }
         // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         // 允许单引号、允许不带引号的字段名称
-        JacksonMapperUtils.enableSimple(mapper);
-        // 空值处理为空串
-        mapper.getSerializerProvider().setNullValueSerializer(new JsonSerializer<Object>() {
-            @Override
-            public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-                jgen.writeString("");
-            }
-        });
-        // 进行HTML解码
-        mapper.registerModule(new SimpleModule().addSerializer(String.class, new JsonSerializer<String>() {
-            @Override
-            public void serialize(String value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-                jgen.writeString(StringEscapeUtils.unescapeHtml4(value));
-            }
-        }));
-        // 设置时区 getTimeZone("GMT+8:00")
-        mapper.setTimeZone(TimeZone.getDefault());
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        // 使用枚举的的toString函数来读写枚举
+        // mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+        // mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+        // 设置时区 getTimeZone("GMT+8")
+        mapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        // locale: zh_CN
+        mapper.setLocale(Locale.CHINA);
+        // 设置时间格式
+        mapper.setDateFormat(new SimpleDateFormat(dateFormatPattern));
+        // 注册 Module
+        List<Module> modules = new ArrayList<>();
+        MultiValueMap<Object, Module> modulesToRegister = new LinkedMultiValueMap<>();
+        ObjectMapper.findModules(moduleClassLoader).forEach(module -> registerModule(module, modulesToRegister));
+        registerWellKnownModulesIfAvailable(modulesToRegister, moduleClassLoader);
+        for (List<Module> nestedModules : modulesToRegister.values()) {
+            modules.addAll(nestedModules);
+        }
+        SimpleModule module = new SimpleModule();
+        modules.add(module);
+        module.addSerializer(DateTime.class, new DateTimeSerializer(new JacksonJodaDateFormat(DateTimeFormat.forPattern(dateFormatPattern).withZoneUTC()), 0));
+        module.addSerializer(BigInteger.class, ToStringSerializer.instance);
+        module.addSerializer(Long.class, ToStringSerializer.instance);
+        module.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        module.addDeserializer(Date.class, CustomizerDateDeserializer.instance);
+        mapper.registerModules(modules);
     }
 
     /**
-     * 创建只输出非Null且非Empty(如List.isEmpty)的属性到Json字符串的Mapper，建议在外部接口中使用<br/>
-     *
-     * @return 返回的是一个单例JacksonMapper全局共享
+     * 返回标准的实例
      */
-    public static JacksonMapper nonEmptyMapper() {
-        return NON_EMPTY_MAPPER;
+    public static JacksonMapper getInstance() {
+        return Instance;
     }
 
-    /**
-     * 创建只输出初始值被改变的属性到Json字符串的Mapper，最节约的存储方式，建议在内部接口中使用<br/>
-     *
-     * @return 返回的是一个单例JacksonMapper全局共享
-     */
-    public static JacksonMapper nonDefaultMapper() {
-        return NON_DEFAULT_MAPPER;
+    private void registerModule(Module module, MultiValueMap<Object, Module> modulesToRegister) {
+        if (module.getTypeId() == null) {
+            modulesToRegister.add(SimpleModule.class.getName(), module);
+        } else {
+            modulesToRegister.set(module.getTypeId(), module);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerWellKnownModulesIfAvailable(MultiValueMap<Object, Module> modulesToRegister, ClassLoader moduleClassLoader) {
+        try {
+            Class<? extends Module> jdk8ModuleClass = (Class<? extends Module>) ClassUtils.forName("com.fasterxml.jackson.datatype.jdk8.Jdk8Module", moduleClassLoader);
+            Module jdk8Module = BeanUtils.instantiateClass(jdk8ModuleClass);
+            modulesToRegister.set(jdk8Module.getTypeId(), jdk8Module);
+        } catch (ClassNotFoundException ex) {
+            // jackson-datatype-jdk8 not available
+        }
+
+        try {
+            Class<? extends Module> javaTimeModuleClass = (Class<? extends Module>) ClassUtils.forName("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule", moduleClassLoader);
+            Module javaTimeModule = BeanUtils.instantiateClass(javaTimeModuleClass);
+            modulesToRegister.set(javaTimeModule.getTypeId(), javaTimeModule);
+        } catch (ClassNotFoundException ex) {
+            // jackson-datatype-jsr310 not available
+        }
+
+        // Joda-Time present?
+        if (ClassUtils.isPresent("org.joda.time.LocalDate", moduleClassLoader)) {
+            try {
+                Class<? extends Module> jodaModuleClass = (Class<? extends Module>) ClassUtils.forName("com.fasterxml.jackson.datatype.joda.JodaModule", moduleClassLoader);
+                Module jodaModule = BeanUtils.instantiateClass(jodaModuleClass);
+                modulesToRegister.set(jodaModule.getTypeId(), jodaModule);
+            } catch (ClassNotFoundException ex) {
+                // jackson-datatype-joda not available
+            }
+        }
+
+        // Kotlin present?
+        if (KotlinDetector.isKotlinPresent()) {
+            try {
+                Class<? extends Module> kotlinModuleClass = (Class<? extends Module>) ClassUtils.forName("com.fasterxml.jackson.module.kotlin.KotlinModule", moduleClassLoader);
+                Module kotlinModule = BeanUtils.instantiateClass(kotlinModuleClass);
+                modulesToRegister.set(kotlinModule.getTypeId(), kotlinModule);
+            } catch (ClassNotFoundException ex) {
+                if (!kotlinWarningLogged) {
+                    kotlinWarningLogged = true;
+                    log.warn("For Jackson Kotlin classes support please add \"com.fasterxml.jackson.module:jackson-module-kotlin\" to the classpath");
+                }
+            }
+        }
     }
 
     /**

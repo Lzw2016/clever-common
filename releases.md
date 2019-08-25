@@ -1,13 +1,19 @@
-
-### 2019-08-05 1.0.0.RELEASES
-
-- 发布第一个版本
-
----
-### 2019-xx-xx 1.0.1.RELEASES
+### 2019-xx-xx 1.0.2.RELEASES
 
 - [bug fix]
 
+- [增强]
+
+- [新增]
+
+- [变化]
+
+---
+
+### 2019-08-25 1.0.1.RELEASES
+
+- [bug fix]
+    - 无
 
 - [增强]
     - ThreadUtils
@@ -26,6 +32,15 @@
     - RandomUtil
     - WeightRandom
 
+- [变化]
+    - JacksonMapper 删除 nonEmptyMapper() 和 nonDefaultMapper()
+    - 删除 JacksonMapperUtils.java
+
+---
+
+### 2019-08-05 1.0.0.RELEASES
+
+- 发布第一个版本
 
 
 
