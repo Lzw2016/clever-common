@@ -5,6 +5,7 @@ import org.clever.common.utils.exception.ExceptionUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
@@ -21,6 +22,7 @@ import javax.servlet.ServletContext;
  * 作者：LiZW <br/>
  * 创建时间：2016-5-9 14:25 <br/>
  */
+@Order(Integer.MIN_VALUE)
 @Component
 @Slf4j
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
@@ -126,3 +128,4 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         return servletContext;
     }
 }
+
