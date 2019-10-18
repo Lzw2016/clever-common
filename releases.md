@@ -1,12 +1,27 @@
-### 2019-xx-xx 1.0.2.RELEASES
+### 2019-xx-xx 1.0.3.RELEASES
 
 - [bug fix]
 
 - [增强]
-    QueryByPage 新增 isSearchCount(是否进行 count 查询)
+
 - [新增]
 
 - [变化]
+
+---
+
+### 2019-xx-xx 1.0.2.RELEASES
+
+- [bug fix]
+    - 无
+
+- [增强]
+    QueryByPage 新增 isSearchCount(是否进行 count 查询)
+- [新增]
+    - 无
+
+- [变化]
+    - 无
 
 ---
 
