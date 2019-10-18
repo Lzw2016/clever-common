@@ -221,7 +221,7 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
         }
         // page 默认值
         if (null == page && queryByPage != null) {
-            page = new Page<>(queryByPage.getPageNo(), queryByPage.getPageSize());
+            page = new Page<>(queryByPage.getPageNo(), queryByPage.getPageSize(), queryByPage.isSearchCount());
             queryByPage.page(page);
         }
 

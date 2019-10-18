@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -21,7 +23,6 @@ public class QueryByPage extends QueryBySort {
      * 每页的数据量 - 最大值
      */
     private static final int PAGE_SIZE_MAX = 100;
-
     /**
      * 每页的数据量(1 <= pageSize <= 100)
      */
@@ -33,11 +34,17 @@ public class QueryByPage extends QueryBySort {
      */
     @ApiModelProperty(value = "当前页面的页码数", position = 6)
     private int pageNo = 1;
-
+    /**
+     * 是否进行 count 查询
+     */
+    @Setter
+    @Getter
+    @ApiModelProperty(value = "是否进行 count 查询", position = 6)
+    private boolean isSearchCount = true;
     /**
      * 分页
      */
-    @ApiModelProperty(hidden = true, accessMode = ApiModelProperty.AccessMode.READ_ONLY, readOnly = true, position = 999999999)
+    @ApiModelProperty(hidden = true, accessMode = ApiModelProperty.AccessMode.READ_ONLY, readOnly = true, position = Integer.MAX_VALUE)
     private IPage<?> page;
 
     /*--------------------------------------------------------------

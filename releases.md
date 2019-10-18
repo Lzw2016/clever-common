@@ -3,7 +3,7 @@
 - [bug fix]
 
 - [增强]
-
+    QueryByPage 新增 isSearchCount(是否进行 count 查询)
 - [新增]
 
 - [变化]
