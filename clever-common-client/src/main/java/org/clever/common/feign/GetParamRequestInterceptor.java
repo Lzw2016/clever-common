@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.*;
  * 创建时间：2018-09-25 20:20 <br/>
  */
 //@Component
+@Slf4j
 public class GetParamRequestInterceptor implements RequestInterceptor {
 
     private ObjectMapper objectMapper;
@@ -39,7 +41,7 @@ public class GetParamRequestInterceptor implements RequestInterceptor {
                 buildQuery(jsonNode, "", queries);
                 template.queries(queries);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("处理GET请求的Java POJO对象参数发生异常", e);
             }
         }
     }

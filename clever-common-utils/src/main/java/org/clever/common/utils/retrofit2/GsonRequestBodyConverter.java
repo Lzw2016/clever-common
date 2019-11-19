@@ -32,11 +32,12 @@ public final class GsonRequestBodyConverter<T> implements Converter<T, RequestBo
 
     @Override
     public RequestBody convert(@Nullable T value) throws IOException {
-        Buffer buffer = new Buffer();
-        Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
-        JsonWriter jsonWriter = gson.newJsonWriter(writer);
-        adapter.write(jsonWriter, value);
-        jsonWriter.close();
-        return RequestBody.create(MEDIA_TYPE, buffer.readByteString());
+        try (Buffer buffer = new Buffer()) {
+            Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
+            JsonWriter jsonWriter = gson.newJsonWriter(writer);
+            adapter.write(jsonWriter, value);
+            jsonWriter.close();
+            return RequestBody.create(MEDIA_TYPE, buffer.readByteString());
+        }
     }
 }

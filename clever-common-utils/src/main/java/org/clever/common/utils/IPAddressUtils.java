@@ -72,7 +72,7 @@ public class IPAddressUtils {
      */
     public static String getInet4AddressStr() {
         Set<String> inet4Address = getInet4Address();
-        if (inet4Address != null) {
+        if (inet4Address != null && !inet4Address.isEmpty()) {
             StringBuilder stringBuilder = new StringBuilder();
             for (String str : inet4Address) {
                 if (org.apache.commons.lang3.StringUtils.isNotBlank(stringBuilder.toString())) {

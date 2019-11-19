@@ -70,7 +70,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         String rootRealPath = "";
         try {
             rootRealPath = getApplicationContext().getResource("").getFile().getAbsolutePath();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn("获取系统根目录失败", e);
         }
         return rootRealPath;
@@ -83,7 +83,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         String rootRealPath = "";
         try {
             rootRealPath = new DefaultResourceLoader().getResource("").getFile().getAbsolutePath();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn("获取资源根目录失败", e);
         }
         return rootRealPath;
@@ -98,7 +98,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     public static <T> T getBean(String name) {
         try {
             return (T) getApplicationContext().getBean(name);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }
     }
@@ -111,7 +111,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     public static <T> T getBean(Class<T> requiredType) {
         try {
             return getApplicationContext().getBean(requiredType);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }
     }

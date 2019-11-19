@@ -141,6 +141,8 @@ public class CustomPaginationInterceptor extends AbstractSqlParserHandler implem
                     sort = sorts.get(index);
                     if (sort != null) {
                         sort = sort.trim();
+                    } else {
+                        sort = ASC;
                     }
                     if (!DESC.equalsIgnoreCase(sort) && !ASC.equalsIgnoreCase(sort)) {
                         sort = ASC;

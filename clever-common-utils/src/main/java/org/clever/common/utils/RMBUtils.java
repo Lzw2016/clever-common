@@ -30,16 +30,4 @@ public class RMBUtils {
 
         return head + s.toString().replaceAll("(零.)*零元", "元").replaceFirst("(零.)+", "").replaceAll("(零.)+", "零").replaceAll("^整$", "零元整");
     }
-
-    public static String digitUppercase(int n) {
-        return digitUppercase(new Double(n));
-    }
-
-    public static String digitUppercase(float n) {
-        return digitUppercase(new Double(n));
-    }
-
-    public static String digitUppercase(short n) {
-        return digitUppercase(new Double(n));
-    }
 }
