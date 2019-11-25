@@ -58,13 +58,13 @@ public class JsonWrapper {
      * 通过Json构造
      */
     public JsonWrapper(String jsonString) {
-        this(JsonToMap(jsonString));
+        this(jsonToMap(jsonString));
     }
 
     /**
      * Json转换成Map
      */
-    private static Map JsonToMap(String jsonString) {
+    private static Map jsonToMap(String jsonString) {
         try {
             return mapper.readValue(jsonString, LinkedHashMap.class);
         } catch (IOException e) {

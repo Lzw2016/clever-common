@@ -72,13 +72,13 @@ public class DataSizeUtils {
     /**
      * 返回容易读取的数据大小,如：15B、12.36KB、1.58MB、25.3GB
      *
-     * @param Size 文件大小 单位：bit
+     * @param size 文件大小 单位：bit
      * @return 返回容易读取的文件大小数据, 参数是null，返回null
      */
-    public static String getHumanReadableSize(Long Size) {
-        if (Size == null) {
+    public static String getHumanReadableSize(Long size) {
+        if (size == null) {
             return null;
         }
-        return getHumanReadableSize(Size.longValue());
+        return getHumanReadableSize(size.longValue());
     }
 }

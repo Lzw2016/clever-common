@@ -69,6 +69,19 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
+        <!--SonarQube文档 https://docs.sonarqube.org/6.7/AnalysisParameters.html-->
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.login>7aa02750be264859233bcfb18d963665734e948f</sonar.login>
+        <!--<sonar.password></sonar.password>-->
+        <sonar.projectName>${project.artifactId}</sonar.projectName>
+        <sonar.projectKey>${project.groupId}:${project.artifactId}</sonar.projectKey>
+        <sonar.projectVersion>${project.version}</sonar.projectVersion>
+        <!--<sonar.projectVersion>1.0.2.RELEASES</sonar.projectVersion>-->
+        <sonar.language>java</sonar.language>
+        <sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
+        <sonar.log.level>INFO</sonar.log.level>
+        <sonar.links.homepage>https://github.com/Lzw2016/clever-common</sonar.links.homepage>
+        <sonar.links.scm>https://github.com/Lzw2016/clever-common.git</sonar.links.scm>
     </properties>
 
     <dependencyManagement>
@@ -352,6 +365,12 @@
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
+            </plugin>
+            <!--sonar代码分析插件-->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
             </plugin>
         </plugins>
     </build>
