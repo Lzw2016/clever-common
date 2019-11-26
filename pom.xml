@@ -370,7 +370,14 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.6.0.1398</version>
+                <version>3.7.0.1746</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.sonarsource.java</groupId>
+                        <artifactId>java-frontend</artifactId>
+                        <version>4.15.0.12310</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

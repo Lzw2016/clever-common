@@ -23,10 +23,6 @@ import org.springframework.util.StringUtils;
 @Configuration("CleverCommonServerBeanConfiguration")
 @Slf4j
 public class DefaultBeanConfiguration {
-
-    @Autowired(required = false)
-    private TtlScheduler ttlScheduler;
-
     /**
      * 自定义Consul注册逻辑
      */
@@ -35,6 +31,7 @@ public class DefaultBeanConfiguration {
     protected ConsulServiceRegistry consulServiceRegistry(
             ConsulClient consulClient,
             ConsulDiscoveryProperties properties,
+            @Autowired(required = false) TtlScheduler ttlScheduler,
             HeartbeatProperties heartbeatProperties) {
         return new ConsulRegistry(consulClient, properties, ttlScheduler, heartbeatProperties);
     }
