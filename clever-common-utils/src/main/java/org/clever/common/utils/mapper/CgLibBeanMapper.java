@@ -53,7 +53,6 @@ public class CgLibBeanMapper {
         return BEAN_CONVERTER.mapper(source, destinationClass);
     }
 
-
     /**
      * 将对象source的值拷贝到对象destinationObject中<br/>
      * <b>注意：此操作source中的属性会覆盖destinationObject中的属性，无论source中的属性是不是空的</b><br/>

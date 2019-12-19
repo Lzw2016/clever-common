@@ -3,6 +3,8 @@ package org.clever.common.utils.mapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.beans.BeanCopier;
+import org.apache.commons.lang3.ClassUtils;
+import org.clever.common.utils.mapper.cglib.TypeConverter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -143,25 +145,37 @@ public class BeanMapperTest {
         log.info("### 自定义转换 --> {}", modelB);
     }
 
-//    @Test
-//    public void t01() {
-//        ModelA modelA = new ModelA();
-//        modelA.setF1(1);
-//        modelA.setF2(1.23D);
-//        modelA.setF3(new Date());
-//        modelA.setF4("abcd");
-//        modelA.setF5(true);
-//        modelA.setF6("2018-09-12 13:45:26");
-//        modelA.setF7("QQQ");
-//        modelA.setF9(123456L);
-//        ModelB modelB = CgLibBeanMapper.mapper(modelA, ModelB.class,  source -> {
-//            if (source == null) {
-//                return null;
-//            }
-//            return String.valueOf(source);
-//        });
-//        log.info("### 自定义转换 --> {}", modelB);
-//    }
+    @Test
+    public void t01() {
+        ModelA modelA = new ModelA();
+        modelA.setF1(1);
+        modelA.setF2(1.23D);
+        modelA.setF3(new Date());
+        modelA.setF4("abcd");
+        modelA.setF5(true);
+        modelA.setF6("2018-09-12 13:45:26");
+        modelA.setF7("QQQ");
+        modelA.setF9(123456L);
+        ModelB modelB = CgLibBeanMapper.mapper(modelA, ModelB.class, new TypeConverter() {
+            @Override
+            public boolean support(Object source, Class<?> targetType) {
+                if (source == null) {
+                    return false;
+                }
+                return ClassUtils.isAssignable(source.getClass(), Long.class, true)
+                        && ClassUtils.isAssignable(targetType, String.class, true);
+            }
+
+            @Override
+            public Object convert(Object source, Class<?> targetType, Object context) {
+                if (source == null) {
+                    return null;
+                }
+                return String.valueOf(source);
+            }
+        });
+        log.info("### 自定义转换 --> {}", modelB);
+    }
 
     @Data
     public static class ModelA {

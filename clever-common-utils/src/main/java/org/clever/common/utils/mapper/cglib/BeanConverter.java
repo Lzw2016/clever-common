@@ -57,7 +57,7 @@ public class BeanConverter {
         try {
             result = destinationClass.newInstance();
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(String.format("创建对象实例[%s]失败，缺少默认的构造函数", destinationClass.getCanonicalName()), e);
+            throw new RuntimeException(String.format("创建对象实例[%s]失败，缺少默认的构造函数", destinationClass.getName()), e);
         }
         copyTo(source, result);
         return result;
@@ -130,9 +130,9 @@ public class BeanConverter {
                 if (log.isInfoEnabled()) {
                     log.info(
                             "[ConverterAdapter] 自定义类型转换 sourceType=[{}] --> targetType=[{}] | 转换器[{}]",
-                            sourceType.getCanonicalName(),
-                            targetType.getCanonicalName(),
-                            resolvedTypeConverter.delegatingConverter.getClass().getCanonicalName()
+                            sourceType.getName(),
+                            targetType.getName(),
+                            resolvedTypeConverter.delegatingConverter.getClass().getName()
                     );
                 }
                 return resolvedTypeConverter.convert(source, targetType, context);
@@ -180,12 +180,12 @@ public class BeanConverter {
             if (delegatingConverter == null || that.delegatingConverter == null) {
                 return false;
             }
-            return delegatingConverter.getClass().getCanonicalName().equals(that.delegatingConverter.getClass().getCanonicalName());
+            return delegatingConverter.getClass().getName().equals(that.delegatingConverter.getClass().getName());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(delegatingConverter.getClass().getCanonicalName());
+            return Objects.hash(delegatingConverter.getClass().getName());
         }
     }
 }
