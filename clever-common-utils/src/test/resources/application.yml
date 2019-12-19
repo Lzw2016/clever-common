@@ -1,0 +1,10 @@
+###################################################################################
+### logging(logback)
+###################################################################################
+logging:
+  config: classpath:logback.xml
+  level:
+    org.dozer: warn
+    org.apache: warn
+    org.springframework: warn
+    org.clever: debug

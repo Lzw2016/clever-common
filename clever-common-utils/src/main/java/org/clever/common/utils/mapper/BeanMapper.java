@@ -65,7 +65,7 @@ public class BeanMapper {
      * @param <T>              需要转换之后的JavaBean类型
      * @return 转换之后的对象集合
      */
-    public static <T> List<T> mapperCollection(Collection sourceList, Class<T> destinationClass) {
+    public static <T> List<T> mapperCollection(Collection<?> sourceList, Class<T> destinationClass) {
         if (sourceList == null) {
             return null;
         }
