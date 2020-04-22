@@ -1,11 +1,14 @@
 package org.clever.common.model.request;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,6 +114,20 @@ public class QueryByPage extends QueryBySort {
         newPage.setSearchCount(page.isSearchCount());
         newPage.setPages(page.getPages());
         newPage.setRecords(records);
+        List<String> orderFields = this.getOrderFields();
+        List<String> sorts = this.getSortsSql();
+        List<OrderItem> orders = new ArrayList<>(orderFields.size());
+        for (int index = 0; index < orderFields.size(); index++) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setColumn(orderFields.get(index));
+            String sort = ASC;
+            if (sorts.size() > index) {
+                sort = sorts.get(index);
+            }
+            orderItem.setAsc(ASC.equalsIgnoreCase(StringUtils.trim(sort)));
+            orders.add(orderItem);
+        }
+        newPage.setOrders(orders);
         return newPage;
     }
 }

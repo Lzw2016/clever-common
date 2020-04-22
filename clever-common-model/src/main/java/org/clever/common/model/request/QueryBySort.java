@@ -134,6 +134,9 @@ public class QueryBySort extends BaseRequest {
         return this;
     }
 
+    /**
+     * 排序SQL字段集合
+     */
     public List<String> getOrderFieldsSql() {
         List<String> orderFieldsSql = new ArrayList<>();
         List<String> orderFieldsTmp = getOrderFields();
@@ -146,6 +149,9 @@ public class QueryBySort extends BaseRequest {
         return orderFieldsSql;
     }
 
+    /**
+     * 排序SQL字段对应的排序类型集合
+     */
     public List<String> getSortsSql() {
         List<String> sortsSql = new ArrayList<>();
         List<String> orderFieldsTmp = getOrderFields();

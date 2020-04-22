@@ -1,4 +1,4 @@
-### 2020-xx-xx 1.0.5.RELEASES
+### 2020-xx-xx 1.0.6.RELEASES
 
 - [bug fix]
 
@@ -8,6 +8,18 @@
 
 - [变化]
 
+---
+
+### 2020-04-22 1.0.5.RELEASES
+
+- [bug fix]
+    - Page<T> QueryByPage.result(List<T>) 方法填充排序数据
+- [增强]
+    - 无
+- [新增]
+    - 无
+- [变化]
+    - 无
 ---
 
 ### 2020-04-22 1.0.4.RELEASES
