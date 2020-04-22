@@ -10,26 +10,31 @@
     <parent>
         <groupId>org.clever</groupId>
         <artifactId>clever-common</artifactId>
-        <version>1.0.3.RELEASES</version>
+        <version>1.0.4.RELEASES</version>
     </parent>
 
     <dependencies>
+        <!--clever-common-->
         <dependency>
             <groupId>org.clever</groupId>
             <artifactId>clever-common-utils</artifactId>
         </dependency>
+        <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
+        <!--javax-->
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
         </dependency>
+        <!--Json、Xml相关-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <!--mybatis-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-core</artifactId>

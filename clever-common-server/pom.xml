@@ -10,10 +10,11 @@
     <parent>
         <groupId>org.clever</groupId>
         <artifactId>clever-common</artifactId>
-        <version>1.0.3.RELEASES</version>
+        <version>1.0.4.RELEASES</version>
     </parent>
 
     <dependencies>
+        <!--clever-common-->
         <dependency>
             <groupId>org.clever</groupId>
             <artifactId>clever-common-model</artifactId>
