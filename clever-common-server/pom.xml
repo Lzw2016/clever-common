@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.clever</groupId>
         <artifactId>clever-common</artifactId>
-        <version>1.0.2.RELEASES</version>
+        <version>1.0.3.RELEASES</version>
     </parent>
 
     <dependencies>
@@ -55,22 +55,10 @@
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
         </dependency>
         <!--mybatis-plus-->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-annotation</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-core</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-extension</artifactId>-->
-<!--        </dependency>-->
     </dependencies>
 
 </project>

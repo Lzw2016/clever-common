@@ -9,11 +9,11 @@ import java.text.DecimalFormat;
  * 创建时间：2016-5-9 21:43 <br/>
  */
 public class DataSizeUtils {
-    private static long ONE_KB = 1024;
-    private static long ONE_MB = ONE_KB * 1024;
-    private static long ONE_GB = ONE_MB * 1024;
-    private static long ONE_TB = ONE_GB * 1024;
-    private static long ONE_PB = ONE_TB * 1024;
+    private static final long ONE_KB = 1024;
+    private static final long ONE_MB = ONE_KB * 1024;
+    private static final long ONE_GB = ONE_MB * 1024;
+    private static final long ONE_TB = ONE_GB * 1024;
+    private static final long ONE_PB = ONE_TB * 1024;
 
     /**
      * 返回容易读取的数据大小
@@ -66,7 +66,7 @@ public class DataSizeUtils {
         if (result != null) {
             return result;
         }
-        return String.valueOf(size) + "B";
+        return size + "B";
     }
 
     /**

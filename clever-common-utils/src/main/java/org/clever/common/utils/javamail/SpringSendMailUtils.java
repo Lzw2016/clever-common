@@ -103,7 +103,7 @@ public class SpringSendMailUtils {
      * @param sentDate 设置发送时间，可以为空
      * @return 返回一个新的 SimpleMailMessage 对象
      */
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "DuplicatedCode"})
     private SimpleMailMessage newSimpleMailMessage(String[] to, String subject, String text, String[] cc, String[] bcc, String replyTo, Date sentDate) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         // 设置发件人
@@ -203,6 +203,7 @@ public class SpringSendMailUtils {
      * @param sentDate      设置发送时间，可以为空
      * @return 返回一个新的 MimeMessage 对象
      */
+    @SuppressWarnings("DuplicatedCode")
     private MimeMessage newMimeMessage(String[] to,
                                        String subject,
                                        String text,

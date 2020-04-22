@@ -27,8 +27,8 @@ import java.util.TreeMap;
 public class WeightRandom<T> implements Serializable {
     private static final long serialVersionUID = -8244697995702786499L;
 
-    private TreeMap<Double, T> weightMap;
-    private Random random;
+    private final TreeMap<Double, T> weightMap;
+    private final Random random;
 
     /**
      * 创建权重随机获取器
@@ -96,7 +96,7 @@ public class WeightRandom<T> implements Serializable {
      * @return this
      */
     public WeightRandom<T> add(T obj, double weight) {
-        return add(new WeightObj<T>(obj, weight));
+        return add(new WeightObj<>(obj, weight));
     }
 
     /**
@@ -156,7 +156,7 @@ public class WeightRandom<T> implements Serializable {
         /**
          * 权重
          */
-        private double weight;
+        private final double weight;
 
         /**
          * 构造

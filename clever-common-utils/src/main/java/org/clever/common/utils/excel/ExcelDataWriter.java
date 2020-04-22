@@ -82,7 +82,7 @@ public class ExcelDataWriter {
     /**
      * Excel页签对应的数据类型
      */
-    private List<Class> sheetClassList = Lists.newArrayList();
+    private List<Class<?>> sheetClassList = Lists.newArrayList();
 
     /**
      * Excel页签对应的数据集合
@@ -109,6 +109,7 @@ public class ExcelDataWriter {
      * @param clazz Excel页签对应的数据类型
      * @param data  Excel页签对应的数据集合
      */
+    @SuppressWarnings("UnusedReturnValue")
     public synchronized <T> ExcelDataWriter addSheet(Class<T> clazz, List<T> data) {
         return addSheet(clazz, data, String.format("sheet%s", sheetNameList.size() + 1));
     }
@@ -135,11 +136,11 @@ public class ExcelDataWriter {
      */
     public synchronized boolean removeSheet(String sheetName) {
         List<String> sheetNameListTmp = new ArrayList<>();
-        List<Class> sheetClassListTmp = Lists.newArrayList();
+        List<Class<?>> sheetClassListTmp = Lists.newArrayList();
         List<List<?>> sheetDataListTmp = Lists.newArrayList();
         for (int index = 0; index < sheetNameList.size(); index++) {
             String name = sheetNameList.get(index);
-            Class clzz = sheetClassList.get(index);
+            Class<?> clzz = sheetClassList.get(index);
             List<?> sheetData = sheetDataList.get(index);
             if (!Objects.equals(sheetName, name)) {
                 sheetNameListTmp.add(name);

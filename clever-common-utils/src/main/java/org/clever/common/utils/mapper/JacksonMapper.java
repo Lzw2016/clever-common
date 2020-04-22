@@ -47,7 +47,7 @@ public class JacksonMapper {
     /**
      * 对象转换器
      */
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     public JacksonMapper(ObjectMapper mapper) {
         this.mapper = mapper;

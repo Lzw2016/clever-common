@@ -53,6 +53,7 @@ public abstract class Tuple implements Iterable<Object>, Serializable, Comparabl
     /**
      * 元组中是否包含该对象
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public final boolean contains(final Object value) {
         for (final Object val : this.valueList) {
             if (val == null) {
@@ -149,7 +150,7 @@ public abstract class Tuple implements Iterable<Object>, Serializable, Comparabl
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public int compareTo(final Tuple o) {
         final int tLen = this.valueArray.length;

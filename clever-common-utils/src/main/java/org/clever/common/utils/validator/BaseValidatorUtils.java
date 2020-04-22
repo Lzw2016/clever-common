@@ -39,9 +39,9 @@ public class BaseValidatorUtils {
      * @param constraintViolations 验证结果信息
      * @return 验证异常信息集合
      */
-    public static List<String> extractMessage(Set<? extends ConstraintViolation> constraintViolations) {
+    public static List<String> extractMessage(Set<? extends ConstraintViolation<?>> constraintViolations) {
         List<String> errorMessages = new ArrayList<>();
-        for (ConstraintViolation violation : constraintViolations) {
+        for (ConstraintViolation<?> violation : constraintViolations) {
             errorMessages.add(violation.getMessage());
         }
         return errorMessages;
@@ -64,9 +64,9 @@ public class BaseValidatorUtils {
      * @param constraintViolations 验证结果信息
      * @return 验证异常信息集合
      */
-    public static Map<String, String> extractPropertyAndMessage(Set<? extends ConstraintViolation> constraintViolations) {
+    public static Map<String, String> extractPropertyAndMessage(Set<? extends ConstraintViolation<?>> constraintViolations) {
         Map<String, String> errorMessages = new HashMap<>();
-        for (ConstraintViolation violation : constraintViolations) {
+        for (ConstraintViolation<?> violation : constraintViolations) {
             errorMessages.put(violation.getPropertyPath().toString(), violation.getMessage());
         }
         return errorMessages;
@@ -90,9 +90,9 @@ public class BaseValidatorUtils {
      * @param separator            分隔符号，Bean字段与其验证失败的错误信息间的分隔符号
      * @return 验证异常信息List集合
      */
-    public static List<String> extractPropertyAndMessageAsList(Set<? extends ConstraintViolation> constraintViolations, String separator) {
+    public static List<String> extractPropertyAndMessageAsList(Set<? extends ConstraintViolation<?>> constraintViolations, String separator) {
         List<String> errorMessages = new ArrayList<>();
-        for (ConstraintViolation violation : constraintViolations) {
+        for (ConstraintViolation<?> violation : constraintViolations) {
             errorMessages.add(violation.getPropertyPath() + separator + violation.getMessage());
         }
         return errorMessages;

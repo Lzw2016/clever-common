@@ -55,9 +55,9 @@ public class GlobalExceptionHandler {
         return validMessageList;
     }
 
-    private List<ValidMessage> getValidMessages(Set<? extends ConstraintViolation> constraintViolations) {
+    private List<ValidMessage> getValidMessages(Set<? extends ConstraintViolation<?>> constraintViolations) {
         List<ValidMessage> validMessageList = new ArrayList<>();
-        for (ConstraintViolation violation : constraintViolations) {
+        for (ConstraintViolation<?> violation : constraintViolations) {
             ValidMessage validMessage = new ValidMessage();
             validMessage.setEntityName(violation.getRootBeanClass().getSimpleName());
             validMessage.setFiled(violation.getPropertyPath().toString());

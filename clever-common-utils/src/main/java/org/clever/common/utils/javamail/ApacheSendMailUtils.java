@@ -98,7 +98,7 @@ public class ApacheSendMailUtils {
      * @param sentDate    设置发送时间，可以为空
      * @return 返回传入的邮件信息对象
      */
-    @SuppressWarnings({"UnusedReturnValue", "ConstantConditions"})
+    @SuppressWarnings({"UnusedReturnValue"})
     private Email emailValueBind(Email email,
                                  String fromAccount,
                                  String fromName,

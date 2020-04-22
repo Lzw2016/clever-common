@@ -111,7 +111,7 @@ public class ImageValidatePatchcaUtils {
         /**
          * 变色的颜色集合，为了性能共用
          */
-        private List<ColorFactory> colorList = new ArrayList<>();
+        private final List<ColorFactory> colorList = new ArrayList<>();
 
         public CustomConfigurableCaptchaService() {
             colorList.add(new SingleColorFactory(new Color(25, 60, 170)));

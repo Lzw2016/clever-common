@@ -15,12 +15,12 @@ public enum ErrorCode {
     /**
      * 错误码
      */
-    private int code;
+    private final int code;
 
     /**
      * 错误消息
      */
-    private String message;
+    private final String message;
 
     ErrorCode(int code, String message) {
         this.code = code;

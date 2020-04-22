@@ -152,7 +152,7 @@ public class AjaxMessage<T> extends BaseResponse {
      * @param validMessage 服务端数据验证错误消息
      * @return 当前对象
      */
-    public AjaxMessage addValidMessage(ValidMessage validMessage) {
+    public AjaxMessage<?> addValidMessage(ValidMessage validMessage) {
         if (this.validMessageList == null) {
             this.validMessageList = new ArrayList<>();
         }
@@ -166,7 +166,7 @@ public class AjaxMessage<T> extends BaseResponse {
      * @param fieldError Spring的验证错误消息
      * @return 当前对象
      */
-    public AjaxMessage addValidMessage(FieldError fieldError) {
+    public AjaxMessage<?> addValidMessage(FieldError fieldError) {
         ValidMessage validMessage = new ValidMessage(fieldError);
         return addValidMessage(validMessage);
     }

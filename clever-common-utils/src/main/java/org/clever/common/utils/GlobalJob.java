@@ -17,12 +17,12 @@ public abstract class GlobalJob {
     /**
      * 全局执行的任务(JVM内同一时刻只有一个线程执行)
      */
-    protected abstract void internalExecute() throws Throwable;
+    protected abstract void internalExecute() throws Exception;
 
     /**
      * 任务执行的异常处理
      */
-    protected abstract void exceptionHandle(Throwable e);
+    protected abstract void exceptionHandle(Exception e);
 
     /**
      * 任务处理内部逻辑
@@ -38,7 +38,7 @@ public abstract class GlobalJob {
             LOCK = true;
             internalExecute();
             success = true;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             exceptionHandle(e);
         } finally {
             LOCK = false;

@@ -76,7 +76,7 @@ public class ZxingCreateImageUtils {
      * @return 图片对象BitMatrix
      */
     private static BitMatrix createImageBitMatrix(String contents, BarcodeFormat format, int width, int height) {
-        BitMatrix matrix = null;
+        BitMatrix matrix;
         try {
             matrix = MULTI_FORMAT_WRITER.encode(contents, format, width, height, HINTS);
         } catch (Throwable e) {

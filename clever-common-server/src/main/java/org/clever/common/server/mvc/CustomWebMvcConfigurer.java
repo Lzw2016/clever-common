@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.*;
  * 作者：lzw <br/>
  * 创建时间：2017-09-03 11:48 <br/>
  */
+@SuppressWarnings("NullableProblems")
 @Configuration
 public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     /**

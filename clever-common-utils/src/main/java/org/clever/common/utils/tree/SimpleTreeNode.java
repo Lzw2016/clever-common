@@ -102,7 +102,7 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
      * @param children   子节点
      * @param attributes 被添加到节点的自定义属性
      */
-    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode> children, T attributes) {
+    public SimpleTreeNode(Long parentId, Long id, String text, String iconCls, boolean checked, String state, Set<SimpleTreeNode<?>> children, T attributes) {
         this.parentId = parentId;
         this.id = id;
         this.text = text;
@@ -149,7 +149,7 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     /**
      * 增加子节点<br>
      */
-    public SimpleTreeNode addChildren(SimpleTreeNode node) {
+    public SimpleTreeNode<?> addChildren(SimpleTreeNode<?> node) {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
@@ -160,7 +160,8 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     /**
      * 增加子节点集合<br>
      */
-    public SimpleTreeNode addChildren(Collection<SimpleTreeNode> nodes) {
+    @SuppressWarnings("UnusedReturnValue")
+    public SimpleTreeNode<?> addChildren(Collection<SimpleTreeNode<?>> nodes) {
         if (this.children == null) {
             this.children = new ArrayList<>();
         }

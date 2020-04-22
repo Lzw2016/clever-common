@@ -20,6 +20,7 @@ import java.util.*;
  * 作者：LiZW <br/>
  * 创建时间：2016-4-28 0:55 <br/>
  */
+@SuppressWarnings("rawtypes")
 public class JsonWrapper {
 
     private static final ObjectMapper mapper = JacksonMapper.getInstance().getMapper();

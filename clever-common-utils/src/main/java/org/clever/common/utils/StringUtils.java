@@ -44,9 +44,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         htmlStr = StringEscapeUtils.unescapeHtml4(htmlStr);
         //定义script的正则表达式
-        String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>";
+        String regEx_script = "<script[^>]*?>[\\s\\S]*?</script>";
         //定义style的正则表达式
-        String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>";
+        String regEx_style = "<style[^>]*?>[\\s\\S]*?</style>";
         //定义HTML标签的正则表达式
         String regEx_html = "<[^>]+>";
 

@@ -23,7 +23,7 @@ import java.util.*;
 @Slf4j
 public class GetParamRequestInterceptor implements RequestInterceptor {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public GetParamRequestInterceptor(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

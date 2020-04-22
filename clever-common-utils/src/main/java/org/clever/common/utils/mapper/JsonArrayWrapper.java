@@ -11,7 +11,7 @@ import java.util.List;
  * 作者：LiZW <br/>
  * 创建时间：2016-4-28 0:55 <br/>
  */
-@SuppressWarnings({"unchecked", "NullableProblems"})
+@SuppressWarnings({"unchecked", "NullableProblems", "rawtypes"})
 public class JsonArrayWrapper implements Collection<Object> {
 
     public final List innerList;

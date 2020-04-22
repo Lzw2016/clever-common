@@ -88,6 +88,7 @@ public class ImageValidateUtils {
      * @param w 图片宽度
      * @param h 图片高度
      */
+    @SuppressWarnings("SameParameterValue")
     private static void createBackground(Graphics g, int w, int h) {
         // 填充背景
         g.setColor(getRandColor(220, 250));

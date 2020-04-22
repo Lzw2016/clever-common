@@ -30,7 +30,7 @@ public class DateTimeUtils extends DateUtils {
      * 定义可能出现的时间日期格式<br />
      * 参考 https://blog.csdn.net/solocoder/article/details/83655885
      */
-    private static String[] parsePatterns = {
+    private static final String[] parsePatterns = {
             yyyy_MM_dd, yyyy_MM_dd_HH_mm_ss, yyyy_MM_dd_HH_mm,
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm",
             "yyyyMMdd", "yyyyMMdd HH:mm:ss", "yyyyMMdd HH:mm",

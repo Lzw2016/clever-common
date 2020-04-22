@@ -3,7 +3,6 @@ package org.clever.common.model.request;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * 作者：lzw <br/>
  * 创建时间：2017-09-02 00:41 <br/>
  */
-@EqualsAndHashCode(callSuper = false)
+@SuppressWarnings("deprecation")
 public class QueryByPage extends QueryBySort {
     private static final long serialVersionUID = 1L;
 

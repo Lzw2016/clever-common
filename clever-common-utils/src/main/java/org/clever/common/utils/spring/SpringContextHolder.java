@@ -52,6 +52,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 获取Spring容器applicationContext对象
      */
+    @SuppressWarnings("BusyWait")
     public static ApplicationContext getApplicationContext() {
         while (applicationContext == null) {
             log.info("等待Spring Context初始化成功...");

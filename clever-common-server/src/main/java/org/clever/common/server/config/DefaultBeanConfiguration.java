@@ -26,6 +26,7 @@ public class DefaultBeanConfiguration {
     /**
      * 自定义Consul注册逻辑
      */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnProperty(name = "spring.cloud.consul.enabled", havingValue = "true", matchIfMissing = true)
     protected ConsulServiceRegistry consulServiceRegistry(

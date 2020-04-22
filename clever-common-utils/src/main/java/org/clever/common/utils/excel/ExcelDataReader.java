@@ -135,21 +135,21 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
      * 上传的Excel文件名称
      */
     @Getter
-    private String filename;
+    private final String filename;
     /**
      * 上传的文件数据流
      */
-    private InputStream inputStream;
+    private final InputStream inputStream;
     /**
      * 读取Excel文件最大行数
      */
     @Getter
-    private int limitRows;
+    private final int limitRows;
     /**
      * Excel读取结果
      */
     @Getter
-    private ExcelData<T> excelData;
+    private final ExcelData<T> excelData;
     /**
      * 是否已经开始解析
      */
@@ -166,15 +166,15 @@ public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
     /**
      * 列头信息
      */
-    private List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
+    private final List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
     /**
      * 列头元数据(列index -> 列头信息)
      */
-    private Map<Integer, ExcelColumnProperty> excelColumnPropertyMap1 = new HashMap<>();
+    private final Map<Integer, ExcelColumnProperty> excelColumnPropertyMap1 = new HashMap<>();
     /**
      * 列头元数据(列名称 -> 列头信息)
      */
-    private Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
+    private final Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
     // /**
     //  * Excel表格头数据 - 导入Excel表格中的真实数据
     //  */

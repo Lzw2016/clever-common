@@ -42,7 +42,7 @@ public class HttpUtils {
 
     static {
         long readTimeout = 60L;
-        long connectTimeout = 60L;
+        long connectTimeout = 5L;
         long cacheSize = 1024 * 1024 * 100L;
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {

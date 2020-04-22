@@ -28,13 +28,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class JaxbMapper {
 
-    private static ConcurrentMap<Class, JAXBContext> jaxbContexts = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<>();
 
     /**
      * Java Object->Xml without encoding.
      */
     public static String toXml(Object root) {
-        Class clazz = ReflectionsUtils.getUserClass(root);
+        Class<?> clazz = ReflectionsUtils.getUserClass(root);
         return toXml(root, clazz, null);
     }
 
@@ -42,14 +42,14 @@ public class JaxbMapper {
      * Java Object->Xml with encoding.
      */
     public static String toXml(Object root, String encoding) {
-        Class clazz = ReflectionsUtils.getUserClass(root);
+        Class<?> clazz = ReflectionsUtils.getUserClass(root);
         return toXml(root, clazz, encoding);
     }
 
     /**
      * Java Object->Xml with encoding.
      */
-    public static String toXml(Object root, Class clazz, String encoding) {
+    public static String toXml(Object root, Class<?> clazz, String encoding) {
         try {
             StringWriter writer = new StringWriter();
             createMarshaller(clazz, encoding).marshal(root, writer);
@@ -62,14 +62,14 @@ public class JaxbMapper {
     /**
      * Java Collection->Xml without encoding, 特别支持Root Element是Collection的情形.
      */
-    public static String toXml(Collection<?> root, String rootName, Class clazz) {
+    public static String toXml(Collection<?> root, String rootName, Class<?> clazz) {
         return toXml(root, rootName, clazz, null);
     }
 
     /**
      * Java Collection->Xml with encoding, 特别支持Root Element是Collection的情形.
      */
-    public static String toXml(Collection<?> root, String rootName, Class clazz, String encoding) {
+    public static String toXml(Collection<?> root, String rootName, Class<?> clazz, String encoding) {
         try {
             CollectionWrapper wrapper = new CollectionWrapper();
             wrapper.collection = root;
@@ -103,7 +103,7 @@ public class JaxbMapper {
      * 创建Marshaller并设定encoding(可为null).
      * 线程不安全，需要每次创建或pooling。
      */
-    public static Marshaller createMarshaller(Class clazz, String encoding) {
+    public static Marshaller createMarshaller(Class<?> clazz, String encoding) {
         try {
             JAXBContext jaxbContext = getJaxbContext(clazz);
 
@@ -125,7 +125,7 @@ public class JaxbMapper {
      * 创建UnMarshaller.
      * 线程不安全，需要每次创建或pooling。
      */
-    public static Unmarshaller createUnmarshaller(Class clazz) {
+    public static Unmarshaller createUnmarshaller(Class<?> clazz) {
         try {
             JAXBContext jaxbContext = getJaxbContext(clazz);
             return jaxbContext.createUnmarshaller();
@@ -134,7 +134,7 @@ public class JaxbMapper {
         }
     }
 
-    protected static JAXBContext getJaxbContext(Class clazz) {
+    protected static JAXBContext getJaxbContext(Class<?> clazz) {
         Assert.notNull(clazz, "'clazz' must not be null");
         JAXBContext jaxbContext = jaxbContexts.get(clazz);
         if (jaxbContext == null) {

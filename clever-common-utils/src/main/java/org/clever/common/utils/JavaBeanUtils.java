@@ -70,7 +70,7 @@ public class JavaBeanUtils {
      * @param name 对象属性名，支持多场景
      * @return 返回对象属性类型
      */
-    public static Class getPropertyType(Object bean, String name) {
+    public static Class<?> getPropertyType(Object bean, String name) {
         try {
             return PropertyUtils.getPropertyType(bean, name);
         } catch (Throwable e) {

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@SuppressWarnings("CodeBlock2Expr")
 @Slf4j
 public class ExcelTest {
 
@@ -78,6 +79,7 @@ public class ExcelTest {
 
     // --------------------------------------------------------------------------------------------------------------------------------------------------------- 其他测试
 
+    @SuppressWarnings({"StringBufferReplaceableByString", "ConstantConditions"})
     @Test
     public void t90() {
         StringBuilder sb = new StringBuilder();

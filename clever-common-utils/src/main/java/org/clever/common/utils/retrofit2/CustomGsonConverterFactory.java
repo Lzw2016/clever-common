@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 /**
  * 请求响应Json转Factory
  */
+@SuppressWarnings("NullableProblems")
 public final class CustomGsonConverterFactory extends Converter.Factory {
     public static CustomGsonConverterFactory create() {
         return create(new Gson());

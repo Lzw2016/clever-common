@@ -88,6 +88,7 @@ public class ReflectionsUtils {
         while (searchType != Object.class) {
             try {
                 Method method = searchType.getDeclaredMethod(methodName, parameterTypes);
+                // noinspection ConstantConditions
                 if (method != null) {
                     // 强制设置方法可以访问(public)
                     makeAccessible(method);
@@ -145,6 +146,7 @@ public class ReflectionsUtils {
         while (superClass != Object.class) {
             try {
                 Field field = superClass.getDeclaredField(fieldName);
+                // noinspection ConstantConditions
                 if (field != null) {
                     // 强制设置成员变量可以访问(public)
                     makeAccessible(field);
@@ -301,7 +303,7 @@ public class ReflectionsUtils {
      * @param index 泛型类型所处的位置，例如：直接父类的泛型使用0
      * @return the 返回父类层级中的泛型类型，如无法找到, 返回Object.class
      */
-    public static Class getClassGenricType(final Class clazz, final int index) {
+    public static Class<?> getClassGenricType(final Class<?> clazz, final int index) {
         Type genType = clazz.getGenericSuperclass();
 
         if (!(genType instanceof ParameterizedType)) {
@@ -321,7 +323,7 @@ public class ReflectionsUtils {
             return Object.class;
         }
 
-        return (Class) params[index];
+        return (Class<?>) params[index];
     }
 
     /**
@@ -333,8 +335,8 @@ public class ReflectionsUtils {
      * @return 返回父类中的泛型类型，如无法找到, 返回Object.class
      */
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> getClassGenricType(final Class clazz) {
-        return getClassGenricType(clazz, 0);
+    public static <T> Class<T> getClassGenricType(final Class<?> clazz) {
+        return (Class<T>) getClassGenricType(clazz, 0);
     }
 
     /**
@@ -344,7 +346,7 @@ public class ReflectionsUtils {
      * @return 返回实际使用的类
      */
     public static Class<?> getUserClass(Object instance) {
-        Class clazz = instance.getClass();
+        Class<?> clazz = instance.getClass();
         if (clazz != null && clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
             Class<?> superClass = clazz.getSuperclass();
             if (superClass != null && !Object.class.equals(superClass)) {

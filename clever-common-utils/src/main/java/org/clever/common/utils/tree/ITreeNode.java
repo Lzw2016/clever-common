@@ -47,7 +47,7 @@ public interface ITreeNode extends Serializable {
     void addChildren(ITreeNode node);
 
     /**
-     * 当前节点时候是根节点
+     * 当前节点是否是根节点
      *
      * @return true:是根节点 false:不是根节点 null:未知
      */

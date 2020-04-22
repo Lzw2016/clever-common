@@ -27,6 +27,7 @@ public class BeanMapConverter {
      * @param properties Map集合
      * @return 成功返回true
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean toObject(Object bean, Map<String, Object> properties) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());

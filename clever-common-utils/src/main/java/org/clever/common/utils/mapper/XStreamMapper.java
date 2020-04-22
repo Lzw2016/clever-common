@@ -52,7 +52,7 @@ public class XStreamMapper {
     /**
      * XStream核心Mapper类
      */
-    private XStream xstream;
+    private final XStream xstream;
 
     /**
      * 构造函数

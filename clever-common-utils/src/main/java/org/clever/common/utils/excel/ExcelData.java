@@ -32,13 +32,13 @@ public class ExcelData<T> implements Serializable {
      * 数据类型
      */
     @Getter
-    private Class<T> clazz;
+    private final Class<T> clazz;
 
     /**
      * 表头信息
      */
     @Getter
-    private List<ExcelHead> heads = new ArrayList<>();
+    private final List<ExcelHead> heads = new ArrayList<>();
 
     /**
      * Excel行数据

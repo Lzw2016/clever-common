@@ -177,6 +177,7 @@ public class BeanConverter {
                 return false;
             }
             ResolvedTypeConverter that = (ResolvedTypeConverter) o;
+            // noinspection ConstantConditions
             if (delegatingConverter == null || that.delegatingConverter == null) {
                 return false;
             }
