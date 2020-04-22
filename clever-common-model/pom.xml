@@ -14,11 +14,6 @@
     </parent>
 
     <dependencies>
-        <!--clever-common-->
-        <dependency>
-            <groupId>org.clever</groupId>
-            <artifactId>clever-common-utils</artifactId>
-        </dependency>
         <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -28,6 +23,15 @@
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <!--apache commons-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <!--Json、Xml相关-->
         <dependency>

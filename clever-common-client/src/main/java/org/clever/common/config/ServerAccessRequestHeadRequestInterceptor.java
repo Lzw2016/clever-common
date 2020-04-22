@@ -3,7 +3,7 @@ package org.clever.common.config;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.clever.common.utils.spring.SpringContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
@@ -22,10 +22,15 @@ public class ServerAccessRequestHeadRequestInterceptor implements RequestInterce
      */
     private ServerAccessRequestHeadConfig requestHeadConfig;
 
+    public ServerAccessRequestHeadRequestInterceptor(@Autowired ServerAccessRequestHeadConfig requestHeadConfig) {
+        this.requestHeadConfig = requestHeadConfig;
+    }
+
     @Override
     public void apply(RequestTemplate template) {
         if (requestHeadConfig == null) {
-            requestHeadConfig = SpringContextHolder.getBean(ServerAccessRequestHeadConfig.class);
+            // TODO: 需要注入 requestHeadConfig
+            // requestHeadConfig = SpringContextHolder.getBean(ServerAccessRequestHeadConfig.class);
             // log.debug("读取服务之间访问的全局请求头设置: {}", requestHeadConfig.getHeads());
         }
         if (requestHeadConfig.getHeads() != null && requestHeadConfig.getHeads().size() > 0) {

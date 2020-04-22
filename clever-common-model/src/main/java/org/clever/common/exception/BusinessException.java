@@ -19,24 +19,8 @@ public class BusinessException extends RuntimeException {
      */
     private Integer status;
 
-    /**
-     * 错误码
-     */
-    private int code;
-
     public BusinessException() {
         super();
-    }
-
-
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.code = errorCode.getCode();
-    }
-
-    public BusinessException(ErrorCode errorCode, Throwable cause) {
-        super(errorCode.getMessage(), cause);
-        this.code = errorCode.getCode();
     }
 
     /**
@@ -48,7 +32,7 @@ public class BusinessException extends RuntimeException {
 
     /**
      * @param message 异常信息
-     * @param sc      请求响应状态码
+     * @param sc      请求响应状态码(HttpStatus)
      */
     public BusinessException(String message, int sc) {
         super(message);

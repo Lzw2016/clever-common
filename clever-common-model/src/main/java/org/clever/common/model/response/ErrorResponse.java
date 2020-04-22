@@ -59,14 +59,14 @@ public class ErrorResponse extends BaseResponse {
     private List<ValidMessage> validMessageList;
 
     public ErrorResponse() {
-        this.timestamp = new Date();
+        this(null, null, 500, null);
     }
 
     /**
      * @param message 错误消息，用于前端显示
      */
     public ErrorResponse(String message) {
-        this(message, null, 400, null);
+        this(message, null, 500, null);
     }
 
     /**

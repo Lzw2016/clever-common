@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.clever.common.model.ValidMessage;
-import org.clever.common.utils.exception.ExceptionUtils;
 import org.springframework.validation.FieldError;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,7 +143,7 @@ public class AjaxMessage<T> extends BaseResponse {
         this.successMessage = successMessage;
         this.failMessage = failMessage;
         this.hasException = hasException;
-        this.exceptionStack = ExceptionUtils.getStackTraceAsString(throwable);
+        this.exceptionStack = getStackTraceAsString(throwable);
         this.exceptionMessage = exceptionMessage;
     }
 
@@ -184,7 +185,22 @@ public class AjaxMessage<T> extends BaseResponse {
             this.success = false;
             this.hasException = true;
         }
-        this.exceptionStack = ExceptionUtils.getStackTraceAsString(e);
+        this.exceptionStack = getStackTraceAsString(e);
+    }
+
+    /**
+     * 将ErrorStack转化为String(获取异常的堆栈信息)<br/>
+     *
+     * @param e 异常对象
+     * @return 异常的堆栈信息
+     */
+    private static String getStackTraceAsString(Throwable e) {
+        if (e == null) {
+            return "";
+        }
+        StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
     }
 
     /*--------------------------------------------------------------

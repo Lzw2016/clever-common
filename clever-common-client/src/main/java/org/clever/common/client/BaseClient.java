@@ -7,7 +7,7 @@ package org.clever.common.client;
 public interface BaseClient {
 
     /**
-     * 视图页面(JSP)的后缀
+     * Http Restful接口的后缀
      */
     String JSON_SUFFIX = ".json";
 }

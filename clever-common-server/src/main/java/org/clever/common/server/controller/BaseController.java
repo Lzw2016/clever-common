@@ -11,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BaseController {
     /**
-     * 视图页面(JSP)的后缀
+     * 视图页面的后缀
      */
-    protected final static String VIEW_PAGE_SUFFIX = ".html";
+    protected final static String HTML_SUFFIX = ".html";
 
     /**
-     * 视图页面(Json)的后缀
+     * Http Restful接口的后缀
      */
     protected final static String JSON_SUFFIX = ".json";
 }
