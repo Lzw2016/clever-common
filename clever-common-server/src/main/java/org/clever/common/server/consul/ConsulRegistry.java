@@ -28,7 +28,7 @@ public class ConsulRegistry extends ConsulServiceRegistry {
      */
     @Override
     public void register(ConsulRegistration reg) {
-        // TODO 做到全局唯一
+        // TODO 做到全局唯一 IP + PORT
         reg.getService().setId(reg.getService().getName() + "-" + reg.getService().getAddress() + "-" + reg.getService().getPort());
         // reg.getService().setId(reg.getService().getName() + "-" + SnowFlake.SNOW_FLAKE.nextId());
         super.register(reg);
