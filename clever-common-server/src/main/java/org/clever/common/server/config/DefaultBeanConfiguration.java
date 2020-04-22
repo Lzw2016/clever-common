@@ -38,7 +38,7 @@ public class DefaultBeanConfiguration {
     }
 
     /**
-     * 在metrics增加application纬度
+     * 在 metrics 增加 application 纬度
      */
     @Bean
     @ConditionalOnProperty(name = "spring.application.name")
