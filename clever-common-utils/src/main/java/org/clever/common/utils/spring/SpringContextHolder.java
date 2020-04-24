@@ -52,9 +52,18 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 获取Spring容器applicationContext对象
      */
-    @SuppressWarnings("BusyWait")
     public static ApplicationContext getApplicationContext() {
-        while (applicationContext == null) {
+        return getApplicationContext(true);
+    }
+
+    /**
+     * 获取Spring容器applicationContext对象
+     *
+     * @param require 是否要求一定要获取到
+     */
+    @SuppressWarnings("BusyWait")
+    public static ApplicationContext getApplicationContext(boolean require) {
+        while (applicationContext == null && require) {
             log.info("等待Spring Context初始化成功...");
             try {
                 Thread.sleep(1000);
@@ -93,12 +102,24 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
      *
+     * @param name Bean名称
+     * @return 返回Bean对象
+     */
+    public static <T> T getBean(String name) {
+        return getBean(true, name);
+    }
+
+    /**
+     * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
+     *
+     * @param require 是否等待获取ApplicationContext
+     * @param name    Bean名称
      * @return 返回Bean对象
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getBean(String name) {
+    public static <T> T getBean(boolean require, String name) {
         try {
-            return (T) getApplicationContext().getBean(name);
+            return (T) getApplicationContext(require).getBean(name);
         } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }
@@ -107,11 +128,23 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
      *
+     * @param requiredType Bean类型
      * @return 返回Bean对象
      */
     public static <T> T getBean(Class<T> requiredType) {
+        return getBean(true, requiredType);
+    }
+
+    /**
+     * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
+     *
+     * @param require      是否等待获取ApplicationContext
+     * @param requiredType Bean类型
+     * @return 返回Bean对象
+     */
+    public static <T> T getBean(boolean require, Class<T> requiredType) {
         try {
-            return getApplicationContext().getBean(requiredType);
+            return getApplicationContext(require).getBean(requiredType);
         } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }

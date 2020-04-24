@@ -3,7 +3,7 @@
 - [bug fix]
 
 - [增强]
-    
+    - SpringContextHolder增加`boolean require`参数
 - [新增]
 
 - [变化]
