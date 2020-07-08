@@ -4,52 +4,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--统一版本修改 versions:set -DnewVersion=0.0.1-SNAPSHOT-->
-    <groupId>org.clever</groupId>
     <artifactId>clever-common</artifactId>
-    <version>1.0.4.RELEASES</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
+    <description>clever系列项目基础模块</description>
+    <url>https://github.com/Lzw2016/clever-common.git</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/Lzw2016/clever-common/raw/master/LICENSE</url>
+        </license>
+    </licenses>
+
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.13.RELEASE</version>
+        <groupId>org.clever</groupId>
+        <artifactId>clever-parent</artifactId>
+        <version>2.1.15.0.RELEASE</version>
         <relativePath/>
     </parent>
-
-    <repositories>
-        <repository>
-            <id>nexus-central</id>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>nexus-central-2</id>
-            <url>http://central.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>nexus-spring</id>
-            <url>https://repo.spring.io/libs-release/</url>
-        </repository>
-        <repository>
-            <id>nexus-snapshots</id>
-            <url>http://nexus.msvc.top:8081/repository/maven-snapshots/</url>
-        </repository>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://nexus.msvc.top:8081/repository/maven-releases/</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <uniqueVersion>true</uniqueVersion>
-            <url>http://nexus.msvc.top:8081/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>nexus-releases</id>
-            <url>http://nexus.msvc.top:8081/repository/maven-releases/</url>
-        </repository>
-    </distributionManagement>
 
     <modules>
         <module>clever-common-utils</module>
@@ -59,29 +33,7 @@
     </modules>
 
     <properties>
-        <downloadSources>true</downloadSources>
-        <downloadJavadocs>true</downloadJavadocs>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-cloud.version>Greenwich.SR5</spring-cloud.version>
-        <mybatis-plus.version>3.1.2</mybatis-plus.version>
-        <!--SonarQube文档 https://docs.sonarqube.org/6.7/AnalysisParameters.html-->
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
-        <sonar.login>7aa02750be264859233bcfb18d963665734e948f</sonar.login>
-        <!--<sonar.password></sonar.password>-->
-        <sonar.projectName>${project.artifactId}</sonar.projectName>
-        <sonar.projectKey>${project.groupId}:${project.artifactId}</sonar.projectKey>
-        <sonar.projectVersion>${project.version}</sonar.projectVersion>
-        <!--<sonar.projectVersion>1.0.2.RELEASES</sonar.projectVersion>-->
-        <sonar.language>java</sonar.language>
-        <sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
-        <sonar.log.level>INFO</sonar.log.level>
-        <sonar.links.homepage>https://github.com/Lzw2016/clever-common</sonar.links.homepage>
-        <sonar.links.scm>https://github.com/Lzw2016/clever-common.git</sonar.links.scm>
+        <revision>2.0.0-SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>
@@ -90,318 +42,23 @@
             <dependency>
                 <groupId>org.clever</groupId>
                 <artifactId>clever-common-utils</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.clever</groupId>
                 <artifactId>clever-common-model</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.clever</groupId>
                 <artifactId>clever-common-server</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.clever</groupId>
                 <artifactId>clever-common-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <!--spring-cloud-->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--swagger2-->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>2.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>2.9.2</version>
-            </dependency>
-            <!--javax-->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.1</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>1</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>2.0.1.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.persistence</groupId>
-                <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
-            </dependency>
-            <!--apache commons-->
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.6</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>1.8</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-email</artifactId>
-                <version>1.5</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version>
-            </dependency>
-            <!--HTTP相关-->
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>3.14.7</version>
-            </dependency>
-            <dependency>
-                <groupId>com.squareup.retrofit2</groupId>
-                <artifactId>retrofit</artifactId>
-                <version>2.8.1</version>
-            </dependency>
-            <!--Json、Xml相关-->
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20190722</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>1.2.68</version>
-            </dependency>
-            <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>1.4.12</version>
-            </dependency>
-            <!--反射相关-->
-            <dependency>
-                <groupId>net.jodah</groupId>
-                <artifactId>typetools</artifactId>
-                <version>0.6.2</version>
-            </dependency>
-            <dependency>
-                <groupId>cglib</groupId>
-                <artifactId>cglib</artifactId>
-                <version>3.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>0.9.12</version>
-            </dependency>
-            <!--验证码-->
-            <dependency>
-                <groupId>com.github.cage</groupId>
-                <artifactId>cage</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.axet</groupId>
-                <artifactId>kaptcha</artifactId>
-                <version>0.0.9</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.bingoohuang</groupId>
-                <artifactId>patchca</artifactId>
-                <version>0.0.1</version>
-            </dependency>
-            <!--其他工具包-->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>easyexcel</artifactId>
-                <version>1.1.2-beat1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.zxing</groupId>
-                <artifactId>javase</artifactId>
-                <version>3.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.belerweb</groupId>
-                <artifactId>pinyin4j</artifactId>
-                <version>2.5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>eu.bitwalker</groupId>
-                <artifactId>UserAgentUtils</artifactId>
-                <version>1.21</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.dozer</groupId>
-                <artifactId>dozer</artifactId>
-                <version>5.5.1</version>
-            </dependency>
-            <!--mybatis-->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-annotation</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-core</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-extension</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <!--项目结构-->
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-        <plugins>
-            <!--发布到Maven私服-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
-            <!--编译插件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <!--发布插件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                    <updateReleaseInfo>true</updateReleaseInfo>
-                </configuration>
-            </plugin>
-            <!--打包插件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <!--安装插件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-            <!--单元测试插件-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <!--打包源码插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <configuration>
-                    <attach>true</attach>
-                </configuration>
-                <executions>
-                    <!-- 发布时自动将源码同时发布的配置 -->
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- 设置资源文件的编码方式 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <!--sonar代码分析插件-->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.7.0.1746</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.sonarsource.java</groupId>
-                        <artifactId>java-frontend</artifactId>
-                        <version>4.15.0.12310</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
 </project>

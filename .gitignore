@@ -12,6 +12,7 @@
 hs_err_pid*
 
 # 设置不需要提交的文件
+.flattened-pom.xml
 *.iml
 .idea
 target

@@ -3,7 +3,7 @@
 - [bug fix]
 
 - [增强]
-    - SpringContextHolder增加`boolean require`参数
+    
 - [新增]
 
 - [变化]
@@ -15,7 +15,8 @@
 - [bug fix]
 
 - [增强]
-
+    - SpringContextHolder增加`boolean require`参数
+    - 更新 pom.xml 配置。简化配置，统一依赖 clever-parent 项目
 - [新增]
 
 - [变化]
