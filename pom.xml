@@ -25,6 +25,29 @@
         <relativePath/>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>nexus-central</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>nexus-central-2</id>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>nexus-spring</id>
+            <url>https://repo.spring.io/libs-release/</url>
+        </repository>
+        <repository>
+            <id>nexus-snapshots</id>
+            <url>http://nexus.msvc.top:8081/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://nexus.msvc.top:8081/repository/maven-releases/</url>
+        </repository>
+    </repositories>
+
     <modules>
         <module>clever-common-utils</module>
         <module>clever-common-model</module>
