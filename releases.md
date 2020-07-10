@@ -18,5 +18,5 @@
     - SpringContextHolder增加`boolean require`参数
     - 更新 pom.xml 配置。简化配置，统一依赖 clever-parent 项目
 - [新增]
-
+    - add StrFormatter.java
 - [变化]
