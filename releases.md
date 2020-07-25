@@ -1,4 +1,4 @@
-### 2020-xx-xx 2.0.1.RELEASES
+### 2020-xx-xx 2.0.2.RELEASES
 
 - [bug fix]
 
@@ -8,6 +8,18 @@
 
 - [变化]
 
+---
+
+### 2020-xx-xx 2.0.1.RELEASES
+
+- [bug fix]
+
+- [增强]
+    
+- [新增]
+
+- [变化]
+    - 删除 StringUtils.format 函数
 ---
 
 ### 2020-04-22 2.0.0.RELEASES

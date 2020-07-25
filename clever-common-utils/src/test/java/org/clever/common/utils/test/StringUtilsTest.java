@@ -1,7 +1,7 @@
 package org.clever.common.utils.test;
 
 import lombok.extern.slf4j.Slf4j;
-import org.clever.common.utils.StringUtils;
+import org.clever.common.utils.StrFormatter;
 import org.junit.Test;
 
 /**
@@ -14,15 +14,15 @@ public class StringUtilsTest {
     @Test
     public void formatTest() {
         //通常使用
-        String result1 = StringUtils.format("this is {} for {}", "a", "b");
+        String result1 = StrFormatter.format("this is {} for {}", "a", "b");
         log.info(result1);
 
         //转义{}
-        String result2 = StringUtils.format("this is \\{} for {}", "a", "b");
+        String result2 = StrFormatter.format("this is \\{} for {}", "a", "b");
         log.info(result2);
 
         //转义\
-        String result3 = StringUtils.format("this is \\\\{} for {}", "a", "b");
+        String result3 = StrFormatter.format("this is \\\\{} for {}", "a", "b");
         log.info(result3);
     }
 }
