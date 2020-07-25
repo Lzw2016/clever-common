@@ -1,6 +1,5 @@
 package org.clever.common.utils;
 
-import jdk.nashorn.internal.runtime.Undefined;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.exception.ExceptionUtils;
 import org.clever.common.utils.mapper.JacksonMapper;
@@ -284,8 +283,6 @@ public class StrFormatter {
             str = String.valueOf(obj);
         } else if (obj instanceof Date) {
             str = DateTimeUtils.formatToString((Date) obj);
-        } else if (obj instanceof Undefined) {
-            str = obj.toString();
         } else {
             str = JacksonMapper.getInstance().toJson(obj);
         }
