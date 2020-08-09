@@ -19,7 +19,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param defaultStr 对象为空时返回的默认值
      * @return 返回对象的toString方法结果
      */
-    public String objectToString(Object object, String defaultStr) {
+    public static String objectToString(Object object, String defaultStr) {
         if (null == object) {
             return defaultStr;
         } else {
