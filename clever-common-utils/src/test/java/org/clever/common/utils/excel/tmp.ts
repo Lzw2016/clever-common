@@ -131,6 +131,8 @@ interface ExcelReaderBuilder extends AbstractExcelReaderParameterBuilder<ExcelRe
 }
 
 interface ExcelProperty {
+    ignore?: boolean;
+
     heads?: string | string[];
 
     index?: number;
@@ -151,6 +153,16 @@ interface NumberFormat {
 
     // roundingMode?: RoundingMode;
 }
+
+// ColumnWidth
+// ContentFontStyle
+// ContentLoopMerge
+// ContentRowHeight
+// ContentStyle
+// HeadFontStyle
+// HeadRowHeight
+// HeadStyle
+// OnceAbsoluteMerge
 
 interface ExcelReaderHeadConfig extends ExcelProperty {
     dateTimeFormat?: DateTimeFormat;
@@ -187,7 +199,7 @@ class ExcelReaderConfig<T extends object> {
     autoTrim: boolean = true;
 
     heads?: {
-        [head in keyof T]?: ExcelReaderHeadConfig;
+        [head in keyof T]: ExcelReaderHeadConfig;
     };
 }
 
