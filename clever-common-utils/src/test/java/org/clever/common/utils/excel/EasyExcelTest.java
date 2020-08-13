@@ -122,7 +122,7 @@ public class EasyExcelTest {
             }
         });
 
-        excelReaderBuilder.sheet(0).doRead();
+        excelReaderBuilder.sheet(0).doReadSync();
     }
 
     @Test
