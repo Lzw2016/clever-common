@@ -133,7 +133,7 @@ interface ExcelReaderBuilder extends AbstractExcelReaderParameterBuilder<ExcelRe
 interface ExcelProperty {
     ignore?: boolean;
 
-    heads?: string | string[];
+    column?: string | string[];
 
     index?: number;
 
@@ -222,16 +222,16 @@ const excelReaderConfig = new ExcelReaderConfig<Test>();
 
 excelReaderConfig.heads = {
     aaa: {
-        heads: "aaa",
+        column: "aaa",
         dateTimeFormat: {
             value: "yyyy-MM-dd HH:mm:ss"
         }
     },
     bbb: {
-        heads: "bbb",
+        column: "bbb",
     },
     ccc: {
-        heads: "ccc",
+        column: "ccc",
     }
 }
 
