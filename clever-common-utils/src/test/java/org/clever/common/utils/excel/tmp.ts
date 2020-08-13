@@ -237,6 +237,20 @@ excelReaderConfig.heads = {
 
 excelUtils.read<Test>(excelReaderConfig).sheet(0).doRead();
 
+excelUtils.read<Test>({
+    autoCloseStream: false,
+    extraRead: [],
+    ignoreEmptyRow: false,
+    mandatoryUseInputStream: false,
+    sheet: 0,
+    headRowNumber: 1,
+    useScientificFormat: false,
+    registerConverter: [],
+    use1904windowing: false,
+    locale: Locale.SIMPLIFIED_CHINESE,
+    autoTrim: false,
+}).sheet(0).doRead();
+
 
 
 
