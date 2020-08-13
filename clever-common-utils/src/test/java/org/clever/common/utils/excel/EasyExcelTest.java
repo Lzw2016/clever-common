@@ -86,7 +86,7 @@ public class EasyExcelTest {
         heads.add(Collections.singletonList("积分商品总数量"));
         heads.add(Collections.singletonList("上架积分商品数"));
         heads.add(Collections.singletonList("下架积分商品数"));
-        excelReaderBuilder.head(heads);
+//        excelReaderBuilder.head(heads);
 //        excelReaderBuilder.headRowNumber(1);
         excelReaderBuilder.registerReadListener(new AnalysisEventListener<Map<Integer, CellData<?>>>() {
 
