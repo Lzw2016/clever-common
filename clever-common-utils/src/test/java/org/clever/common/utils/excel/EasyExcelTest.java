@@ -90,14 +90,22 @@ public class EasyExcelTest {
 //        excelReaderBuilder.headRowNumber(1);
         excelReaderBuilder.registerReadListener(new AnalysisEventListener<Map<Integer, CellData<?>>>() {
 
+            private Map<Integer, String> headMap;
+
             @Override
             public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+                this.headMap = headMap;
                 log.info("headMap -> {}", headMap);
             }
 
             @Override
             public void invoke(Map<Integer, CellData<?>> data, AnalysisContext context) {
-                log.info("data    -> {}", data);
+                Map<String, CellData<?>> row = new LinkedHashMap<>(data.size());
+                for (Map.Entry<Integer, CellData<?>> entry : data.entrySet()) {
+                    row.put(headMap.get(entry.getKey()), entry.getValue());
+                }
+//                log.info("data    -> {}", data);
+                log.info("row     -> {}", row);
 //                ConverterUtils.convertToJavaObject(
 //                        cellData,
 //                        excelContentProperty.getField(),
