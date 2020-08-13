@@ -223,6 +223,9 @@ const excelReaderConfig = new ExcelReaderConfig<Test>();
 excelReaderConfig.heads = {
     aaa: {
         heads: "aaa",
+        dateTimeFormat: {
+            value: "yyyy-MM-dd HH:mm:ss"
+        }
     },
     bbb: {
         heads: "bbb",
