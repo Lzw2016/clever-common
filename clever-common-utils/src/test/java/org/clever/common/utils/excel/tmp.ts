@@ -361,6 +361,8 @@ interface ExcelUtils {
     read<T extends object>(initConfig: ExcelReaderConfig<T>): ExcelReaderBuilder;
 }
 
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 declare const excelUtils: ExcelUtils;
 
 class Test {
