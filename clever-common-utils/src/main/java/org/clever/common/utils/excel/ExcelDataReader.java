@@ -40,94 +40,9 @@
 //@Slf4j
 //public class ExcelDataReader<T> extends AnalysisEventListener<List<String>> {
 //
-//    /**
-//     * 创建ExcelDataReader
-//     *
-//     * @param request   上传文件的请求
-//     * @param clazz     Excel读取对应的实体类型
-//     * @param limitRows 最大读取行数
-//     */
-//    public static <T> ExcelDataReader<T> newExcelDataReader(HttpServletRequest request, Class<T> clazz, int limitRows) {
-//        if (!(request instanceof MultipartRequest)) {
-//            throw new ExcelAnalysisException("当前请求未上传文件");
-//        }
-//        MultipartRequest multipartRequest = (MultipartRequest) request;
-//        Map<String, MultipartFile> multipartFileMap = multipartRequest.getFileMap();
-//        if (multipartFileMap.size() <= 0) {
-//            throw new ExcelAnalysisException("当前请求未上传文件");
-//        }
-//        List<MultipartFile> multipartFileList = new ArrayList<>();
-//        for (Map.Entry<String, MultipartFile> entry : multipartFileMap.entrySet()) {
-//            String name = entry.getValue().getOriginalFilename();
-//            String extension = FilenameUtils.getExtension(name);
-//            if ("xls".equalsIgnoreCase(extension) || "xlsx".equalsIgnoreCase(extension)) {
-//                multipartFileList.add(entry.getValue());
-//            }
-//        }
-//        if (multipartFileList.size() <= 0) {
-//            throw new ExcelAnalysisException("当前请求未上传Excel文件");
-//        }
-//        if (multipartFileList.size() >= 2) {
-//            throw new ExcelAnalysisException("不支持同时导入多个Excel文件");
-//        }
-//        MultipartFile file = multipartFileList.get(0);
-//        try {
-//            return new ExcelDataReader<>(file, clazz, limitRows);
-//        } catch (IOException e) {
-//            throw ExceptionUtils.unchecked(e);
-//        }
-//    }
 //
-////    /**
-////     * 创建ExcelDataReader，并读取Excel
-////     *
-////     * @param request               上传文件的请求
-////     * @param clazz                 Excel读取对应的实体类型
-////     * @param limitRows             最大读取行数
-////     * @param sheetNo               Excel也签号，从1开始
-////     * @param excelRowReader        自定义的行处理
-////     * @param excelCellExceptionHan 自定义的单元格读取异常处理
-////     */
-////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, int sheetNo, ExcelRowReader<T> excelRowReader, ExcelCellExceptionHand<T> excelCellExceptionHan) {
-////        ExcelDataReader<T> excelDataReader = newExcelDataReader(request, clazz, limitRows);
-////        excelDataReader.readExcel(sheetNo, excelRowReader, excelCellExceptionHan);
-////        return excelDataReader;
-////    }
-////
-////    /**
-////     * 创建ExcelDataReader，并读取Excel
-////     *
-////     * @param request        上传文件的请求
-////     * @param clazz          Excel读取对应的实体类型
-////     * @param limitRows      最大读取行数
-////     * @param excelRowReader 自定义的行处理
-////     */
-////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader) {
-////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader, null);
-////    }
-////
-////    /**
-////     * 创建ExcelDataReader，并读取Excel
-////     *
-////     * @param request               上传文件的请求
-////     * @param clazz                 Excel读取对应的实体类型
-////     * @param limitRows             最大读取行数
-////     * @param excelCellExceptionHan 自定义的单元格读取异常处理
-////     */
-////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelCellExceptionHand<T> excelCellExceptionHan) {
-////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, excelCellExceptionHan);
-////    }
-////
-////    /**
-////     * 创建ExcelDataReader，并读取Excel
-////     *
-////     * @param request   上传文件的请求
-////     * @param clazz     Excel读取对应的实体类型
-////     * @param limitRows 最大读取行数
-////     */
-////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows) {
-////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, null);
-////    }
+//
+
 //
 //    /**
 //     * 默认最大读取数据行数
@@ -192,22 +107,7 @@
 ////    @Getter
 ////    private ExcelCellExceptionHand<T> excelCellExceptionHand;
 //
-////    /**
-////     * @param multipartFile 上传的文件内容
-////     * @param clazz         Excel解析对应的数据类型
-////     */
-////    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz) throws IOException {
-////        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, LIMIT_ROWS);
-////    }
-////
-////    /**
-////     * @param multipartFile 上传的文件内容
-////     * @param clazz         Excel解析对应的数据类型
-////     * @param limitRows     读取Excel文件最大行数
-////     */
-////    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) throws IOException {
-////        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows);
-////    }
+
 ////
 ////    /**
 ////     * @param inputStream 上传的文件内容

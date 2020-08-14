@@ -126,8 +126,8 @@ public class EasyExcelTest {
             }
         });
 
-//        excelReaderBuilder.sheet(0).doReadSync();
-        excelReaderBuilder.doReadAll();
+        excelReaderBuilder.sheet(0).doRead();
+        excelReaderBuilder.sheet(0).doRead();
     }
 
     @Test
@@ -148,9 +148,12 @@ public class EasyExcelTest {
     @Test
     public void t5() throws IOException {
         FileInputStream inputStream = FileUtils.openInputStream(new File(file));
-        ExcelDataReader2<DemoData> excelDataReader2 = new ExcelDataReader2<>("test", inputStream, DemoData.class, 2000);
+        ExcelDataReader2<DemoData> excelDataReader2 = new ExcelDataReader2<>("test", inputStream, DemoData.class, 2);
+        excelDataReader2.read().file(file).autoCloseStream(false);
         excelDataReader2.read().doReadAll();
         log.info("data -> {}", excelDataReader2.getExcelData(0));
+        excelDataReader2.read().doReadAll();
+        inputStream.close();
     }
 
     @Data

@@ -64,15 +64,23 @@ public class ExcelData<T> implements Serializable {
     /**
      * 开始解析的时间
      */
+    @JsonIgnore
     @Getter
     @Setter
     private Long startTime;
     /**
      * 解析完成时间
      */
+    @JsonIgnore
     @Getter
     @Setter
     private Long endTime;
+    /**
+     * 读取中断在指定Excel行(从1开始)
+     */
+    @Getter
+    @Setter
+    private Integer interruptByRowNum;
 
     /**
      * @param clazz Excel解析对应的数据类型
@@ -101,7 +109,7 @@ public class ExcelData<T> implements Serializable {
     public int getHeadRowNum() {
         int headRowNum = 0;
         for (ExcelHead excelHeads : heads) {
-            if (excelHeads != null && excelHeads.getHeads() != null && excelHeads.getHeads().size() > 0) {
+            if (excelHeads != null && excelHeads.getHeads() != null) {
                 if (excelHeads.getHeads().size() > headRowNum) {
                     headRowNum = excelHeads.getHeads().size();
                 }
