@@ -2,6 +2,7 @@ package org.clever.common.utils.excel.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,60 +27,61 @@ import java.util.stream.Collectors;
  * 创建时间：2019-05-13 11:41 <br/>
  */
 public class ExcelData<T> implements Serializable {
-
     /**
      * 数据类型
      */
     @Getter
     private final Class<T> clazz;
-
+    /**
+     * 页签名称
+     */
+    @Getter
+    private final String sheetName;
+    /**
+     * 页签编号
+     */
+    @Getter
+    private final Integer sheetNo;
     /**
      * 表头信息
      */
     @Getter
     private final List<ExcelHead> heads = new ArrayList<>();
-
     /**
      * Excel行数据
      */
     @JsonIgnore
     @Getter
     private List<ExcelRow<T>> rows = new ArrayList<>();
-
     /**
      * 导入的数据前端使用
      */
     private List<?> importData;
-
     /**
      * Excel导出统计
      */
     private ExcelImportState excelImportState = new ExcelImportState();
+    /**
+     * 开始解析的时间
+     */
+    @Getter
+    @Setter
+    private Long startTime;
+    /**
+     * 解析完成时间
+     */
+    @Getter
+    @Setter
+    private Long endTime;
 
     /**
      * @param clazz Excel解析对应的数据类型
      */
-    public ExcelData(Class<T> clazz) {
+    public ExcelData(Class<T> clazz, String sheetName, Integer sheetNo) {
         this.clazz = clazz;
+        this.sheetName = sheetName;
+        this.sheetNo = sheetNo;
     }
-
-//    /**
-//     * @param clazz            Excel解析对应的数据类型
-//     * @param columnProperties Excel列属性
-//     */
-//    public ExcelData(Class<T> clazz, List<ExcelColumnProperty> columnProperties) {
-//        this.clazz = clazz;
-//        init(columnProperties);
-//    }
-//
-//    /**
-//     * @param columnProperties Excel列属性
-//     */
-//    public void init(List<ExcelColumnProperty> columnProperties) {
-//        for (ExcelColumnProperty columnProperty : columnProperties) {
-//            heads.add(new ExcelHead(columnProperty));
-//        }
-//    }
 
     /**
      * 清除导入数据
@@ -99,9 +101,9 @@ public class ExcelData<T> implements Serializable {
     public int getHeadRowNum() {
         int headRowNum = 0;
         for (ExcelHead excelHeads : heads) {
-            if (excelHeads != null && excelHeads.getHead() != null && excelHeads.getHead().size() > 0) {
-                if (excelHeads.getHead().size() > headRowNum) {
-                    headRowNum = excelHeads.getHead().size();
+            if (excelHeads != null && excelHeads.getHeads() != null && excelHeads.getHeads().size() > 0) {
+                if (excelHeads.getHeads().size() > headRowNum) {
+                    headRowNum = excelHeads.getHeads().size();
                 }
             }
         }
@@ -221,6 +223,9 @@ public class ExcelData<T> implements Serializable {
             }
         }
         excelImportState.setErrorCount(errorCount);
+        if (startTime != null && endTime != null) {
+            excelImportState.setTakeTime(endTime - startTime);
+        }
         return excelImportState;
     }
 }

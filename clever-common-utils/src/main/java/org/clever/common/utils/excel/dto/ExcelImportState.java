@@ -39,4 +39,9 @@ public class ExcelImportState implements Serializable {
      * 重复数据量
      */
     private int repeat;
+
+    /**
+     * 处理耗时(单位毫秒)
+     */
+    private long takeTime = -1;
 }

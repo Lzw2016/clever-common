@@ -14,8 +14,12 @@ import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -122,7 +126,8 @@ public class EasyExcelTest {
             }
         });
 
-        excelReaderBuilder.sheet(0).doReadSync();
+//        excelReaderBuilder.sheet(0).doReadSync();
+        excelReaderBuilder.doReadAll();
     }
 
     @Test
@@ -138,6 +143,14 @@ public class EasyExcelTest {
                 log.info("所有数据解析完成！");
             }
         }).sheet().doRead();
+    }
+
+    @Test
+    public void t5() throws IOException {
+        FileInputStream inputStream = FileUtils.openInputStream(new File(file));
+        ExcelDataReader2<DemoData> excelDataReader2 = new ExcelDataReader2<>("test", inputStream, DemoData.class, 2000);
+        excelDataReader2.read().doReadAll();
+        log.info("data -> {}", excelDataReader2.getExcelData(0));
     }
 
     @Data

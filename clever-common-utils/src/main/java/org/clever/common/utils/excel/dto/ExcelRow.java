@@ -20,13 +20,13 @@ public class ExcelRow<T> implements Serializable {
     /**
      * 数据在Excel文件中的行号
      */
-    private int excelRowNum;
+    private final int excelRowNum;
 
     /**
      * 读取的原始数据
      */
     @JsonUnwrapped
-    private T data;
+    private final T data;
 
     /**
      * 数据签名

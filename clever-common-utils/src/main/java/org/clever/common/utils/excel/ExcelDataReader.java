@@ -15,6 +15,8 @@
 //import org.apache.commons.lang3.StringUtils;
 //import org.clever.common.utils.codec.DigestUtils;
 //import org.clever.common.utils.codec.EncodeDecodeUtils;
+//import org.clever.common.utils.excel.dto.ExcelData;
+//import org.clever.common.utils.excel.dto.ExcelRow;
 //import org.clever.common.utils.exception.ExceptionUtils;
 //import org.clever.common.utils.validator.ValidatorFactoryUtils;
 //import org.springframework.web.multipart.MultipartFile;
@@ -76,56 +78,56 @@
 //        }
 //    }
 //
-//    /**
-//     * 创建ExcelDataReader，并读取Excel
-//     *
-//     * @param request               上传文件的请求
-//     * @param clazz                 Excel读取对应的实体类型
-//     * @param limitRows             最大读取行数
-//     * @param sheetNo               Excel也签号，从1开始
-//     * @param excelRowReader        自定义的行处理
-//     * @param excelCellExceptionHan 自定义的单元格读取异常处理
-//     */
-//    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, int sheetNo, ExcelRowReader<T> excelRowReader, ExcelCellExceptionHand<T> excelCellExceptionHan) {
-//        ExcelDataReader<T> excelDataReader = newExcelDataReader(request, clazz, limitRows);
-//        excelDataReader.readExcel(sheetNo, excelRowReader, excelCellExceptionHan);
-//        return excelDataReader;
-//    }
-//
-//    /**
-//     * 创建ExcelDataReader，并读取Excel
-//     *
-//     * @param request        上传文件的请求
-//     * @param clazz          Excel读取对应的实体类型
-//     * @param limitRows      最大读取行数
-//     * @param excelRowReader 自定义的行处理
-//     */
-//    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader) {
-//        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader, null);
-//    }
-//
-//    /**
-//     * 创建ExcelDataReader，并读取Excel
-//     *
-//     * @param request               上传文件的请求
-//     * @param clazz                 Excel读取对应的实体类型
-//     * @param limitRows             最大读取行数
-//     * @param excelCellExceptionHan 自定义的单元格读取异常处理
-//     */
-//    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelCellExceptionHand<T> excelCellExceptionHan) {
-//        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, excelCellExceptionHan);
-//    }
-//
-//    /**
-//     * 创建ExcelDataReader，并读取Excel
-//     *
-//     * @param request   上传文件的请求
-//     * @param clazz     Excel读取对应的实体类型
-//     * @param limitRows 最大读取行数
-//     */
-//    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows) {
-//        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, null);
-//    }
+////    /**
+////     * 创建ExcelDataReader，并读取Excel
+////     *
+////     * @param request               上传文件的请求
+////     * @param clazz                 Excel读取对应的实体类型
+////     * @param limitRows             最大读取行数
+////     * @param sheetNo               Excel也签号，从1开始
+////     * @param excelRowReader        自定义的行处理
+////     * @param excelCellExceptionHan 自定义的单元格读取异常处理
+////     */
+////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, int sheetNo, ExcelRowReader<T> excelRowReader, ExcelCellExceptionHand<T> excelCellExceptionHan) {
+////        ExcelDataReader<T> excelDataReader = newExcelDataReader(request, clazz, limitRows);
+////        excelDataReader.readExcel(sheetNo, excelRowReader, excelCellExceptionHan);
+////        return excelDataReader;
+////    }
+////
+////    /**
+////     * 创建ExcelDataReader，并读取Excel
+////     *
+////     * @param request        上传文件的请求
+////     * @param clazz          Excel读取对应的实体类型
+////     * @param limitRows      最大读取行数
+////     * @param excelRowReader 自定义的行处理
+////     */
+////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader) {
+////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, excelRowReader, null);
+////    }
+////
+////    /**
+////     * 创建ExcelDataReader，并读取Excel
+////     *
+////     * @param request               上传文件的请求
+////     * @param clazz                 Excel读取对应的实体类型
+////     * @param limitRows             最大读取行数
+////     * @param excelCellExceptionHan 自定义的单元格读取异常处理
+////     */
+////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelCellExceptionHand<T> excelCellExceptionHan) {
+////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, excelCellExceptionHan);
+////    }
+////
+////    /**
+////     * 创建ExcelDataReader，并读取Excel
+////     *
+////     * @param request   上传文件的请求
+////     * @param clazz     Excel读取对应的实体类型
+////     * @param limitRows 最大读取行数
+////     */
+////    public static <T> ExcelDataReader<T> readExcel(HttpServletRequest request, Class<T> clazz, int limitRows) {
+////        return ExcelDataReader.readExcel(request, clazz, limitRows, 1, null, null);
+////    }
 //
 //    /**
 //     * 默认最大读取数据行数
@@ -163,70 +165,66 @@
 //     * 表格头行数
 //     */
 //    private int headRowNum;
-//    /**
-//     * 列头信息
-//     */
-//    private final List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
-//    /**
-//     * 列头元数据(列index -> 列头信息)
-//     */
-//    private final Map<Integer, ExcelColumnProperty> excelColumnPropertyMap1 = new HashMap<>();
-//    /**
-//     * 列头元数据(列名称 -> 列头信息)
-//     */
-//    private final Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
-//    // /**
-//    //  * Excel表格头数据 - 导入Excel表格中的真实数据
-//    //  */
-//    // private List<List<String>> excelHeadRealData = new ArrayList<>();
+////    /**
+////     * 列头信息
+////     */
+////    private final List<ExcelColumnProperty> columnPropertyList = new ArrayList<>();
+////    /**
+////     * 列头元数据(列index -> 列头信息)
+////     */
+////    private final Map<Integer, ExcelColumnProperty> excelColumnPropertyMap1 = new HashMap<>();
+////    /**
+////     * 列头元数据(列名称 -> 列头信息)
+////     */
+////    private final Map<String, ExcelColumnProperty> excelColumnPropertyMap2 = new HashMap<>();
 //    /**
 //     * Excel表格头数据(最后一行) - 导入Excel表格中的真实数据
 //     */
 //    private List<String> lastExcelHeadRealData;
-//    /**
-//     * 处理Excel行数据
-//     */
-//    private ExcelRowReader<T> excelRowReader;
-//    /**
-//     * 处理单元格异常
-//     */
-//    @Setter
-//    @Getter
-//    private ExcelCellExceptionHand<T> excelCellExceptionHand;
+////    /**
+////     * 处理Excel行数据
+////     */
+////    private ExcelRowReader<T> excelRowReader;
+////    /**
+////     * 处理单元格异常
+////     */
+////    @Setter
+////    @Getter
+////    private ExcelCellExceptionHand<T> excelCellExceptionHand;
 //
-//    /**
-//     * @param multipartFile 上传的文件内容
-//     * @param clazz         Excel解析对应的数据类型
-//     */
-//    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz) throws IOException {
-//        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, LIMIT_ROWS);
-//    }
-//
-//    /**
-//     * @param multipartFile 上传的文件内容
-//     * @param clazz         Excel解析对应的数据类型
-//     * @param limitRows     读取Excel文件最大行数
-//     */
-//    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) throws IOException {
-//        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows);
-//    }
-//
-//    /**
-//     * @param inputStream 上传的文件内容
-//     * @param clazz       Excel解析对应的数据类型
-//     */
-//    public ExcelDataReader(InputStream inputStream, Class<T> clazz) {
-//        this("", inputStream, clazz, LIMIT_ROWS);
-//    }
-//
-//    /**
-//     * @param filename    上传的文件名称
-//     * @param inputStream 上传的文件内容
-//     * @param clazz       Excel解析对应的数据类型
-//     */
-//    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz) {
-//        this(filename, inputStream, clazz, LIMIT_ROWS);
-//    }
+////    /**
+////     * @param multipartFile 上传的文件内容
+////     * @param clazz         Excel解析对应的数据类型
+////     */
+////    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz) throws IOException {
+////        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, LIMIT_ROWS);
+////    }
+////
+////    /**
+////     * @param multipartFile 上传的文件内容
+////     * @param clazz         Excel解析对应的数据类型
+////     * @param limitRows     读取Excel文件最大行数
+////     */
+////    public ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows) throws IOException {
+////        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows);
+////    }
+////
+////    /**
+////     * @param inputStream 上传的文件内容
+////     * @param clazz       Excel解析对应的数据类型
+////     */
+////    public ExcelDataReader(InputStream inputStream, Class<T> clazz) {
+////        this("", inputStream, clazz, LIMIT_ROWS);
+////    }
+////
+////    /**
+////     * @param filename    上传的文件名称
+////     * @param inputStream 上传的文件内容
+////     * @param clazz       Excel解析对应的数据类型
+////     */
+////    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz) {
+////        this(filename, inputStream, clazz, LIMIT_ROWS);
+////    }
 //
 //    /**
 //     * @param filename    上传的文件名称
@@ -258,43 +256,43 @@
 //        readExcel(sheetNo, null, null);
 //    }
 //
-//    /**
-//     * 开始解析读取Excel
-//     *
-//     * @param excelRowReader 自定义的行处理
-//     */
-//    public void readExcel(ExcelRowReader<T> excelRowReader) {
-//        readExcel(1, excelRowReader, null);
-//    }
-//
-//    /**
-//     * 开始解析读取Excel
-//     *
-//     * @param excelCellExceptionHand 自定义的单元格读取异常处理
-//     */
-//    public void readExcel(ExcelCellExceptionHand<T> excelCellExceptionHand) {
-//        readExcel(1, null, excelCellExceptionHand);
-//    }
-//
-//    /**
-//     * 开始解析读取Excel
-//     *
-//     * @param sheetNo        Excel也签号，从1开始
-//     * @param excelRowReader 自定义的行处理
-//     */
-//    public void readExcel(int sheetNo, ExcelRowReader<T> excelRowReader) {
-//        readExcel(sheetNo, excelRowReader, null);
-//    }
-//
-//    /**
-//     * 开始解析读取Excel
-//     *
-//     * @param sheetNo                Excel也签号，从1开始
-//     * @param excelCellExceptionHand 自定义的单元格读取异常处理
-//     */
-//    public void readExcel(int sheetNo, ExcelCellExceptionHand<T> excelCellExceptionHand) {
-//        readExcel(sheetNo, null, excelCellExceptionHand);
-//    }
+////    /**
+////     * 开始解析读取Excel
+////     *
+////     * @param excelRowReader 自定义的行处理
+////     */
+////    public void readExcel(ExcelRowReader<T> excelRowReader) {
+////        readExcel(1, excelRowReader, null);
+////    }
+////
+////    /**
+////     * 开始解析读取Excel
+////     *
+////     * @param excelCellExceptionHand 自定义的单元格读取异常处理
+////     */
+////    public void readExcel(ExcelCellExceptionHand<T> excelCellExceptionHand) {
+////        readExcel(1, null, excelCellExceptionHand);
+////    }
+////
+////    /**
+////     * 开始解析读取Excel
+////     *
+////     * @param sheetNo        Excel也签号，从1开始
+////     * @param excelRowReader 自定义的行处理
+////     */
+////    public void readExcel(int sheetNo, ExcelRowReader<T> excelRowReader) {
+////        readExcel(sheetNo, excelRowReader, null);
+////    }
+////
+////    /**
+////     * 开始解析读取Excel
+////     *
+////     * @param sheetNo                Excel也签号，从1开始
+////     * @param excelCellExceptionHand 自定义的单元格读取异常处理
+////     */
+////    public void readExcel(int sheetNo, ExcelCellExceptionHand<T> excelCellExceptionHand) {
+////        readExcel(sheetNo, null, excelCellExceptionHand);
+////    }
 //
 //    /**
 //     * 开始解析读取Excel

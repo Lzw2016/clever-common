@@ -13,49 +13,37 @@ import java.util.List;
 @Data
 public class ExcelHead implements Serializable {
     /**
-     * 自动格式化配置
-     */
-    private String format;
-
-    /**
      * 字段位置
      */
-    private Integer index;
+    private final Integer index;
 
     /**
      * Excel表头名称(允许多级表头)
      */
-    private final List<String> head = new ArrayList<>();
+    private final List<String> heads = new ArrayList<>();
+
+    public ExcelHead(Integer index, String head) {
+        this.index = index;
+        this.heads.add(head);
+    }
 
     /**
      * 第一级表头
      */
-    private String firstHead;
+    public String getFirstHead() {
+        if (heads.isEmpty()) {
+            return null;
+        }
+        return heads.get(0);
+    }
 
     /**
      * 最后一级表头(建议前端使用此值)
      */
-    private String lastHead;
-
-    /**
-     * 导入实体类字段名
-     */
-    private String columnName;
-
-    /**
-     * 导入实体类字段类型
-     */
-    private Class<?> columnType;
-
-//    public ExcelHead(ExcelColumnProperty excelColumnProperty) {
-//        format = excelColumnProperty.getFormat();
-//        index = excelColumnProperty.getIndex();
-//        head.addAll(excelColumnProperty.getHead());
-//        if (head.size() > 0) {
-//            firstHead = head.get(0);
-//            lastHead = head.get(head.size() - 1);
-//        }
-//        columnName = excelColumnProperty.getField().getName();
-//        columnType = excelColumnProperty.getField().getType();
-//    }
+    public String getLastHead() {
+        if (heads.isEmpty()) {
+            return null;
+        }
+        return heads.get(heads.size() - 1);
+    }
 }
