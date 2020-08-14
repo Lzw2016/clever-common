@@ -177,15 +177,126 @@ interface NumberFormat {
     // roundingMode?: RoundingMode;
 }
 
-// ColumnWidth
-// ContentFontStyle
-// ContentLoopMerge
-// ContentRowHeight
-// ContentStyle
-// HeadFontStyle
-// HeadRowHeight
-// HeadStyle
-// OnceAbsoluteMerge
+interface ColumnWidth {
+    /** 列宽 */
+    columnWidth: number;
+}
+
+interface ContentFontStyle {
+    /** 字体的名称（如: Arial） */
+    fontName?: string;
+
+    /** 以熟悉的测量单位表示的高度- points */
+    fontHeightInPoints?: number;
+
+    /** 是否使用斜体 */
+    italic?: boolean;
+
+    /** 是否在文本中使用删除线水平线 */
+    strikeout?: boolean;
+
+    /** 字体的颜色 */
+    color?: number;
+
+    /** 设置normal、super或subscript */
+    typeOffset?: number;
+
+    /** 要使用的文本下划线 */
+    underline?: number;
+
+    /** 设置要使用的字符集 */
+    charset?: number;
+
+    /** 粗体 */
+    bold?: boolean;
+}
+
+interface ContentLoopMerge {
+    /** 行 */
+    eachRow: number;
+
+    /** 列 */
+    columnExtend: number;
+}
+
+interface ContentRowHeight {
+    /** 行高 */
+    rowHeight: number;
+}
+
+interface ContentStyle {
+    // dataFormat: ;
+    // hidden: ;
+    // locked: ;
+    // quotePrefix: ;
+    // horizontalAlignment: ;
+    // verticalAlignment: ;
+    // rotation: ;
+    // indent: ;
+    // borderLeft: ;
+    // borderRight: ;
+    // borderTop: ;
+    // borderBottom: ;
+    // leftBorderColor: ;
+    // rightBorderColor: ;
+    // topBorderColor: ;
+    // bottomBorderColor: ;
+    // fillPatternType: ;
+    // fillBackgroundColor: ;
+    // fillForegroundColor: ;
+    // shrinkToFit: ;
+}
+
+interface HeadFontStyle {
+    // fontName: ;
+    // fontHeightInPoints: ;
+    // italic: ;
+    // strikeout: ;
+    // color: ;
+    // typeOffset: ;
+    // underline: ;
+    // charset: ;
+    // bold: ;
+}
+
+interface HeadRowHeight {
+    /** 表格头行高 */
+    headRowHeight: number;
+}
+
+interface HeadStyle {
+    // dataFormat: ;
+    // hidden: ;
+    // locked: ;
+    // quotePrefix: ;
+    // horizontalAlignment: ;
+    // verticalAlignment: ;
+    // rotation: ;
+    // indent: ;
+    // borderLeft: ;
+    // borderRight: ;
+    // borderTop: ;
+    // borderBottom: ;
+    // leftBorderColor: ;
+    // rightBorderColor: ;
+    // topBorderColor: ;
+    // bottomBorderColor: ;
+    // fillPatternType: ;
+    // fillBackgroundColor: ;
+    // fillForegroundColor: ;
+    // shrinkToFit: ;
+}
+
+interface OnceAbsoluteMerge {
+    /**  */
+    firstRowIndex: number;
+    /**  */
+    lastRowIndex: number;
+    /**  */
+    firstColumnIndex: number;
+    /**  */
+    lastColumnIndex: number;
+}
 
 interface ExcelReaderHeadConfig extends ExcelProperty, Partial<DateTimeFormat>, Partial<NumberFormat> {
 }
