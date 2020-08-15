@@ -3,6 +3,7 @@ package org.clever.common.utils.excel.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * 作者： lzw<br/>
  * 创建时间：2019-05-13 11:41 <br/>
  */
+@ToString
 public class ExcelData<T> implements Serializable {
     /**
      * 数据类型
@@ -76,7 +78,7 @@ public class ExcelData<T> implements Serializable {
     @Setter
     private Long endTime;
     /**
-     * 读取中断在指定Excel行(从1开始)
+     * 读取中断在指定Excel行，为null表示未中断(行号从1开始)
      */
     @Getter
     @Setter

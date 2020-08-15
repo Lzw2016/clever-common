@@ -146,13 +146,13 @@ public class EasyExcelTest {
     }
 
     @Test
-    public void t5() throws IOException {
+    public void t05() throws IOException {
         FileInputStream inputStream = FileUtils.openInputStream(new File(file));
-        ExcelDataReader2<DemoData> excelDataReader2 = new ExcelDataReader2<>("test", inputStream, DemoData.class, 2);
-        excelDataReader2.read().file(file).autoCloseStream(false);
-        excelDataReader2.read().doReadAll();
-        log.info("data -> {}", excelDataReader2.getExcelData(0));
-        excelDataReader2.read().doReadAll();
+        ExcelDataReader<DemoData> excelDataReader = new ExcelDataReader<>("test", inputStream, DemoData.class);
+        excelDataReader.read().file(file).autoCloseStream(false);
+        excelDataReader.read().doReadAll();
+        log.info("data -> {}", excelDataReader.getExcelData(0));
+        excelDataReader.read().doReadAll();
         inputStream.close();
     }
 
