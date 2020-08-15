@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -229,8 +230,21 @@ public class EasyExcelTest {
     }
 
     @Test
-    public void t07() {
-
+    public void t07() throws IOException {
+        List<DemoData> list = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            DemoData demoData = new DemoData();
+            demoData.index = i;
+            demoData.id = (long) i;
+            demoData.name = "AA药店名称" + i;
+            demoData.num1 = new BigDecimal(i + 66001);
+            demoData.num2 = new BigDecimal(i + 8800001);
+            demoData.num3 = new BigDecimal(i + 990000001);
+            list.add(demoData);
+        }
+        FileOutputStream outputStream = FileUtils.openOutputStream(new File(file2));
+        ExcelDataWriter.read(outputStream, DemoData.class).sheet(0).doWrite(list);
+        outputStream.close();
     }
 
     @Data
