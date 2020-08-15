@@ -14,6 +14,13 @@ interface GlobalConfiguration {
 
 }
 
+enum ExcelTypeEnum {
+    /** .xls */
+    XLS = "XLS",
+    /** .xlsx */
+    XLSX = "XLSX",
+}
+
 enum CellExtraTypeEnum {
     /** 批注信息 */
     COMMENT = "COMMENT",
@@ -60,6 +67,8 @@ interface AbstractParameterBuilder<T extends AbstractParameterBuilder<T>> {
 
     /** 自动删除空格字符 */
     autoTrim(autoTrim: boolean);
+
+    // head(List<List<String>> head)
 }
 
 interface AbstractExcelReaderParameterBuilder<T extends AbstractExcelReaderParameterBuilder<T>> extends AbstractParameterBuilder<T> {
@@ -131,6 +140,82 @@ interface ExcelReaderBuilder extends AbstractExcelReaderParameterBuilder<ExcelRe
 
     /** 开始读取所有的页签数据，并返回所有结果(数据量大时，会消耗大量内存) */
     // doReadAllSync(): List<T>;
+}
+
+interface AbstractExcelWriterParameterBuilder<T extends AbstractExcelWriterParameterBuilder<T>> extends AbstractParameterBuilder<T> {
+    /** 设置Excel表头所在行，从0开始 */
+    relativeHeadRowIndex(relativeHeadRowIndex: number): T;
+
+    /** 是否需要输出表头 */
+    needHead(needHead: boolean): T;
+
+    /** 是否使用默认样式 */
+    useDefaultStyle(useDefaultStyle: boolean): T;
+
+    /** 是否自动合并表头 */
+    automaticMergeHead(automaticMergeHead: boolean): T;
+
+    // excludeColumnIndexes(Collection<Integer> excludeColumnIndexes):T;
+
+    // excludeColumnFiledNames(Collection<String> excludeColumnFiledNames):T;
+
+    // includeColumnIndexes(Collection<Integer> includeColumnIndexes):T;
+
+    // includeColumnFiledNames(Collection<String> includeColumnFiledNames):T;
+}
+
+interface ExcelWriterSheetBuilder extends AbstractExcelWriterParameterBuilder<ExcelWriterSheetBuilder> {
+    /** 页签编号(从0开始) */
+    sheetNo(sheetNo: number): ExcelWriterSheetBuilder;
+
+    /** 页签名称(xlsx格式才支持) */
+    sheetName(sheetName: string): ExcelWriterSheetBuilder;
+
+    // doWrite(List data):void
+
+    // doFill(Object data):void
+
+    // doFill(Object data, FillConfig fillConfig):void
+
+    // table():ExcelWriterSheetBuilder
+
+    // table(Integer tableNo):ExcelWriterSheetBuilder
+}
+
+interface ExcelWriterTableBuilder extends AbstractExcelWriterParameterBuilder<ExcelWriterTableBuilder> {
+    // tableNo(Integer tableNo):ExcelWriterTableBuilder
+
+    // doWrite(List data):void
+}
+
+interface ExcelWriterBuilder extends AbstractExcelWriterParameterBuilder<ExcelWriterBuilder> {
+
+    // file(OutputStream outputStream)
+
+    // withTemplate(InputStream templateInputStream)
+
+    /**  */
+    autoCloseStream(autoCloseStream: boolean): ExcelWriterBuilder;
+
+    password(password: string): ExcelWriterBuilder;
+
+    inMemory(inMemory: boolean): ExcelWriterBuilder;
+
+    writeExcelOnException(writeExcelOnException: boolean): ExcelWriterBuilder;
+
+    excelType(excelType: ExcelTypeEnum): ExcelWriterBuilder;
+
+    /**
+     * 设置读取的页签
+     * @param sheetNo 页签编号(从0开始)
+     */
+    sheet(sheetNo: number): ExcelWriterBuilder;
+
+    /**
+     * 设置读取的页签
+     * @param sheetName 页签名称(xlsx格式才支持)
+     */
+    sheet(sheetName: string): ExcelWriterBuilder;
 }
 
 enum DataType {
@@ -356,9 +441,22 @@ class ExcelReaderConfig<T extends object> {
     }
 }
 
-interface ExcelUtils {
+class ExcelWriterConfig<T extends object> {
 
+}
+
+interface ExcelUtils {
+    /**
+     * 读取Excel数据
+     * @param initConfig 初始化配置
+     */
     read<T extends object>(initConfig: ExcelReaderConfig<T>): ExcelReaderBuilder;
+
+    /**
+     * 生成Excel
+     * @param initConfig 初始化配置
+     */
+    write<T extends object>(initConfig: ExcelWriterConfig<T>): ExcelWriterBuilder;
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------

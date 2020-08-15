@@ -2,7 +2,9 @@ package org.clever.common.utils.excel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -12,6 +14,7 @@ import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -31,6 +34,8 @@ import java.util.*;
 public class EasyExcelTest {
 
     private final String file = "C:\\Users\\lizw\\Downloads\\药店积分商品统计20200813141849.xlsx";
+
+    private final String file2 = "C:\\Users\\lizw\\Downloads\\药店积分商品统计20200813141850.xlsx";
 
     @Test
     public void t01() {
@@ -72,8 +77,41 @@ public class EasyExcelTest {
     @Test
     public void t02() {
         ExcelWriterBuilder excelWriterBuilder = new ExcelWriterBuilder();
+        excelWriterBuilder.file("");
+        excelWriterBuilder.autoCloseStream(true);
+        excelWriterBuilder.inMemory(false);
+        excelWriterBuilder.withTemplate("");
+        excelWriterBuilder.writeExcelOnException(false);
+        excelWriterBuilder.automaticMergeHead(true);
+        excelWriterBuilder.excludeColumnFiledNames(null);
+        excelWriterBuilder.excludeColumnIndexes(null);
+        excelWriterBuilder.includeColumnFiledNames(null);
+        excelWriterBuilder.includeColumnIndexes(null);
+        excelWriterBuilder.needHead(true);
+        excelWriterBuilder.registerConverter(null);
+        //excelWriterBuilder.registerWriteHandler(null);
+        excelWriterBuilder.relativeHeadRowIndex(0);
+        excelWriterBuilder.useDefaultStyle(true);
+        excelWriterBuilder.excelType(ExcelTypeEnum.XLSX);
+        excelWriterBuilder.password("");
+        excelWriterBuilder.sheet(0);
+        excelWriterBuilder.head(new ArrayList<>());
+        excelWriterBuilder.use1904windowing(false);
+        excelWriterBuilder.locale(Locale.SIMPLIFIED_CHINESE);
+        excelWriterBuilder.autoTrim(true);
 
-        ExcelWriterSheetBuilder excelWriterSheetBuilder = new ExcelWriterSheetBuilder();
+        ExcelWriter excelWriter = excelWriterBuilder.build();
+//        excelWriter.write()
+//        excelWriter.fill()
+//        excelWriter.writeContext()
+        excelWriter.finish();
+
+        ExcelWriterSheetBuilder excelWriterSheetBuilder = excelWriterBuilder.sheet(0);
+//        excelWriterSheetBuilder.doWrite();
+//        excelWriterSheetBuilder.doFill();
+//        excelWriterSheetBuilder.sheetNo()
+//        excelWriterSheetBuilder.sheetName()
+//        excelWriterSheetBuilder.table();
     }
 
     @Test
@@ -154,25 +192,70 @@ public class EasyExcelTest {
         log.info("data -> {}", excelDataReader.getExcelData(0));
         excelDataReader.read().doReadAll();
         inputStream.close();
+
+        // ExcelDataReader.read(null, DemoData.class).sheet(0).doRead();
+    }
+
+    @Test
+    public void t06() {
+        List<List<String>> heads = new ArrayList<>();
+//        heads.add(Arrays.asList("序号", "药店ID", "药店名称", "积分商品总数量", "上架积分商品数", "下架积分商品数"));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "序号")));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "药店ID")));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "药店名称")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "积分商品总数量")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "上架积分商品数")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "下架积分商品数")));
+
+        List<DemoData> list = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            DemoData demoData = new DemoData();
+            demoData.index = i;
+            demoData.id = (long) i;
+            demoData.name = "药店名称" + i;
+            demoData.num1 = new BigDecimal(i + 10001);
+            demoData.num2 = new BigDecimal(i + 2000001);
+            demoData.num3 = new BigDecimal(i + 300000001);
+            list.add(demoData);
+        }
+
+        ExcelWriterBuilder excelWriterBuilder = new ExcelWriterBuilder();
+        excelWriterBuilder.file(file2);
+        excelWriterBuilder.head(heads);
+//        excelWriterBuilder.head(DemoData.class);
+//        excelWriterBuilder.relativeHeadRowIndex(3);
+        excelWriterBuilder.registerWriteHandler(new LongestMatchColumnWidthStyleStrategy());
+        excelWriterBuilder.sheet(0).doWrite(list);
+    }
+
+    @Test
+    public void t07() {
+
     }
 
     @Data
     public static class DemoData {
+        @ColumnWidth(6)
         @ExcelProperty("序号")
         private Integer index;
 
+        @ColumnWidth(10)
         @ExcelProperty("药店ID")
         private Long id;
 
+        @ColumnWidth(14)
         @ExcelProperty("药店名称")
         private String name;
 
+        @ColumnWidth(21)
         @ExcelProperty("积分商品总数量")
         private BigDecimal num1;
 
+        @ColumnWidth(21)
         @ExcelProperty("上架积分商品数")
         private BigDecimal num2;
 
+        @ColumnWidth(21)
         @ExcelProperty("下架积分商品数")
         private BigDecimal num3;
     }
