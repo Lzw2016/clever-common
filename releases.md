@@ -1,3 +1,15 @@
+### 2020-xx-xx 2.0.3.RELEASES
+
+- [bug fix]
+
+- [增强]
+    
+- [新增]
+
+- [变化]
+
+---
+
 ### 2020-xx-xx 2.0.2.RELEASES
 
 - [bug fix]
@@ -10,19 +22,22 @@
 
 ---
 
-### 2020-xx-xx 2.0.1.RELEASES
+### 2020-08-15 2.0.1.SNAPSHOT
 
 - [bug fix]
 
 - [增强]
-    
+    - ValidatorFactoryUtils增加Validator单列
 - [新增]
-
+    - 更新 pom.xml 配置加入org.glassfish:javax.el(hibernate-validator 需要)
 - [变化]
     - 删除 StringUtils.format 函数
+    - 升级 easyexcel 到 2.2.6
+    - ExcelDataReader API变化
+    - ExcelDataWriter API变化
 ---
 
-### 2020-04-22 2.0.0.RELEASES
+### 2020-04-22 2.0.0.SNAPSHOT
 
 - [bug fix]
 

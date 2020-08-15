@@ -24,13 +24,23 @@ public class ValidatorFactoryUtils {
      */
     public static final ValidatorFactory HIBERNATE_VALIDATOR_FACTORY;
 
+    private static final Validator Instance;
+
     static {
         Configuration<HibernateValidatorConfiguration> configure = Validation.byProvider(HibernateValidator.class).configure();
         HIBERNATE_VALIDATOR_FACTORY = configure.buildValidatorFactory();
+        Instance = getHibernateValidator();
     }
 
     /**
-     * 创建Hibernate实现的Validator
+     * 返回Hibernate实现的Validator单例(验证器实例是线程安全的，可以多次重用)
+     */
+    public static Validator getValidatorInstance() {
+        return Instance;
+    }
+
+    /**
+     * 创建一个新的Hibernate实现的Validator
      *
      * @return Hibernate实现的Validator
      */

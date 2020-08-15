@@ -188,6 +188,7 @@ public class EasyExcelTest {
     public void t05() throws IOException {
         FileInputStream inputStream = FileUtils.openInputStream(new File(file));
         ExcelDataReader<DemoData> excelDataReader = new ExcelDataReader<>("test", inputStream, DemoData.class);
+//        excelDataReader.setEnableValidation(false);
         excelDataReader.read().file(file).autoCloseStream(false);
         excelDataReader.read().doReadAll();
         log.info("data -> {}", excelDataReader.getExcelData(0));

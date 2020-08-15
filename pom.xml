@@ -56,7 +56,7 @@
     </modules>
 
     <properties>
-        <revision>2.0.0-SNAPSHOT</revision>
+        <revision>2.0.1.SNAPSHOT</revision>
     </properties>
 
     <dependencyManagement>

@@ -16,11 +16,14 @@ public class ExcelHead implements Serializable {
      * 字段位置
      */
     private final Integer index;
-
     /**
      * Excel表头名称(允许多级表头)
      */
     private final List<String> heads = new ArrayList<>();
+    /**
+     * 对应实体类字段名
+     */
+    private String columnName;
 
     public ExcelHead(Integer index, String head) {
         this.index = index;

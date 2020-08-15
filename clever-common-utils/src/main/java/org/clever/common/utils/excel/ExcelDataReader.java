@@ -4,8 +4,11 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.excel.metadata.Cell;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.metadata.property.ExcelReadHeadProperty;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -24,6 +27,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -73,6 +77,12 @@ public class ExcelDataReader<T> {
      * ExcelDate 数据读取实现
      */
     private final ExcelDateReadListener excelDateReadListener = new ExcelDateReadListener();
+    /**
+     * 是否启用JSR303校验
+     */
+    @Setter
+    @Getter
+    private boolean enableValidation = true;
 
     /**
      * @param request 上传的文件的请求
@@ -250,6 +260,14 @@ public class ExcelDataReader<T> {
                     excelHead = excelData.getHeads().get(index);
                     excelHead.getHeads().add(head);
                 }
+                ExcelReadHeadProperty headProperty = context.readSheetHolder().getExcelReadHeadProperty();
+                if (headProperty != null && headProperty.getContentPropertyMap() != null && headProperty.getContentPropertyMap().containsKey(index)) {
+                    ExcelContentProperty property = headProperty.getContentPropertyMap().get(index);
+                    Field field = property.getField();
+                    if (field != null) {
+                        excelHead.setColumnName(field.getName());
+                    }
+                }
             }
         }
 
@@ -270,9 +288,9 @@ public class ExcelDataReader<T> {
                 log.info("Excel数据导入数据重复，filename={} | data={}", filename, data);
             }
             // 数据校验
-            if (!excelRow.hasError() && !(data instanceof Map)) {
+            if (enableValidation && !excelRow.hasError() && !(data instanceof Map)) {
                 // JSR303校验
-                Validator validator = ValidatorFactoryUtils.getHibernateValidator();
+                Validator validator = ValidatorFactoryUtils.getValidatorInstance();
                 Set<ConstraintViolation<T>> set = validator.validate(excelRow.getData());
                 for (ConstraintViolation<T> constraintViolation : set) {
                     excelRow.addErrorInColumn(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
