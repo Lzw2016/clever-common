@@ -22,7 +22,7 @@
 
 ---
 
-### 2020-08-15 2.0.1.SNAPSHOT
+### 2020-08-15 2.0.1-SNAPSHOT
 
 - [bug fix]
 
@@ -37,7 +37,7 @@
     - ExcelDataWriter API变化
 ---
 
-### 2020-04-22 2.0.0.SNAPSHOT
+### 2020-04-22 2.0.0-SNAPSHOT
 
 - [bug fix]
 
