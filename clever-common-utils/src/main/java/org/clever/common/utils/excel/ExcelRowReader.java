@@ -18,5 +18,10 @@ public interface ExcelRowReader<T> {
      * @param data     校验通过的数据
      * @param excelRow 数据行对象
      */
-    void readerRow(T data, ExcelRow<T> excelRow, AnalysisContext context);
+    void readRow(T data, ExcelRow<T> excelRow, AnalysisContext context);
+
+    /**
+     * 读取结束时调用
+     */
+    void readEnd(AnalysisContext context);
 }

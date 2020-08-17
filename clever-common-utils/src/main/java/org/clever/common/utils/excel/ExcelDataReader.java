@@ -310,7 +310,7 @@ public class ExcelDataReader<T> {
             // 自定义读取行处理逻辑
             if (!excelRow.hasError() && excelRowReader != null) {
                 try {
-                    excelRowReader.readerRow(data, excelRow, context);
+                    excelRowReader.readRow(data, excelRow, context);
                 } catch (Throwable e) {
                     excelRow.addErrorInRow(e.getMessage());
                 }
@@ -325,6 +325,9 @@ public class ExcelDataReader<T> {
             }
             if (excelData.getEndTime() != null && excelData.getStartTime() != null) {
                 log.info("Excel Sheet读取完成，sheet={} | 耗时：{}ms", excelData.getSheetName(), excelData.getEndTime() - excelData.getStartTime());
+            }
+            if (excelRowReader != null) {
+                excelRowReader.readEnd(context);
             }
             // if (!enableExcelData) {
             //     excelData.setStartTime(null);
