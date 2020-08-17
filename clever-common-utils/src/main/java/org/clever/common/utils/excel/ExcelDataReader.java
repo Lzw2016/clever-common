@@ -57,6 +57,10 @@ public class ExcelDataReader<T> {
     @Getter
     private final int limitRows;
     /**
+     * 是否缓存读取的数据结果到内存中(默认启用)
+     */
+    private final boolean enableExcelData;
+    /**
      * Excel读取结果
      */
     @Getter
@@ -78,7 +82,7 @@ public class ExcelDataReader<T> {
      */
     private final ExcelDateReadListener excelDateReadListener = new ExcelDateReadListener();
     /**
-     * 是否启用JSR303校验
+     * 是否启用JSR303校验(默认启用)
      */
     @Setter
     @Getter
@@ -89,7 +93,7 @@ public class ExcelDataReader<T> {
      * @param clazz   Excel解析对应的数据类型
      */
     public ExcelDataReader(HttpServletRequest request, Class<T> clazz) throws IOException {
-        this(getMultipartFile(request), clazz, LIMIT_ROWS, null, null);
+        this(getMultipartFile(request), clazz, LIMIT_ROWS, true, null, null);
     }
 
     /**
@@ -98,7 +102,7 @@ public class ExcelDataReader<T> {
      * @param excelRowReader 处理Excel数据行(用于自定义校验)
      */
     public ExcelDataReader(HttpServletRequest request, Class<T> clazz, ExcelRowReader<T> excelRowReader) throws IOException {
-        this(getMultipartFile(request), clazz, LIMIT_ROWS, excelRowReader, null);
+        this(getMultipartFile(request), clazz, LIMIT_ROWS, true, excelRowReader, null);
     }
 
     /**
@@ -108,22 +112,23 @@ public class ExcelDataReader<T> {
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
     public ExcelDataReader(HttpServletRequest request, Class<T> clazz, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
-        this(getMultipartFile(request), clazz, LIMIT_ROWS, excelRowReader, excelReaderExceptionHand);
+        this(getMultipartFile(request), clazz, LIMIT_ROWS, true, excelRowReader, excelReaderExceptionHand);
     }
 
     /**
      * @param request                  上传的文件的请求
      * @param clazz                    Excel解析对应的数据类型
      * @param limitRows                读取Excel文件最大行数
+     * @param enableExcelData          是否缓存读取的数据结果到内存中
      * @param excelRowReader           处理Excel数据行(用于自定义校验)
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
-    public ExcelDataReader(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
-        this(getMultipartFile(request), clazz, limitRows, excelRowReader, excelReaderExceptionHand);
+    public ExcelDataReader(HttpServletRequest request, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+        this(getMultipartFile(request), clazz, limitRows, enableExcelData, excelRowReader, excelReaderExceptionHand);
     }
 
-    private ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
-        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows, excelRowReader, excelReaderExceptionHand);
+    private ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows, enableExcelData, excelRowReader, excelReaderExceptionHand);
     }
 
     /**
@@ -132,7 +137,7 @@ public class ExcelDataReader<T> {
      * @param clazz       Excel解析对应的数据类型
      */
     public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz) {
-        this(filename, inputStream, clazz, LIMIT_ROWS, null, null);
+        this(filename, inputStream, clazz, LIMIT_ROWS, true, null, null);
     }
 
     /**
@@ -142,7 +147,7 @@ public class ExcelDataReader<T> {
      * @param excelRowReader 处理Excel数据行(用于自定义校验)
      */
     public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, ExcelRowReader<T> excelRowReader) {
-        this(filename, inputStream, clazz, LIMIT_ROWS, excelRowReader, null);
+        this(filename, inputStream, clazz, LIMIT_ROWS, true, excelRowReader, null);
     }
 
     /**
@@ -153,7 +158,7 @@ public class ExcelDataReader<T> {
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
     public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
-        this(filename, inputStream, clazz, LIMIT_ROWS, excelRowReader, excelReaderExceptionHand);
+        this(filename, inputStream, clazz, LIMIT_ROWS, true, excelRowReader, excelReaderExceptionHand);
     }
 
     /**
@@ -161,18 +166,21 @@ public class ExcelDataReader<T> {
      * @param inputStream              上传的文件内容
      * @param clazz                    Excel解析对应的数据类型
      * @param limitRows                读取Excel文件最大行数
+     * @param enableExcelData          是否缓存读取的数据结果到内存中
      * @param excelRowReader           处理Excel数据行(用于自定义校验)
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
-    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
+    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
         Assert.hasText(filename, "参数filename不能为空");
         Assert.notNull(inputStream, "参数inputStream不能为空");
         Assert.notNull(clazz, "参数clazz不能为空");
+        Assert.isTrue(enableExcelData || excelRowReader != null, "参数enableExcelData值为false时，excelRowReader参数不能为null");
         this.filename = filename;
         this.inputStream = inputStream;
         this.limitRows = limitRows;
         this.excelReaderBuilder = new ExcelReaderBuilder();
         this.excelReaderBuilder.head(clazz);
+        this.enableExcelData = enableExcelData;
         this.excelRowReader = excelRowReader;
         this.excelReaderExceptionHand = excelReaderExceptionHand;
         init();
@@ -273,7 +281,6 @@ public class ExcelDataReader<T> {
 
         @Override
         public void invoke(T data, AnalysisContext context) {
-            ExcelData<T> excelData = getExcelData(context);
             int index = context.readRowHolder().getRowIndex() + 1;
             ExcelRow<T> excelRow = new ExcelRow<>(data, index);
             // 数据签名-防重机制
@@ -283,7 +290,11 @@ public class ExcelDataReader<T> {
                 sb.append(entry.getKey()).append("=").append(entry.getValue().toString()).append("|");
             }
             excelRow.setDataSignature(EncodeDecodeUtils.encodeHex(DigestUtils.sha1(sb.toString().getBytes())));
-            boolean success = excelData.addRow(excelRow);
+            boolean success = true;
+            if (enableExcelData) {
+                ExcelData<T> excelData = getExcelData(context);
+                success = excelData.addRow(excelRow);
+            }
             if (!success) {
                 log.info("Excel数据导入数据重复，filename={} | data={}", filename, data);
             }
@@ -299,7 +310,7 @@ public class ExcelDataReader<T> {
             // 自定义读取行处理逻辑
             if (!excelRow.hasError() && excelRowReader != null) {
                 try {
-                    excelRowReader.readerRow(data, excelRow);
+                    excelRowReader.readerRow(data, excelRow, context);
                 } catch (Throwable e) {
                     excelRow.addErrorInRow(e.getMessage());
                 }
@@ -315,6 +326,10 @@ public class ExcelDataReader<T> {
             if (excelData.getEndTime() != null && excelData.getStartTime() != null) {
                 log.info("Excel Sheet读取完成，sheet={} | 耗时：{}ms", excelData.getSheetName(), excelData.getEndTime() - excelData.getStartTime());
             }
+            // if (!enableExcelData) {
+            //     excelData.setStartTime(null);
+            //     excelData.setEndTime(null);
+            // }
         }
 
         @Override
@@ -338,7 +353,7 @@ public class ExcelDataReader<T> {
             // 数据是否超出限制 LIMIT_ROWS
             final int rowNum = context.readRowHolder().getRowIndex() + 1;
             final int dataRowNum = rowNum - context.currentReadHolder().excelReadHeadProperty().getHeadRowNumber();
-            if (limitRows >= 0 && dataRowNum > limitRows) {
+            if (limitRows > 0 && dataRowNum > limitRows) {
                 log.info("Excel数据行超出限制：dataRowNum={} | limitRows={}", dataRowNum, limitRows);
                 excelData.setInterruptByRowNum(rowNum);
                 // 设置已经读取完成
@@ -379,12 +394,13 @@ public class ExcelDataReader<T> {
      * @param request                  上传的文件的请求
      * @param clazz                    Excel解析对应的数据类型
      * @param limitRows                读取Excel文件最大行数
+     * @param enableExcelData          是否缓存读取的数据结果到内存中
      * @param excelRowReader           处理Excel数据行(用于自定义校验)
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
     @SneakyThrows
-    public static <T> ExcelReaderBuilder read(HttpServletRequest request, Class<T> clazz, int limitRows, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
-        return new ExcelDataReader<>(request, clazz, limitRows, excelRowReader, excelReaderExceptionHand).read();
+    public static <T> ExcelReaderBuilder read(HttpServletRequest request, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
+        return new ExcelDataReader<>(request, clazz, limitRows, enableExcelData, excelRowReader, excelReaderExceptionHand).read();
     }
 
     /**

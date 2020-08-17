@@ -1,5 +1,6 @@
 package org.clever.common.utils.excel;
 
+import com.alibaba.excel.context.AnalysisContext;
 import org.clever.common.utils.excel.dto.ExcelRow;
 
 /**
@@ -17,5 +18,5 @@ public interface ExcelRowReader<T> {
      * @param data     校验通过的数据
      * @param excelRow 数据行对象
      */
-    void readerRow(T data, ExcelRow<T> excelRow);
+    void readerRow(T data, ExcelRow<T> excelRow, AnalysisContext context);
 }
