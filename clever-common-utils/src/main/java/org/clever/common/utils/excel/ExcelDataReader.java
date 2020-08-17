@@ -179,7 +179,6 @@ public class ExcelDataReader<T> {
         this.inputStream = inputStream;
         this.limitRows = limitRows;
         this.excelReaderBuilder = new ExcelReaderBuilder();
-        this.excelReaderBuilder.head(clazz);
         this.enableExcelData = enableExcelData;
         this.excelRowReader = excelRowReader;
         this.excelReaderExceptionHand = excelReaderExceptionHand;
@@ -187,6 +186,7 @@ public class ExcelDataReader<T> {
     }
 
     private void init(Class<T> clazz) {
+        excelReaderBuilder.head(clazz);
         excelReaderBuilder.file(inputStream);
         excelReaderBuilder.registerReadListener(excelDateReadListener);
         excelReaderBuilder.autoCloseStream(false);
