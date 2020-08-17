@@ -183,10 +183,10 @@ public class ExcelDataReader<T> {
         this.enableExcelData = enableExcelData;
         this.excelRowReader = excelRowReader;
         this.excelReaderExceptionHand = excelReaderExceptionHand;
-        init();
+        init(clazz);
     }
 
-    private void init() {
+    private void init(Class<T> clazz) {
         excelReaderBuilder.file(inputStream);
         excelReaderBuilder.registerReadListener(excelDateReadListener);
         excelReaderBuilder.autoCloseStream(false);
@@ -196,6 +196,10 @@ public class ExcelDataReader<T> {
         excelReaderBuilder.use1904windowing(false);
         excelReaderBuilder.locale(Locale.SIMPLIFIED_CHINESE);
         excelReaderBuilder.autoTrim(true);
+        if (Map.class.isAssignableFrom(clazz)) {
+            excelReaderBuilder.useDefaultListener(false);
+            excelReaderBuilder.headRowNumber(1);
+        }
     }
 
     public ExcelReaderBuilder read() {
@@ -281,6 +285,10 @@ public class ExcelDataReader<T> {
 
         @Override
         public void invoke(T data, AnalysisContext context) {
+            ExcelData<T> excelData = getExcelData(context);
+            if (excelData.getStartTime() == null) {
+                excelData.setStartTime(System.currentTimeMillis());
+            }
             int index = context.readRowHolder().getRowIndex() + 1;
             ExcelRow<T> excelRow = new ExcelRow<>(data, index);
             // 数据签名-防重机制
@@ -292,7 +300,6 @@ public class ExcelDataReader<T> {
             excelRow.setDataSignature(EncodeDecodeUtils.encodeHex(DigestUtils.sha1(sb.toString().getBytes())));
             boolean success = true;
             if (enableExcelData) {
-                ExcelData<T> excelData = getExcelData(context);
                 success = excelData.addRow(excelRow);
             }
             if (!success) {

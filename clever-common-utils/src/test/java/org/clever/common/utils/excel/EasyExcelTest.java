@@ -248,6 +248,20 @@ public class EasyExcelTest {
         outputStream.close();
     }
 
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void t08() throws IOException {
+        FileInputStream inputStream = FileUtils.openInputStream(new File(file));
+        ExcelDataReader<Map> excelDataReader = new ExcelDataReader<>("test", inputStream, Map.class);
+        excelDataReader.read().file(file).autoCloseStream(false);
+        excelDataReader.read().doReadAll();
+        log.info("data -> {}", excelDataReader.getExcelData(0));
+        excelDataReader.read().doReadAll();
+        inputStream.close();
+
+        // ExcelDataReader.read(null, DemoData.class).sheet(0).doRead();
+    }
+
     @Data
     public static class DemoData {
         @ColumnWidth(6)
