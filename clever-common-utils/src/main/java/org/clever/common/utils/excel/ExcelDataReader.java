@@ -171,7 +171,36 @@ public class ExcelDataReader<T> {
      * @param excelRowReader           处理Excel数据行(用于自定义校验)
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
-    public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
+    public ExcelDataReader(
+            String filename,
+            InputStream inputStream,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) {
+        this(filename, inputStream, clazz, limitRows, enableExcelData, true, excelRowReader, excelReaderExceptionHand);
+    }
+
+    /**
+     * @param filename                 上传的文件名称
+     * @param inputStream              上传的文件内容
+     * @param clazz                    Excel解析对应的数据类型
+     * @param limitRows                读取Excel文件最大行数
+     * @param enableExcelData          是否缓存读取的数据结果到内存中
+     * @param useCustomReadListener    是否使用默认的ReadListener
+     * @param excelRowReader           处理Excel数据行(用于自定义校验)
+     * @param excelReaderExceptionHand 处理读取Excel异常
+     */
+    public ExcelDataReader(
+            String filename,
+            InputStream inputStream,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            boolean useCustomReadListener,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) {
         // Assert.hasText(filename, "参数filename不能为空");
         // Assert.notNull(inputStream, "参数inputStream不能为空");
         Assert.notNull(clazz, "参数clazz不能为空");
@@ -183,13 +212,15 @@ public class ExcelDataReader<T> {
         this.enableExcelData = enableExcelData;
         this.excelRowReader = excelRowReader;
         this.excelReaderExceptionHand = excelReaderExceptionHand;
-        init(clazz);
+        init(clazz, useCustomReadListener);
     }
 
-    private void init(Class<T> clazz) {
+    private void init(Class<T> clazz, boolean useCustomReadListener) {
         excelReaderBuilder.head(clazz);
         excelReaderBuilder.file(inputStream);
-        excelReaderBuilder.registerReadListener(excelDateReadListener);
+        if (useCustomReadListener) {
+            excelReaderBuilder.registerReadListener(excelDateReadListener);
+        }
         excelReaderBuilder.autoCloseStream(false);
         excelReaderBuilder.ignoreEmptyRow(false);
         excelReaderBuilder.mandatoryUseInputStream(false);
