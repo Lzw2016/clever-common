@@ -14,6 +14,7 @@ import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -244,7 +245,17 @@ public class EasyExcelTest {
             list.add(demoData);
         }
         FileOutputStream outputStream = FileUtils.openOutputStream(new File(file2));
-        ExcelDataWriter.write(outputStream, DemoData.class).sheet(0).doWrite(list);
+        ExcelWriterBuilder builder = ExcelDataWriter.write(outputStream, DemoData.class);
+
+        ExcelWriter excelWriter = builder.build();
+        WriteSheet writeSheet = EasyExcel.writerSheet(0).needHead(Boolean.TRUE).build();
+        excelWriter.write(list, writeSheet);
+        excelWriter.write(list, writeSheet);
+        excelWriter.write(list, writeSheet);
+        excelWriter.finish();
+
+//        ExcelWriterSheetBuilder sheetBuilder = builder.sheet(1);
+//        sheetBuilder.doWrite(list);
         outputStream.close();
     }
 
