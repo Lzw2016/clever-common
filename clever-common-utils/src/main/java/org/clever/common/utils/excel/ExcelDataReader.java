@@ -59,6 +59,7 @@ public class ExcelDataReader<T> {
     /**
      * 是否缓存读取的数据结果到内存中(默认启用)
      */
+    @Getter
     private final boolean enableExcelData;
     /**
      * Excel读取结果
