@@ -46,7 +46,7 @@ public class ExcelDataWriter {
         excelWriterBuilder.autoTrim(true);
     }
 
-    public ExcelWriterBuilder read() {
+    public ExcelWriterBuilder write() {
         return excelWriterBuilder;
     }
 
@@ -76,8 +76,8 @@ public class ExcelDataWriter {
      * @param outputStream Excel文件对应输出流
      * @param clazz        Excel解析对应的数据类型
      */
-    public static ExcelWriterBuilder read(OutputStream outputStream, Class<?> clazz) {
-        return new ExcelDataWriter(outputStream, clazz).read();
+    public static ExcelWriterBuilder write(OutputStream outputStream, Class<?> clazz) {
+        return new ExcelDataWriter(outputStream, clazz).write();
     }
 
     /**
@@ -86,7 +86,7 @@ public class ExcelDataWriter {
      * @param fileName 下载Excel文件名称
      * @param clazz    Excel解析对应的数据类型
      */
-    public static ExcelWriterBuilder read(HttpServletRequest request, HttpServletResponse response, String fileName, Class<?> clazz) {
-        return new ExcelDataWriter(request, response, fileName, clazz).read();
+    public static ExcelWriterBuilder write(HttpServletRequest request, HttpServletResponse response, String fileName, Class<?> clazz) {
+        return new ExcelDataWriter(request, response, fileName, clazz).write();
     }
 }

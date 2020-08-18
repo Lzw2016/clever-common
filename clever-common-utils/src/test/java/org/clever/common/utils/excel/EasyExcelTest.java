@@ -244,7 +244,7 @@ public class EasyExcelTest {
             list.add(demoData);
         }
         FileOutputStream outputStream = FileUtils.openOutputStream(new File(file2));
-        ExcelDataWriter.read(outputStream, DemoData.class).sheet(0).doWrite(list);
+        ExcelDataWriter.write(outputStream, DemoData.class).sheet(0).doWrite(list);
         outputStream.close();
     }
 
