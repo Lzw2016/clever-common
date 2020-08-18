@@ -273,6 +273,44 @@ public class EasyExcelTest {
         // ExcelDataReader.read(null, DemoData.class).sheet(0).doRead();
     }
 
+    @Test
+    public void t09() throws IOException {
+        List<List<String>> heads = new ArrayList<>();
+//        heads.add(Arrays.asList("序号", "药店ID", "药店名称", "积分商品总数量", "上架积分商品数", "下架积分商品数"));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "序号")));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "药店ID")));
+        heads.add(new ArrayList<>(Arrays.asList("第一", "药店名称")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "积分商品总数量")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "上架积分商品数")));
+        heads.add(new ArrayList<>(Arrays.asList("第二", "下架积分商品数")));
+
+        List<List<Object>> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            List<Object> data = new ArrayList<>();
+            data.add("字符串" + i);
+            data.add(new Date());
+            data.add(0.56);
+            data.add("111");
+            data.add("222");
+            data.add("333");
+            list.add(data);
+        }
+
+        FileOutputStream outputStream = FileUtils.openOutputStream(new File(file2));
+        ExcelWriterBuilder builder = ExcelDataWriter.write(outputStream, null);
+
+        ExcelWriter excelWriter = builder.head(heads).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet(0).needHead(Boolean.TRUE).build();
+        excelWriter.write(list, writeSheet);
+        excelWriter.write(list, writeSheet);
+        excelWriter.write(list, writeSheet);
+        excelWriter.finish();
+
+//        ExcelWriterSheetBuilder sheetBuilder = builder.sheet(1);
+//        sheetBuilder.doWrite(list);
+        outputStream.close();
+    }
+
     @Data
     public static class DemoData {
         @ColumnWidth(6)

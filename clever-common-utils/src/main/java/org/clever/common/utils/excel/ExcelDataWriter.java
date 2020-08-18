@@ -38,10 +38,12 @@ public class ExcelDataWriter {
      */
     public ExcelDataWriter(OutputStream outputStream, Class<?> clazz) {
         Assert.notNull(outputStream, "参数outputStream不能为空");
-        Assert.notNull(clazz, "参数clazz不能为空");
+        // Assert.notNull(clazz, "参数clazz不能为空");
         excelWriterBuilder = new ExcelWriterBuilder();
         excelWriterBuilder.file(outputStream);
-        excelWriterBuilder.head(clazz);
+        if (clazz != null) {
+            excelWriterBuilder.head(clazz);
+        }
         excelWriterBuilder.locale(Locale.SIMPLIFIED_CHINESE);
         excelWriterBuilder.autoTrim(true);
     }
