@@ -172,7 +172,7 @@ public class ExcelDataReader<T> {
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
     public ExcelDataReader(String filename, InputStream inputStream, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) {
-        Assert.hasText(filename, "参数filename不能为空");
+        // Assert.hasText(filename, "参数filename不能为空");
         // Assert.notNull(inputStream, "参数inputStream不能为空");
         Assert.notNull(clazz, "参数clazz不能为空");
         Assert.isTrue(enableExcelData || excelRowReader != null, "参数enableExcelData值为false时，excelRowReader参数不能为null");
