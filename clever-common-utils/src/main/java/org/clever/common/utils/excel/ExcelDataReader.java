@@ -124,12 +124,55 @@ public class ExcelDataReader<T> {
      * @param excelRowReader           处理Excel数据行(用于自定义校验)
      * @param excelReaderExceptionHand 处理读取Excel异常
      */
-    public ExcelDataReader(HttpServletRequest request, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+    public ExcelDataReader(
+            HttpServletRequest request,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
         this(getMultipartFile(request), clazz, limitRows, enableExcelData, excelRowReader, excelReaderExceptionHand);
     }
 
-    private ExcelDataReader(MultipartFile multipartFile, Class<T> clazz, int limitRows, boolean enableExcelData, ExcelRowReader<T> excelRowReader, ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+    /**
+     * @param request                  上传的文件的请求
+     * @param clazz                    Excel解析对应的数据类型
+     * @param limitRows                读取Excel文件最大行数
+     * @param enableExcelData          是否缓存读取的数据结果到内存中
+     * @param useCustomReadListener    是否使用默认的ReadListener
+     * @param excelRowReader           处理Excel数据行(用于自定义校验)
+     * @param excelReaderExceptionHand 处理读取Excel异常
+     */
+    public ExcelDataReader(
+            HttpServletRequest request,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            boolean useCustomReadListener,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+        this(getMultipartFile(request), clazz, limitRows, enableExcelData, useCustomReadListener, excelRowReader, excelReaderExceptionHand);
+    }
+
+    private ExcelDataReader(
+            MultipartFile multipartFile,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
         this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows, enableExcelData, excelRowReader, excelReaderExceptionHand);
+    }
+
+    private ExcelDataReader(
+            MultipartFile multipartFile,
+            Class<T> clazz,
+            int limitRows,
+            boolean enableExcelData,
+            boolean useCustomReadListener,
+            ExcelRowReader<T> excelRowReader,
+            ExcelReaderExceptionHand excelReaderExceptionHand) throws IOException {
+        this(multipartFile.getOriginalFilename(), multipartFile.getInputStream(), clazz, limitRows, enableExcelData, useCustomReadListener, excelRowReader, excelReaderExceptionHand);
     }
 
     /**
