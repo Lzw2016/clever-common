@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.clever.common.utils.codec.EncodeDecodeUtils;
-import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +36,7 @@ public class ExcelDataWriter {
      * @param clazz        Excel解析对应的数据类型
      */
     public ExcelDataWriter(OutputStream outputStream, Class<?> clazz) {
-        Assert.notNull(outputStream, "参数outputStream不能为空");
+        // Assert.notNull(outputStream, "参数outputStream不能为空");
         // Assert.notNull(clazz, "参数clazz不能为空");
         excelWriterBuilder = new ExcelWriterBuilder();
         excelWriterBuilder.file(outputStream);
