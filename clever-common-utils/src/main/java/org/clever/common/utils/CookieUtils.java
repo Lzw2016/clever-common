@@ -29,7 +29,7 @@ public class CookieUtils {
     /**
      * 设置Cookie
      *
-     * @param response HTTP请求
+     * @param response HTTP响应
      * @param path     Cookie的Path
      * @param name     名称
      * @param value    值
@@ -54,7 +54,7 @@ public class CookieUtils {
     /**
      * 设置Cookie
      *
-     * @param response HTTP请求
+     * @param response HTTP响应
      * @param path     Cookie的Path
      * @param name     名称
      * @param value    值
