@@ -113,7 +113,8 @@ public class HttpServletRequestUtils {
      */
     public static String getRequestParams(HttpServletRequest request) {
         if (request instanceof MultipartHttpServletRequest) {
-            return "用户上传文件请求[系统判断]";
+            // 用户上传文件请求[系统判断]
+            return "";
         }
         if (request == null) {
             return "";

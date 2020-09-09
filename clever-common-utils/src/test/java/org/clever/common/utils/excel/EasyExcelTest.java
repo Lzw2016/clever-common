@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.NumberFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
@@ -317,8 +318,9 @@ public class EasyExcelTest {
         @ExcelProperty("序号")
         private Integer index;
 
+        @NumberFormat("###,##0.00")
         @ColumnWidth(10)
-        @ExcelProperty("药店ID")
+        @ExcelProperty(value = "药店ID", order = 0)
         private Long id;
 
         @ColumnWidth(14)
