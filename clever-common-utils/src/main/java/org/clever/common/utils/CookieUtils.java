@@ -19,12 +19,12 @@ public class CookieUtils {
     /**
      * Cookie的默认编码格式
      */
-    private final static String DEFAULT_COOKIE_Encode = "UTF-8";
+    private final static String Default_Cookie_Encode = "UTF-8";
 
-    /**
-     * Cookie的默认路径，为根目录，其所有子目录都能访问
-     */
-    public final static String DEFAULT_COOKIE_PATH = "/";
+//    /**
+//     * Cookie的默认路径，为根目录，其所有子目录都能访问
+//     */
+//    public final static String Default_Cookie_Path = "/";
 
     /**
      * 设置Cookie
@@ -44,7 +44,7 @@ public class CookieUtils {
             cookie.setMaxAge(maxAge);
         }
         try {
-            cookie.setValue(URLEncoder.encode(value, DEFAULT_COOKIE_Encode));
+            cookie.setValue(URLEncoder.encode(value, Default_Cookie_Encode));
         } catch (Throwable e) {
             throw ExceptionUtils.unchecked(e);
         }
@@ -54,47 +54,53 @@ public class CookieUtils {
     /**
      * 设置Cookie
      *
-     * @param name  名称
-     * @param value 值
+     * @param response HTTP请求
+     * @param path     Cookie的Path
+     * @param name     名称
+     * @param value    值
      */
-    public static void setRooPathCookie(HttpServletResponse response, String name, String value) {
-        setCookie(response, "/", name, value, -1);
+    public static void setCookie(HttpServletResponse response, String path, String name, String value) {
+        setCookie(response, path, name, value, -1);
     }
 
     /**
-     * 设置Cookie
+     * 设置Cookie(当前路径)
      *
      * @param name  名称
      * @param value 值
      */
-    public static void setCookie(HttpServletResponse response, String name, String value) {
+    public static void setCookieForCurrentPath(HttpServletResponse response, String name, String value) {
         setCookie(response, null, name, value, -1);
+    }
+
+    /**
+     * 设置Cookie(根路径)
+     *
+     * @param name  名称
+     * @param value 值
+     */
+    public static void setCookieForRooPath(HttpServletResponse response, String name, String value) {
+        setCookie(response, "/", name, value, -1);
     }
 
     /**
      * 获得指定Cookie的值
      *
-     * @param request  请求对象
-     * @param response 响应对象，设置移除Cookie时(isRemove=true),此对象不能传null
-     * @param name     名字
-     * @param isRemove 是否移除
+     * @param request 请求对象
+     * @param name    名字
      * @return Cookie值，不存在返回null
      */
-    public static String getCookie(HttpServletRequest request, HttpServletResponse response, String name, boolean isRemove) {
+    public static String getCookie(HttpServletRequest request, String name) {
         String value = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
                     try {
-                        value = URLDecoder.decode(cookie.getValue(), DEFAULT_COOKIE_Encode);
+                        value = URLDecoder.decode(cookie.getValue(), Default_Cookie_Encode);
                     } catch (Throwable e) {
                         log.error("Cookie的值解码失败", e);
                         value = cookie.getValue();
-                    }
-                    if (isRemove) {
-                        cookie.setMaxAge(0);
-                        response.addCookie(cookie);
                     }
                     break;
                 }
@@ -104,26 +110,46 @@ public class CookieUtils {
     }
 
     /**
-     * 获得指定Cookie的值
-     *
-     * @param request 请求对象
-     * @param name    名称
-     * @return Cookie值
-     */
-    public static String getCookie(HttpServletRequest request, String name) {
-        return getCookie(request, null, name, false);
-    }
-
-    /**
-     * 获得指定Cookie的值，并删除
+     * 删除指定Cookie
      *
      * @param request  请求对象
      * @param response 响应对象
      * @param name     名称
-     * @return Cookie值
+     * @param path     Cookie的Path
      */
-    public static String getCookieAndRemove(HttpServletRequest request, HttpServletResponse response, String name) {
-        return getCookie(request, response, name, true);
+    public static void delCookie(HttpServletRequest request, HttpServletResponse response, String name, String path) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    cookie.setMaxAge(0);
+                    cookie.setPath(path);
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
     }
 
+    /**
+     * 删除指定Cookie(当前路径)
+     *
+     * @param request  请求对象
+     * @param response 响应对象
+     * @param name     名称
+     */
+    public static void delCookieForCurrentPath(HttpServletRequest request, HttpServletResponse response, String name) {
+        delCookie(request, response, name, null);
+    }
+
+    /**
+     * 删除指定Cookie(根路径)
+     *
+     * @param request  请求对象
+     * @param response 响应对象
+     * @param name     名称
+     */
+    public static void delCookieForRooPath(HttpServletRequest request, HttpServletResponse response, String name) {
+        delCookie(request, response, name, "/");
+    }
 }
