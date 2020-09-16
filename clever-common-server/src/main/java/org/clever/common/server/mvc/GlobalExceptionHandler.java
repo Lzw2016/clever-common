@@ -1,21 +1,25 @@
 package org.clever.common.server.mvc;
 
 import com.alibaba.excel.exception.ExcelAnalysisException;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.clever.common.exception.BusinessException;
 import org.clever.common.model.ValidMessage;
 import org.clever.common.model.response.ErrorResponse;
+import org.clever.common.utils.mapper.JacksonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,8 +39,8 @@ import java.util.Set;
  */
 @SuppressWarnings("Duplicates")
 @Slf4j
-@ControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler implements HandlerExceptionResolver {
 
     /**
      * 获取请求参数校验错误信息
@@ -86,7 +90,6 @@ public class GlobalExceptionHandler {
     /**
      * 数据主键重复
      */
-    @ResponseBody
     @ExceptionHandler(value = DuplicateKeyException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, DuplicateKeyException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -99,7 +102,6 @@ public class GlobalExceptionHandler {
     /**
      * 解析Excel文件异常
      */
-    @ResponseBody
     @ExceptionHandler(value = ExcelAnalysisException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ExcelAnalysisException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -112,7 +114,6 @@ public class GlobalExceptionHandler {
     /**
      * 文件上传大小超过配置的最大值
      */
-    @ResponseBody
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, MaxUploadSizeExceededException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -125,7 +126,6 @@ public class GlobalExceptionHandler {
     /**
      * 数据校验异常
      */
-    @ResponseBody
     @ExceptionHandler(value = ConstraintViolationException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ConstraintViolationException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -139,7 +139,6 @@ public class GlobalExceptionHandler {
     /**
      * 数据校验异常
      */
-    @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, MethodArgumentNotValidException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -153,7 +152,6 @@ public class GlobalExceptionHandler {
     /**
      * 数据校验异常
      */
-    @ResponseBody
     @ExceptionHandler(value = BindException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, BindException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -167,7 +165,6 @@ public class GlobalExceptionHandler {
     /**
      * 请求参数转换异常
      */
-    @ResponseBody
     @ExceptionHandler(value = HttpMessageConversionException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, HttpMessageConversionException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -180,7 +177,6 @@ public class GlobalExceptionHandler {
     /**
      * 请求参数校验异常
      */
-    @ResponseBody
     @ExceptionHandler(value = ValidationException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ValidationException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -193,7 +189,6 @@ public class GlobalExceptionHandler {
     /**
      * 业务异常处理方法<br/>
      */
-    @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, BusinessException e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -211,7 +206,6 @@ public class GlobalExceptionHandler {
     /**
      * 默认的异常处理方法<br/>
      */
-    @ResponseBody
     @ExceptionHandler(value = Throwable.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, Throwable e) {
         log.debug("[ExceptionHandler]-全局的异常处理  ", e);
@@ -219,5 +213,35 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("服务器内部错误");
         return errorResponse;
+    }
+
+    @SneakyThrows
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        ErrorResponse res;
+        if (ex instanceof DuplicateKeyException) {
+            res = defaultErrorHandler(request, response, (DuplicateKeyException) ex);
+        } else if (ex instanceof ExcelAnalysisException) {
+            res = defaultErrorHandler(request, response, (ExcelAnalysisException) ex);
+        } else if (ex instanceof MaxUploadSizeExceededException) {
+            res = defaultErrorHandler(request, response, (MaxUploadSizeExceededException) ex);
+        } else if (ex instanceof ConstraintViolationException) {
+            res = defaultErrorHandler(request, response, (ConstraintViolationException) ex);
+        } else if (ex instanceof MethodArgumentNotValidException) {
+            res = defaultErrorHandler(request, response, (MethodArgumentNotValidException) ex);
+        } else if (ex instanceof BindException) {
+            res = defaultErrorHandler(request, response, (BindException) ex);
+        } else if (ex instanceof HttpMessageConversionException) {
+            res = defaultErrorHandler(request, response, (HttpMessageConversionException) ex);
+        } else if (ex instanceof ValidationException) {
+            res = defaultErrorHandler(request, response, (ValidationException) ex);
+        } else if (ex instanceof BusinessException) {
+            res = defaultErrorHandler(request, response, (BusinessException) ex);
+        } else {
+            res = defaultErrorHandler(request, response, ex);
+        }
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().print(JacksonMapper.getInstance().toJson(res));
+        return null;
     }
 }
