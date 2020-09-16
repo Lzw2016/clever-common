@@ -1,15 +1,12 @@
 package org.clever.common.server.mvc;
 
 import com.alibaba.excel.exception.ExcelAnalysisException;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.clever.common.exception.BusinessException;
 import org.clever.common.model.ValidMessage;
 import org.clever.common.model.response.ErrorResponse;
-import org.clever.common.utils.mapper.JacksonMapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +35,7 @@ import java.util.Set;
 @SuppressWarnings("Duplicates")
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler implements HandlerExceptionResolver {
+public class GlobalExceptionHandler {
 
     /**
      * 获取请求参数校验错误信息
@@ -213,35 +208,5 @@ public class GlobalExceptionHandler implements HandlerExceptionResolver {
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("服务器内部错误");
         return errorResponse;
-    }
-
-    @SneakyThrows
-    @Override
-    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        ErrorResponse res;
-        if (ex instanceof DuplicateKeyException) {
-            res = defaultErrorHandler(request, response, (DuplicateKeyException) ex);
-        } else if (ex instanceof ExcelAnalysisException) {
-            res = defaultErrorHandler(request, response, (ExcelAnalysisException) ex);
-        } else if (ex instanceof MaxUploadSizeExceededException) {
-            res = defaultErrorHandler(request, response, (MaxUploadSizeExceededException) ex);
-        } else if (ex instanceof ConstraintViolationException) {
-            res = defaultErrorHandler(request, response, (ConstraintViolationException) ex);
-        } else if (ex instanceof MethodArgumentNotValidException) {
-            res = defaultErrorHandler(request, response, (MethodArgumentNotValidException) ex);
-        } else if (ex instanceof BindException) {
-            res = defaultErrorHandler(request, response, (BindException) ex);
-        } else if (ex instanceof HttpMessageConversionException) {
-            res = defaultErrorHandler(request, response, (HttpMessageConversionException) ex);
-        } else if (ex instanceof ValidationException) {
-            res = defaultErrorHandler(request, response, (ValidationException) ex);
-        } else if (ex instanceof BusinessException) {
-            res = defaultErrorHandler(request, response, (BusinessException) ex);
-        } else {
-            res = defaultErrorHandler(request, response, ex);
-        }
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        response.getWriter().print(JacksonMapper.getInstance().toJson(res));
-        return null;
     }
 }
