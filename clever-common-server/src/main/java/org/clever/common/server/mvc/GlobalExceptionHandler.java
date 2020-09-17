@@ -87,7 +87,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = DuplicateKeyException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, DuplicateKeyException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("保存数据失败，数据已经存在");
@@ -99,7 +98,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ExcelAnalysisException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ExcelAnalysisException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage(e.getCause().getMessage());
@@ -111,7 +109,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, MaxUploadSizeExceededException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("上传文件大小超限");
@@ -123,7 +120,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ConstraintViolationException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ConstraintViolationException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setValidMessageList(getValidMessages(e.getConstraintViolations()));
@@ -136,7 +132,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, MethodArgumentNotValidException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setValidMessageList(getValidMessages(e.getBindingResult()));
@@ -149,7 +144,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = BindException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, BindException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setValidMessageList(getValidMessages(e.getBindingResult()));
@@ -162,7 +156,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = HttpMessageConversionException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, HttpMessageConversionException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("请求参数转换异常");
@@ -174,7 +167,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ValidationException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, ValidationException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse errorResponse = newErrorResponse(request, response, e);
         errorResponse.setMessage("请求参数校验异常");
@@ -186,7 +178,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = BusinessException.class)
     protected ErrorResponse defaultErrorHandler(HttpServletRequest request, HttpServletResponse response, BusinessException e) {
-        log.debug("[ExceptionHandler]-全局的异常处理  ", e);
         if (e.getStatus() != null) {
             response.setStatus(e.getStatus());
         } else {
