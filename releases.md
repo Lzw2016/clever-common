@@ -32,10 +32,11 @@
     - 更新 pom.xml 配置加入org.glassfish:javax.el(hibernate-validator 需要)
 - [变化]
     - 删除 StringUtils.format 函数
-    - 升级 easyexcel 到 2.2.6
+    - 升级 EasyExcel 到 2.2.6
     - ExcelDataReader API变化
     - ExcelDataWriter API变化
     - CookieUtils API修改的更为合理
+    - IDCardUtils API微调
 ---
 
 ### 2020-04-22 2.0.0-SNAPSHOT
