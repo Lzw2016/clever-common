@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * 作者： lzw<br/>
  * 创建时间：2018-09-30 14:17 <br/>
  */
-@Profile({"dev", "test"})
+@Profile({"local", "dev", "test", "pre"})
 @Configuration
 @EnableSwagger2
 public class DefaultSwagger2Config {
