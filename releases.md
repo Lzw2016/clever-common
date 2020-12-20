@@ -10,6 +10,18 @@
 
 ---
 
+### 2020-12-20 2.0.3-SNAPSHOT
+
+- [bug fix]
+
+- [增强]
+    
+- [新增]
+
+- [变化]
+    - 升级clever-parent到2.1.18.3.RELEASE (原版本2.1.18.2.RELEASE)
+---
+
 ### 2020-12-20 2.0.2-SNAPSHOT
 
 - [bug fix]
