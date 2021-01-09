@@ -1,4 +1,4 @@
-### 2020-xx-xx 2.0.3.RELEASES
+### 2020-xx-xx 2.0.4.RELEASES
 
 - [bug fix]
 
@@ -15,7 +15,7 @@
 - [bug fix]
 
 - [增强]
-    
+    - 增强ValidateCodeSourceUtils
 - [新增]
 
 - [变化]

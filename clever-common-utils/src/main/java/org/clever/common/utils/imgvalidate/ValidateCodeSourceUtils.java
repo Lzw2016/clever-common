@@ -25,10 +25,21 @@ public class ValidateCodeSourceUtils {
      * @return 随机字符串
      */
     public static String getRandString(int length) {
+        return getRandString(length, CODE_SEQ);
+    }
+
+    /**
+     * 生成随机的字符串
+     *
+     * @param length        设置随机字符串的长度
+     * @param charSequences 字符序列
+     * @return 随机字符串
+     */
+    public static String getRandString(final int length, final char[] charSequences) {
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
-            char c = CODE_SEQ[random.nextInt(CODE_SEQ.length)];
+            char c = charSequences[random.nextInt(charSequences.length)];
             sb.append(c);
         }
         return sb.toString();
