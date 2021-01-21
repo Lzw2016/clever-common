@@ -16,6 +16,7 @@
 
 - [增强]
     - 增强ValidateCodeSourceUtils
+    - 优化 CustomPaginationInterceptor
 - [新增]
 
 - [变化]
