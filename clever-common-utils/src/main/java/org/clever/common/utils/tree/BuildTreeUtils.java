@@ -184,4 +184,36 @@ public class BuildTreeUtils {
         }
         return rootNodeList;
     }
+
+    /**
+     * @param treeList 已经构建好的树
+     * @param id       查找的节点ID
+     * @param <T>      节点数据类型
+     * @return 如未找到返回null
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends ITreeNode> T findNode(List<T> treeList, Long id) {
+        List<T> currentLevel = treeList;
+        List<T> nextLevel;
+        T match = null;
+        while (!currentLevel.isEmpty()) {
+            nextLevel = new ArrayList<>();
+            for (T treeNode : currentLevel) {
+                // id 一致找到了
+                if (Objects.equals(id, treeNode.getId())) {
+                    match = treeNode;
+                    break;
+                }
+                // 加入下一层节点
+                if (treeNode.getChildren() != null && !treeNode.getChildren().isEmpty()) {
+                    nextLevel.addAll((List<T>) treeNode.getChildren());
+                }
+            }
+            if (match != null) {
+                break;
+            }
+            currentLevel = nextLevel;
+        }
+        return match;
+    }
 }
