@@ -3,10 +3,7 @@ package org.clever.common.utils.tree;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 构建对象树结构的工具类<br/>
@@ -220,7 +217,7 @@ public class BuildTreeUtils {
     }
 
     /**
-     * 平铺树节点
+     * 平铺树
      *
      * @param treeList 已经构建好的树
      * @param <T>      节点数据类型
@@ -242,5 +239,16 @@ public class BuildTreeUtils {
             currentLevel = nextLevel;
         }
         return flattenNode;
+    }
+
+    /**
+     * 平铺树节点
+     *
+     * @param node 已经构建好的树的一个节点
+     * @param <T> 节点数据类型
+     * @return 包含所有节点的集合
+     */
+    public <T extends ITreeNode> List<T> flattenNode(T node) {
+        return flattenTree(Collections.singletonList(node));
     }
 }
