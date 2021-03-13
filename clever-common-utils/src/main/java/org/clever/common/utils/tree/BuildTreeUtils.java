@@ -224,7 +224,7 @@ public class BuildTreeUtils {
      * @return 包含所有节点的集合
      */
     @SuppressWarnings("unchecked")
-    public <T extends ITreeNode> List<T> flattenTree(List<T> treeList) {
+    public static <T extends ITreeNode> List<T> flattenTree(List<T> treeList) {
         List<T> currentLevel = treeList;
         List<T> nextLevel;
         List<T> flattenNode = new ArrayList<>();
@@ -245,10 +245,10 @@ public class BuildTreeUtils {
      * 平铺树节点
      *
      * @param node 已经构建好的树的一个节点
-     * @param <T> 节点数据类型
+     * @param <T>  节点数据类型
      * @return 包含所有节点的集合
      */
-    public <T extends ITreeNode> List<T> flattenNode(T node) {
+    public static <T extends ITreeNode> List<T> flattenNode(T node) {
         return flattenTree(Collections.singletonList(node));
     }
 }
