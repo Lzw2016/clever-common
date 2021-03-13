@@ -134,7 +134,7 @@ public class SimpleTreeNode<T extends Serializable> implements ITreeNode {
     }
 
     @Override
-    public List<ITreeNode> getChildren() {
+    public List<? extends ITreeNode> getChildren() {
         return children;
     }
 

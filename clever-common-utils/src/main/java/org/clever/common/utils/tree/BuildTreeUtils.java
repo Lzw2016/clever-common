@@ -84,26 +84,6 @@ public class BuildTreeUtils {
         return newNoBuildTreeNodeList;
     }
 
-//    /**
-//     * 递归生成树<br/>
-//     *
-//     * @param parentNode          父节点
-//     * @param noBuildTreeNodeList 所有未被添加到父节点下的节点
-//     */
-//    private static void buildTree(ITreeNode parentNode, List<ITreeNode> noBuildTreeNodeList) {
-//        for (ITreeNode node : noBuildTreeNodeList) {
-//            if (!node.isBuild() && Objects.equals(node.getParentId(), parentNode.getId())) {
-//                // 设置已经被添加到父节点下了
-//                node.setBuild(true);
-//                parentNode.addChildren(node);
-//
-//                // 递归生成树
-//                buildTree(node, noBuildTreeNodeList);
-//                // buildTree(node, refreshNoBuildNodes(noBuildTreeNodeList));
-//            }
-//        }
-//    }
-
     /**
      * 生成树(一层一层的查找子节点)<br/>
      *

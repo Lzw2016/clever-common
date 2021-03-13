@@ -37,7 +37,7 @@ public interface ITreeNode extends Serializable {
     /**
      * 返回所有子节点，必须是List否则顺序会不一致
      */
-    List<ITreeNode> getChildren();
+    List<? extends ITreeNode> getChildren();
 
     /**
      * 增加子节点
