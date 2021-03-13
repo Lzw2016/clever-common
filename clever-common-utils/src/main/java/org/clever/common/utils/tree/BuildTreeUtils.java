@@ -186,6 +186,8 @@ public class BuildTreeUtils {
     }
 
     /**
+     * 查找指定节点
+     *
      * @param treeList 已经构建好的树
      * @param id       查找的节点ID
      * @param <T>      节点数据类型
@@ -196,7 +198,7 @@ public class BuildTreeUtils {
         List<T> currentLevel = treeList;
         List<T> nextLevel;
         T match = null;
-        while (!currentLevel.isEmpty()) {
+        while (currentLevel != null && !currentLevel.isEmpty()) {
             nextLevel = new ArrayList<>();
             for (T treeNode : currentLevel) {
                 // id 一致找到了
@@ -215,5 +217,30 @@ public class BuildTreeUtils {
             currentLevel = nextLevel;
         }
         return match;
+    }
+
+    /**
+     * 平铺树节点
+     *
+     * @param treeList 已经构建好的树
+     * @param <T>      节点数据类型
+     * @return 包含所有节点的集合
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends ITreeNode> List<T> flattenTree(List<T> treeList) {
+        List<T> currentLevel = treeList;
+        List<T> nextLevel;
+        List<T> flattenNode = new ArrayList<>();
+        while (currentLevel != null && !currentLevel.isEmpty()) {
+            nextLevel = new ArrayList<>();
+            flattenNode.addAll(currentLevel);
+            for (T treeNode : currentLevel) {
+                if (treeNode.getChildren() != null && !treeNode.getChildren().isEmpty()) {
+                    nextLevel.addAll((List<T>) treeNode.getChildren());
+                }
+            }
+            currentLevel = nextLevel;
+        }
+        return flattenNode;
     }
 }
