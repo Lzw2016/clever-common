@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * 通用的数节点实现
+ * <p>
  * 作者：lizw <br/>
  * 创建时间：2021/03/18 19:08 <br/>
  */
