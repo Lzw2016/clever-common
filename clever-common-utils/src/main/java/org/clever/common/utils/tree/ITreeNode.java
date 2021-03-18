@@ -1,6 +1,5 @@
 package org.clever.common.utils.tree;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,18 +10,7 @@ import java.util.List;
  *
  * @see org.clever.common.utils.tree.BuildTreeUtils
  */
-public interface ITreeNode extends Serializable {
-
-    /**
-     * 节点ID(必须非空)
-     */
-    Object getId();
-
-    /**
-     * 父节点ID(根节点的ParentId等于null 或 空字符串)
-     */
-    Object getParentId();
-
+public interface ITreeNode extends ITreeID {
     /**
      * 判断当前节点是否被构建到树中了
      */
@@ -45,13 +33,4 @@ public interface ITreeNode extends Serializable {
      * @param node 子节点
      */
     void addChildren(ITreeNode node);
-
-    /**
-     * 当前节点是否是根节点
-     *
-     * @return true:是根节点 false:不是根节点 null:未知
-     */
-    default Boolean isRoot() {
-        return null;
-    }
 }

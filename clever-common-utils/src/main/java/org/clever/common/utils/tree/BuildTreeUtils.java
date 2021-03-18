@@ -2,6 +2,7 @@ package org.clever.common.utils.tree;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -46,7 +47,7 @@ public class BuildTreeUtils {
         noBuildTreeNodeList = refreshNoBuildNodes(noBuildTreeNodeList);
         final long endTime = System.currentTimeMillis();
         // 校验构建是否正确
-        if (noBuildTreeNodeList.size() <= 0) {
+        if (noBuildTreeNodeList.isEmpty()) {
             log.debug("树构建成功！耗时：{}ms | 数据量：{}", (endTime - startTime), nodes.size());
         } else {
             log.error("树构建失败！耗时：{}ms | [{}]", (endTime - startTime), nodesToString(noBuildTreeNodeList));
@@ -103,15 +104,23 @@ public class BuildTreeUtils {
                 }
             }
             // 没有找到下一级节点
-            if (nextParentNodeList.size() <= 0) {
+            if (nextParentNodeList.isEmpty()) {
                 break;
             }
             // 父节点集合
             parentNodeList = nextParentNodeList;
             // 踢除已经构建好的节点
-            noBuildTreeNodeList = refreshNoBuildNodes(noBuildTreeNodeList);
+            List<T> nextNoBuildTreeNodeList = refreshNoBuildNodes(noBuildTreeNodeList);
+            // 消除死循环
+            if (!noBuildTreeNodeList.isEmpty()) {
+                Assert.isTrue(
+                        nextNoBuildTreeNodeList.size() < noBuildTreeNodeList.size(),
+                        "可能出现死循环，ITreeNode.setBuild函数实现错误"
+                );
+            }
+            noBuildTreeNodeList = nextNoBuildTreeNodeList;
             // 没有未构建的节点了
-            if (noBuildTreeNodeList.size() <= 0) {
+            if (noBuildTreeNodeList.isEmpty()) {
                 break;
             }
         }
